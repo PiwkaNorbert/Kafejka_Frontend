@@ -8,6 +8,7 @@ import ComputerShutdown from "../components/ComputerShutdown";
 import ComputerState from "../components/ComputerState";
 import ComputerShutdownTimeoutPanel from "../components/ComputerShutdownTimeoutPanel";
 import ComputerDelete from "../components/ComputerDelete";
+import ComputerAdd from "../components/ComputerAdd";
 
 const ComputerPage = ({ showComps }) => {
   let { compId } = useParams();
@@ -53,25 +54,33 @@ const ComputerPage = ({ showComps }) => {
     .map((computer, index) => {
       return (
         <CardContent
-          sx={{ boxShadow: 2, borderRadius: 3, padding: 2, margin: 1 }}
+          sx={{
+            boxShadow: 2,
+            borderRadius: 3,
+            padding: 1,
+            margin: 1,
+          }}
           className="kafeika__background"
+          disabled={
+            isLoading ? null : (
+              <div style={{ zIndex: 1, backgroundColor: "red" }}>
+                <CircularProgress className="loading-status" disableShrink />
+              </div>
+            )
+          }
           key={index}
         >
           <Box className="kafeika__wrap">
-            <CardContent sx={{ boxShadow: 2 }}>
-              <ComputerIndex
-                computer={computer}
-                index={index}
-                url={url}
-                callback={getDataSlow}
-              />
-            </CardContent>
+            <ComputerIndex
+              computer={computer}
+              index={index}
+              url={url}
+              callback={getDataSlow}
+              showComps={showComps}
+            />
             {showComps ? (
-              <CardContent sx={{ boxShadow: 0 }}>
-                <ComputerOnlineStatus computer={computer} />
-              </CardContent>
+              <ComputerOnlineStatus computer={computer} url={url} />
             ) : null}
-            <hr></hr>
             {showComps ? (
               <ComputerShutdownTimeoutPanel
                 computer={computer}
@@ -79,28 +88,26 @@ const ComputerPage = ({ showComps }) => {
                 url={url}
                 callback={getDataSlow}
               />
-            ) : null}{" "}
-            {showComps ? null : (
-              <ComputerDelete
-                computer={computer}
-                index={index}
-                url={url}
-                callback={getDataSlow}
-              />
-            )}
+            ) : null}
+            <Box sx={{ textAlign: "end", color: "grey", p: 0, m: 0 }}>
+              ID: {computer.pk}
+            </Box>
           </Box>
+          <ComputerAdd computer={computer.fields.filia} url={url} />
         </CardContent>
       );
     });
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box>
       {isLoading ? (
-        <div style={{ display: "grid", justifyContent: "center" }}>
+        <div style={{ display: "flex", justifyContent: "center" }}>
           <CircularProgress className="loading-status" disableShrink />
         </div>
       ) : (
-        computerArrayValues2
+        <Box className={`${showComps ? "layout-grid" : "layout-flex"}`}>
+          {computerArrayValues2}
+        </Box>
       )}
     </Box>
   );

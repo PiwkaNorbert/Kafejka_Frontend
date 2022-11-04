@@ -31,12 +31,13 @@ const ComputerState = ({ computer, url, callback }) => {
       }
       size="small"
       type="submit"
-      className={"btn btn-block"}
+      className={"btn btn-block btn-un-block"}
       disabled={computer.fields.f === 5}
       fullWidth="true"
       sx={{
         minWidth: "fit-content",
         boxShadow: "2px 3px 2px 1px rgb(0 0 0 / 40%)",
+        fontWeight: "900",
       }}
       onClick={(e) => {
         e.preventDefault();

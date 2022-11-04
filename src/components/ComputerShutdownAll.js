@@ -3,7 +3,7 @@ import { Box, Tab, Tabs, Button } from "@mui/material";
 
 const ComputerShutdownAll = () => {
   return (
-    <Button variant="outlined" color="error">
+    <Button variant="outlined" sx={{ fontWeight: "900" }} color="error">
       Zamknij Wszystkie
     </Button>
   );

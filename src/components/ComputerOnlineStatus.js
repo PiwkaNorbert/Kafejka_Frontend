@@ -6,7 +6,7 @@ const ComputerOnlineStatus = ({ computer, url }) => {
   return (
     <Box className={`kafeika-komputer__status`}>
       <Box className={`kafeika-komputer__status-computer`}>
-        <Box sx={{ padding: 1, textAlign: "center" }}>Stan</Box>
+        <Box sx={{ padding: 1, textAlign: "center", margin: "auto" }}>Stan</Box>
         <Box
           className={`kafeika-komputer__status-content ${
             computer.fields.f === 0

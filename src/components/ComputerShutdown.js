@@ -31,6 +31,7 @@ const ComputerShutdown = ({ computer, url, callback }) => {
       sx={{
         minWidth: "fit-content",
         boxShadow: "2px 3px 2px 1px rgb(0 0 0 / 40%)",
+        fontWeight: "900",
       }}
       onClick={(e) => {
         e.preventDefault();

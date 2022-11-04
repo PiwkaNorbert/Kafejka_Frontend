@@ -1,8 +1,9 @@
 import React from "react";
 import { Box } from "@mui/material";
 import ComputerShutdown from "./ComputerShutdown";
+import ComputerDelete from "./ComputerDelete";
 
-const ComputerIndex = ({ computer, index, url }) => {
+const ComputerIndex = ({ computer, index, url, showComps, getDataSlow }) => {
   const statusCheck = () => {
     if (computer.fields.online === 0) {
     }
@@ -10,18 +11,30 @@ const ComputerIndex = ({ computer, index, url }) => {
   return (
     <Box className={`kafeika-komputer__index`}>
       <Box className={`kafeika-komputer__index-computer`}>
-        <Box sx={{ padding: 1, textAlign: "center" }}>Komputer {index + 1}</Box>
+        <Box sx={{ padding: 1, textAlign: "center", margin: "auto" }}>
+          Komputer {index + 1}
+        </Box>
         <Box
+          sx={{ padding: 1, textAlign: "center" }}
           className={`kafeika-komputer__index-content ${
             computer.fields.online >= 120 ? "bg-red" : "bg-green"
           }`}
-          sx={{ padding: 1, textAlign: "center" }}
         >
           {`${computer.fields.online >= 120 ? "Off-line" : "On-line"}`}
           {statusCheck()}
         </Box>
       </Box>
-      <ComputerShutdown computer={computer} url={url} />
+
+      {showComps ? (
+        <ComputerShutdown computer={computer} url={url} />
+      ) : (
+        <ComputerDelete
+          computer={computer}
+          index={index}
+          url={url}
+          callback={getDataSlow}
+        />
+      )}
     </Box>
   );
 };

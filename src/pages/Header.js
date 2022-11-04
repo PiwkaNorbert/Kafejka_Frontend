@@ -2,10 +2,11 @@ import React from "react";
 import { Box, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
 import ComputerPage from "../pages/ComputerPage";
-import WifiPerms from "./WifiPerms";
-import ComputerShutdownAll from "./ComputerShutdownAll";
+import WifiPerms from "../components/WifiPerms";
+import ComputerShutdownAll from "../components/ComputerShutdownAll";
+import ComputerAdd from "../components/ComputerAdd";
 
-const Headers = () => {
+const Headers = ({ computer, url }) => {
   const [tabIndex, setTabIndex] = useState(0);
 
   const handleTabChange = (event, newTabIndex) => {
@@ -21,11 +22,12 @@ const Headers = () => {
         >
           <Tab label="Komputery" />
           <Tab label="WiFi" />
-          <Tab label="Settigns" />
+          <Tab label="Ustawienia" />
           <ComputerShutdownAll />
+          <ComputerAdd computer={computer} url={url} />
         </Tabs>
       </Box>
-      <Box sx={{ padding: 2 }}>
+      <Box sx={{ paddingBlock: 1 }}>
         {tabIndex === 0 && (
           <Box>
             <ComputerPage showComps={true} />
