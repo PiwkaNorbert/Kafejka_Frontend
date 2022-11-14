@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import { Button } from "@mui/material";
-import axios from "axios";
+import React, { useState } from 'react';
+import { Button } from '@mui/material';
+import axios from 'axios';
 
-const ComputerAdd = ({ computer, url }) => {
-  const add = useState("");
+const ComputerAdd = ({ filia, url }) => {
+  const add = useState('');
 
   // Set status Shutdown
-  const compAdd = async (e) => {
-    const urlAdd = `${url}add-pc/${e}/`;
+  const compAdd = async () => {
+    const urlAdd = `${url}add-pc/${filia}/`;
     try {
       await axios.get(urlAdd, {
         add,
-        title: "Add",
+        title: 'Add',
         completed: false,
       });
     } catch (err) {
@@ -20,17 +20,18 @@ const ComputerAdd = ({ computer, url }) => {
   };
   return (
     <Button
-      variant="outlined"
       color="success"
       size="small"
       type="submit"
-      className={"btn btn-block btn-add"}
+      className={'btn btn-block btn-add'}
       sx={{
-        fontWeight: "900",
+        padding: '12px 16px',
+        fontSize: ' 0.875rem',
+        lineHeight: '1.25',
       }}
-      onClick={(e) => {
+      onClick={e => {
         e.preventDefault();
-        compAdd(computer);
+        compAdd();
       }}
     >
       Dodaj Komputer

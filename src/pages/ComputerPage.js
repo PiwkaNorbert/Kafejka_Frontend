@@ -10,14 +10,13 @@ import ComputerShutdownTimeoutPanel from "../components/ComputerShutdownTimeoutP
 import ComputerDelete from "../components/ComputerDelete";
 import ComputerAdd from "../components/ComputerAdd";
 
-const ComputerPage = ({ showComps }) => {
-  let { compId } = useParams();
+const ComputerPage = ({ showComps, url }) => {
+  let { curFilia } = useParams();
   const [computers, setComputer] = useState([]);
 
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const verificationCode = "";
-  const url = `http://192.168.15.115:8000/${verificationCode}/`;
+
   const getData = async (e) => {
     await axios(`${url}${e == true ? "fast-komps/" : "komps/"}`)
       .then((response) => {
@@ -36,7 +35,7 @@ const ComputerPage = ({ showComps }) => {
   // Called after an interaction is made, to poll updated computer status after a short time
   const getDataSlow = async (e) => {
     getData(e);
-    setInterval(getData, 4000);
+    setInterval(getData, 1000);
   };
 
   useEffect(() => {
@@ -49,7 +48,7 @@ const ComputerPage = ({ showComps }) => {
 
   const computerArrayValues2 = computers
     .filter((computer) =>
-      compId === undefined ? true : computer.fields.filia == compId
+      curFilia === undefined ? true : computer.fields.filia == curFilia
     )
     .map((computer, index) => {
       return (
@@ -89,11 +88,10 @@ const ComputerPage = ({ showComps }) => {
                 callback={getDataSlow}
               />
             ) : null}
-            <Box sx={{ textAlign: "end", color: "grey", p: 0, m: 0 }}>
-              ID: {computer.pk}
-            </Box>
           </Box>
-          <ComputerAdd computer={computer.fields.filia} url={url} />
+          <Box sx={{ textAlign: "end", color: "grey", p: 0, m: 0 }}>
+            ID: {computer.pk}
+          </Box>
         </CardContent>
       );
     });
