@@ -1,11 +1,14 @@
 import React from 'react';
-import { Box, Tab, Tabs } from '@mui/material';
+import { Box, Tab, Tabs, useMediaQuery } from '@mui/material';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ComputerPage from '../pages/ComputerPage';
 import WifiPerms from '../pages/WifiPerms';
 import ComputerShutdownAll from '../components/ComputerShutdownAll';
 import ComputerAdd from '../components/ComputerAdd';
+import WifiIcon from '@mui/icons-material/Wifi';
+import ComputerIcon from '@mui/icons-material/Computer';
+import SettingIcon from '@mui/icons-material/Settings';
 
 const Headers = ({ verificationCode }) => {
   let { curFilia } = useParams();
@@ -18,24 +21,21 @@ const Headers = ({ verificationCode }) => {
   const handleTabChange = (event, newTabIndex) => {
     setTabIndex(newTabIndex);
   };
+  const smallScreen = useMediaQuery('(max-width: 768px)');
+
   return (
     <Box>
-      <Box>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <Tabs
+          orientation={smallScreen ? 'vertical' : 'horizonal'}
           className="option__tabs"
           value={tabIndex}
           onChange={handleTabChange}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+          selectionFollowsFocus
         >
-          <Tab label="Komputery" />
-          <Tab label="WiFi" />
-          <Tab label="Ustawienia" />
-
+          <Tab icon={<ComputerIcon />} label="Komputery" />
+          <Tab icon={<WifiIcon />} label="WiFi" />
+          <Tab icon={<SettingIcon />} label="Ustawienia" />
           {tabIndex === 0 && curFilia !== undefined && (
             <ComputerShutdownAll filia={curFilia} url={url} />
           )}

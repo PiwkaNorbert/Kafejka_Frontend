@@ -108,9 +108,18 @@ table {
   flex-wrap: wrap;
   flex-direction: column;
 }
-.option__tabs:nth-child(3) {
-  display: flex;
-  justify-content: flex-end;
+.btn-add,
+.btn-block {
+  flex-direction: column;
+  justify-content: space-between !important;
+  text-transform: uppercase;
+  min-height: 72px;
+}
+
+.tab:nth-child(4),
+.tab:nth-child(5) {
+  display: flex !important;
+  justify-content: flex-end !important;
 }
 @keyframes spinner {
   0% {
@@ -153,9 +162,9 @@ table {
 }
 .layout-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  justify-items: center;
 }
-@media (max-width: 1200px) {
+@media screen and (max-width: 1080px) {
   .layout-grid {
     display: flex;
     justify-content: center;
@@ -165,13 +174,16 @@ table {
     display: block;
   }
 }
-@media (max-width: 720px) {
+@media screen and (max-width: 768px) {
   .option__tabs {
     display: grid;
     justify-content: center;
   }
+  /* .css-heg063-MuiTabs-flexContainer {
+    flex-direction: column !important;
+  } */
 }
 
 .css-x8el2l-MuiCardContent-root:last-child {
-  padding-bottom: 0 !important;
+  padding-bottom: 8px !important;
 }

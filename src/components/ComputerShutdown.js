@@ -26,7 +26,7 @@ const ComputerShutdown = ({ computer, url, callback }) => {
       size="small"
       type="submit"
       disabled={computer.fields.f === 5 && computer.fields.t === 0}
-      className="btn btn-block"
+      className="btn "
       fullWidth={true}
       sx={{
         minWidth: 'fit-content',

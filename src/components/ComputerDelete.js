@@ -24,7 +24,7 @@ const ComputerDelete = ({ index, computer, url, showComps, getDataSlow }) => {
       color="error"
       size="small"
       type="submit"
-      className={'btn btn-block btn-delete'}
+      className={'btn btn-delete'}
       fullWidth={true}
       sx={{
         boxShadow: '2px 3px 2px 1px rgb(0 0 0 / 40%)',

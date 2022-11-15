@@ -10,6 +10,8 @@ import {
   TextField,
   CardContent,
   TableBody,
+  TableCell,
+  FormControl,
 } from '@mui/material';
 import WifiCodesTable from '../components/WifiCodesTable';
 
@@ -34,53 +36,57 @@ const WifiPerms = ({ index, url, filia, callback }) => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        display: 'grid',
+        justifyContent: 'center',
+        textAlign: 'center',
+      }}
+    >
       <CardContent
         className="kafeika__background-wifi "
         sx={{ boxShadow: 2, borderRadius: 3, padding: '10px', margin: 1 }}
       >
-        <Box
-          sx={{
-            display: 'grid',
-            justifyContent: 'center',
-            textAlign: 'center',
-          }}
-        >
-          <TextField
-            id={`hotspot${index}`}
-            name="hotspot"
-            label="Numer karty czytelnika"
-            type="number"
-            variant="filled"
-            color="primary"
-            autoFocus={true}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            inputRef={inputRef}
-            InputProps={{
-              inputProps: { min: 999999999 },
-            }}
-            sx={{ display: 'grid', padding: 0, margin: 0 }}
-          />
-          <Button
-            variant="contained"
-            size="small"
-            key={index}
-            type="submit"
-            fullWidth={true}
-            sx={{
-              minWidth: 'fit-content',
-              boxShadow: '2px 3px 2px 1px rgb(0 0 0 / 40%)',
-              fontWeight: '900',
-            }}
-            onClick={e => {
-              e.preventDefault();
-              handleClick();
-            }}
-          >
-            ok
-          </Button>
+        <Box>
+          <form>
+            <TextField
+              id={`hotspot${index}`}
+              name="hotspot"
+              label="Numer karty czytelnika"
+              type="number"
+              variant="filled"
+              color="primary"
+              autoFocus={true}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              inputRef={inputRef}
+              InputProps={{
+                inputProps: { min: 999999999 },
+              }}
+              sx={{ display: 'grid', padding: 0, margin: 0 }}
+            />
+            <Button
+              variant="contained"
+              size="small"
+              key={index}
+              type="submit"
+              fullWidth={true}
+              sx={{
+                minWidth: 'fit-content',
+                boxShadow: '2px 3px 2px 1px rgb(0 0 0 / 40%)',
+                fontWeight: '900',
+              }}
+              onClick={e => {
+                e.preventDefault();
+                handleClick();
+
+                inputRef.current.value = '';
+              }}
+            >
+              ok
+            </Button>
+          </form>
         </Box>
         <Box>
           <p>Karty oczekujące na połaczenie</p>
@@ -94,7 +100,10 @@ const WifiPerms = ({ index, url, filia, callback }) => {
                     color: 'var(--white)',
                   }}
                 >
-                  Numer karty czytelnika
+                  <TableCell sx={{ color: 'var(--white)' }}>Czas</TableCell>
+                  <TableCell sx={{ textAlign: 'right', color: 'var(--white)' }}>
+                    Numer karty czytelnika
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

@@ -31,7 +31,7 @@ const ComputerState = ({ computer, url, callback }) => {
       }
       size="small"
       type="submit"
-      className={'btn btn-block btn-un-block'}
+      className={'btn btn-un-block'}
       disabled={computer.fields.f === 5}
       fullWidth={true}
       sx={{

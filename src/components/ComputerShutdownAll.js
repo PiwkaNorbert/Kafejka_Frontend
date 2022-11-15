@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Box, Tab, Tabs, Button } from '@mui/material';
 import axios from 'axios';
+import ButtonAddShutdown from './ButtonAddShutdown';
 
 const ComputerShutdownAll = ({ filia, url }) => {
   const ShutdownAll = useState('');
+
+  // Send a get to shutdown all computers
 
   const compShutdownAll = async () => {
     const urlSDAll = `${url}shutdown-all/${filia}/`;
@@ -18,23 +20,7 @@ const ComputerShutdownAll = ({ filia, url }) => {
     }
   };
   return (
-    <Button
-      color="error"
-      size="small"
-      type="submit"
-      className={'btn btn-block btn-add'}
-      sx={{
-        padding: '12px 16px',
-        fontSize: ' 0.875rem',
-        lineHeight: '1.25',
-      }}
-      onClick={e => {
-        e.preventDefault();
-        compShutdownAll();
-      }}
-    >
-      Zamknij Wszystkie
-    </Button>
+    <ButtonAddShutdown compShutdownAll={compShutdownAll} curShutDown={true} />
   );
 };
 

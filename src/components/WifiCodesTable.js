@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { TableRow } from '@mui/material';
+import { TableRow, TableCell } from '@mui/material';
 
 const WifiCodesTable = ({ url, filia, callback }) => {
   const [codeList, setCodeList] = useState([]);
@@ -25,21 +25,24 @@ const WifiCodesTable = ({ url, filia, callback }) => {
     getCodes();
     setInterval(getCodes, 10000);
   }, []);
-  const asda = codeList.map((code, mep) => {
+  const wifiCodesValues = codeList.map((code, mep) => {
     return (
       <TableRow
         sx={{
           backgroundColor: `${
             code.fields.w === 0 ? 'var(--red)' : 'var(--green)'
           }`,
-          margin: '20px',
+          color: 'var(--white)',
         }}
         key={mep}
       >
-        {code.fields.nr}
+        <TableCell>{code.fields.cz}</TableCell>
+        <TableCell sx={{ textAlign: 'right' }}>
+          {Math.floor(Math.abs(+code.fields.nr + 1745) / 3)}
+        </TableCell>
       </TableRow>
     );
   });
-  return <>{asda}</>;
+  return <>{wifiCodesValues}</>;
 };
 export default WifiCodesTable;
