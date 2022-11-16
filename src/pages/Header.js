@@ -13,7 +13,6 @@ import SettingIcon from '@mui/icons-material/Settings';
 const Headers = ({ verificationCode }) => {
   let { curFilia } = useParams();
 
-  //34004b40a0ce84853b64700605d9694fb11e898c10d48878cc8773f21e0edb97
   const url = `http://192.168.15.115:8000/${verificationCode}/`;
 
   const [tabIndex, setTabIndex] = useState(0);
