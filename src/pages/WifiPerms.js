@@ -11,11 +11,10 @@ import {
   CardContent,
   TableBody,
   TableCell,
-  FormControl,
 } from '@mui/material';
 import WifiCodesTable from '../components/WifiCodesTable';
 
-const WifiPerms = ({ index, url, filia, callback }) => {
+const WifiPerms = ({ index, url, filia }) => {
   const [hotspotValue, setHotspotValue] = useState('');
 
   const inputRef = useRef(null);

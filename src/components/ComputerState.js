@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Button, CardActions } from '@mui/material';
 import axios from 'axios';
+import ButtonDelStaShut from './ButtonDelStaShut';
 
-const ComputerState = ({ computer, url, callback }) => {
+const ComputerState = ({ computer, url }) => {
   const status = useState('');
 
   // Set status Blocked or Unblocked
-  const compStatus = async e => {
-    const urlBlock = `${url}block-pc/${e}/`;
+  const compStatus = async () => {
+    const urlBlock = `${url}block-pc/${computer.pk}/`;
     try {
       await axios.get(urlBlock, {
         status,
@@ -20,36 +21,11 @@ const ComputerState = ({ computer, url, callback }) => {
   };
 
   return (
-    <Button
-      variant="contained"
-      color={
-        computer.fields.f === 0
-          ? 'success'
-          : computer.fields.f === 1
-          ? 'error'
-          : 'primary'
-      }
-      size="small"
-      type="submit"
-      className={'btn btn-un-block'}
-      disabled={computer.fields.f === 5}
-      fullWidth={true}
-      sx={{
-        minWidth: 'fit-content',
-        boxShadow: '2px 3px 2px 1px rgb(0 0 0 / 40%)',
-        fontWeight: '900',
-      }}
-      onClick={e => {
-        e.preventDefault();
-        compStatus(computer.pk);
-      }}
-    >
-      {computer.fields.f === 0
-        ? 'Odblokuj'
-        : computer.fields.f === 1
-        ? 'Zablokuj'
-        : 'Zamykanie'}
-    </Button>
+    <ButtonDelStaShut
+      compStatus={compStatus}
+      computer={computer}
+      buttonIndex={0}
+    />
   );
 };
 

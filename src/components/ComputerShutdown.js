@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Button } from '@mui/material';
 import axios from 'axios';
+import ButtonDelStaShut from './ButtonDelStaShut';
 
-const ComputerShutdown = ({ computer, url, callback }) => {
+const ComputerShutdown = ({ computer, url }) => {
   const shutdown = useState('');
 
   // Set status Shutdown
-  const compShutdown = async e => {
-    const urlShutdown = `${url}shutdown-pc/${e}/`;
+  const compShutdown = async () => {
+    const urlShutdown = `${url}shutdown-pc/${computer.pk}/`;
     try {
       await axios.get(urlShutdown, {
         shutdown,
@@ -20,27 +20,11 @@ const ComputerShutdown = ({ computer, url, callback }) => {
   };
 
   return (
-    <Button
-      variant="contained"
-      color="error"
-      size="small"
-      type="submit"
-      disabled={computer.fields.f === 5 && computer.fields.t === 0}
-      className="btn "
-      fullWidth={true}
-      sx={{
-        minWidth: 'fit-content',
-        boxShadow: '2px 3px 2px 1px rgb(0 0 0 / 40%)',
-        fontWeight: '900',
-      }}
-      onClick={e => {
-        e.preventDefault();
-        compShutdown(computer.pk);
-      }}
-    >
-      Wylacz
-    </Button>
+    <ButtonDelStaShut
+      compShutdown={compShutdown}
+      computer={computer}
+      buttonIndex={1}
+    />
   );
 };
-
 export default ComputerShutdown;

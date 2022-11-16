@@ -1,6 +1,8 @@
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import React from 'react';
+// import * as dotenv from 'dotenv'; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+// dotenv.config();
 
 import './App.css';
 import Headers from './pages/Header';

@@ -1,25 +1,25 @@
-import { useParams } from "react-router-dom";
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { CardContent, Box, CircularProgress } from "@mui/material";
-import ComputerOnlineStatus from "../components/ComputerOnlineStatus";
-import ComputerIndex from "../components/ComputerIndex";
-import ComputerShutdown from "../components/ComputerShutdown";
-import ComputerState from "../components/ComputerState";
-import ComputerShutdownTimeoutPanel from "../components/ComputerShutdownTimeoutPanel";
-import ComputerDelete from "../components/ComputerDelete";
-import ComputerAdd from "../components/ComputerAdd";
+import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { CardContent, Box, CircularProgress } from '@mui/material';
+import ComputerOnlineStatus from '../components/ComputerOnlineStatus';
+import ComputerIndex from '../components/ComputerIndex';
+import ComputerShutdown from '../components/ComputerShutdown';
+import ComputerState from '../components/ComputerState';
+import ComputerShutdownTimeoutPanel from '../components/ComputerShutdownTimeoutPanel';
+import ComputerDelete from '../components/ComputerDelete';
+import ComputerAdd from '../components/ComputerAdd';
 
 const ComputerPage = ({ showComps, url }) => {
   let { curFilia } = useParams();
   const [computers, setComputer] = useState([]);
 
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const getData = async (e) => {
-    await axios(`${url}${e == true ? "fast-komps/" : "komps/"}`)
-      .then((response) => {
+  const getData = async e => {
+    await axios(`${url}${e == true ? 'fast-komps/' : 'komps/'}`)
+      .then(response => {
         setComputer(response.data);
         setIsLoading(false);
       })
@@ -33,11 +33,12 @@ const ComputerPage = ({ showComps, url }) => {
   };
 
   // Called after an interaction is made, to poll updated computer status after a short time
-  const getDataSlow = async (e) => {
+  const getDataSlow = async e => {
     getData(e);
     setInterval(getData, 1000);
   };
 
+  console.log(me, brah, hi);
   useEffect(() => {
     // Repeatedly poll all data every 3 seconds
     setIsLoading(true);
@@ -47,7 +48,7 @@ const ComputerPage = ({ showComps, url }) => {
   }, []);
 
   const computerArrayValues2 = computers
-    .filter((computer) =>
+    .filter(computer =>
       curFilia === undefined ? true : computer.fields.filia == curFilia
     )
     .map((computer, index) => {
@@ -62,7 +63,7 @@ const ComputerPage = ({ showComps, url }) => {
           className="kafeika__background"
           disabled={
             isLoading ? null : (
-              <div style={{ zIndex: 1, backgroundColor: "red" }}>
+              <div style={{ zIndex: 1, backgroundColor: 'red' }}>
                 <CircularProgress className="loading-status" disableShrink />
               </div>
             )
@@ -89,7 +90,7 @@ const ComputerPage = ({ showComps, url }) => {
               />
             ) : null}
           </Box>
-          <Box sx={{ textAlign: "end", color: "grey", p: 0, m: 0 }}>
+          <Box sx={{ textAlign: 'end', color: 'grey', p: 0, m: 0 }}>
             ID: {computer.pk}
           </Box>
         </CardContent>
@@ -99,11 +100,11 @@ const ComputerPage = ({ showComps, url }) => {
   return (
     <Box>
       {isLoading ? (
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
           <CircularProgress className="loading-status" disableShrink />
         </div>
       ) : (
-        <Box className={`${showComps ? "layout-grid" : "layout-flex"}`}>
+        <Box className={`${showComps ? 'layout-grid' : 'layout-flex'}`}>
           {computerArrayValues2}
         </Box>
       )}

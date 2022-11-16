@@ -3,7 +3,7 @@ import { Button } from '@mui/material';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import AddIcon from '@mui/icons-material/Add';
 
-const ButtonAddShutdown = ({ compShutdownAll, compAdd, curShutDown }) => {
+const HeaderButtonControl = ({ compShutdownAll, compAdd, curShutDown }) => {
   return (
     <Button
       color={curShutDown ? 'error' : 'success'}
@@ -23,4 +23,4 @@ const ButtonAddShutdown = ({ compShutdownAll, compAdd, curShutDown }) => {
   );
 };
 
-export default ButtonAddShutdown;
+export default HeaderButtonControl;

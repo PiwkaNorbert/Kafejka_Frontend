@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import ButtonAddShutdown from './ButtonAddShutdown';
+import HeaderButtonControl from './HeaderButtonControl';
 
 const ComputerAdd = ({ filia, url }) => {
   const add = useState('');
@@ -18,7 +18,7 @@ const ComputerAdd = ({ filia, url }) => {
       console.log(err);
     }
   };
-  return <ButtonAddShutdown compAdd={compAdd} curShutDown={false} />;
+  return <HeaderButtonControl compAdd={compAdd} curShutDown={false} />;
 };
 
 export default ComputerAdd;
