@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import ButtonDelStaShut from './ButtonDelStaShut';
+import ButtonTemplate from './ButtonTemplate';
 
 const ComputerDelete = ({ computer, url }) => {
   const compDel = useState('');
@@ -18,7 +18,17 @@ const ComputerDelete = ({ computer, url }) => {
       console.log(err);
     }
   };
-  return <ButtonDelStaShut compDelete={compDelete} buttonIndex={2} />;
+  return (
+    <ButtonTemplate
+      variant={'contained'}
+      color={'error'}
+      fullWidth={true}
+      disabled={false}
+      className={'btn btn-delete'}
+      callback={compDelete}
+      text={'Usuń'}
+    />
+  );
 };
 
 export default ComputerDelete;

@@ -108,13 +108,6 @@ table {
   flex-wrap: wrap;
   flex-direction: column;
 }
-.btn-add,
-.btn-block {
-  flex-direction: column;
-  justify-content: space-between !important;
-  text-transform: uppercase;
-  min-height: 72px;
-}
 
 .tab:nth-child(4),
 .tab:nth-child(5) {
@@ -164,6 +157,31 @@ table {
   display: grid;
   justify-items: center;
 }
+
+.css-x8el2l-MuiCardContent-root:last-child {
+  padding-bottom: 8px !important;
+}
+
+.btn-delete,
+.btn-state,
+.btn-shutdown,
+.btn-cancel {
+  box-shadow: 2px 3px 2px 1px rgb(0 0 0 / 40%) !important;
+  font-weight: 900 !important;
+}
+
+.btn-add,
+.btn-block {
+  flex-direction: column;
+  justify-content: space-between !important;
+  text-transform: uppercase;
+  min-height: 72px;
+  padding: 12px 16px !important;
+  font-size: 0.875rem !important;
+  line-height: 1.25 !important;
+  position: absolute !important;
+  right: 8px;
+}
 @media screen and (max-width: 1080px) {
   .layout-grid {
     display: flex;
@@ -182,8 +200,8 @@ table {
   /* .css-heg063-MuiTabs-flexContainer {
     flex-direction: column !important;
   } */
-}
-
-.css-x8el2l-MuiCardContent-root:last-child {
-  padding-bottom: 8px !important;
+  .btn-add,
+  .btn-block {
+    position: unset !important;
+  }
 }

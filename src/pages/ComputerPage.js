@@ -10,15 +10,15 @@ import ComputerShutdownTimeoutPanel from '../components/ComputerShutdownTimeoutP
 import ComputerDelete from '../components/ComputerDelete';
 import ComputerAdd from '../components/ComputerAdd';
 
-const ComputerPage = ({ showComps, url }) => {
-  let { curFilia } = useParams();
+const ComputerPage = ({ filia, showComps, url }) => {
   const [computers, setComputer] = useState([]);
+  let { curFilia } = useParams();
 
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const getData = async e => {
-    await axios(`${url}${e == true ? 'fast-komps/' : 'komps/'}`)
+    await axios(`${url}${e === true ? 'fast-komps/' : 'komps/'}`)
       .then(response => {
         setComputer(response.data);
         setIsLoading(false);
@@ -38,7 +38,6 @@ const ComputerPage = ({ showComps, url }) => {
     setInterval(getData, 1000);
   };
 
-  console.log(me, brah, hi);
   useEffect(() => {
     // Repeatedly poll all data every 3 seconds
     setIsLoading(true);
@@ -49,7 +48,7 @@ const ComputerPage = ({ showComps, url }) => {
 
   const computerArrayValues2 = computers
     .filter(computer =>
-      curFilia === undefined ? true : computer.fields.filia == curFilia
+      filia === undefined ? true : computer.fields.filia == filia
     )
     .map((computer, index) => {
       return (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import ButtonDelStaShut from './ButtonDelStaShut';
+import ButtonTemplate from './ButtonTemplate';
 
 const ComputerShutdown = ({ computer, url }) => {
   const shutdown = useState('');
@@ -20,10 +20,14 @@ const ComputerShutdown = ({ computer, url }) => {
   };
 
   return (
-    <ButtonDelStaShut
-      compShutdown={compShutdown}
-      computer={computer}
-      buttonIndex={1}
+    <ButtonTemplate
+      variant={'contained'}
+      color={'error'}
+      fullWidth={true}
+      disabled={computer.fields.f === 5 && computer.fields.t === 0}
+      className={'btn btn-shutdown'}
+      callback={compShutdown}
+      text={'Wyłacz'}
     />
   );
 };

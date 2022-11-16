@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import HeaderButtonControl from './HeaderButtonControl';
+import ButtonTemplate from './ButtonTemplate';
+import AddIcon from '@mui/icons-material/Add';
 
 const ComputerAdd = ({ filia, url }) => {
   const add = useState('');
@@ -18,7 +19,17 @@ const ComputerAdd = ({ filia, url }) => {
       console.log(err);
     }
   };
-  return <HeaderButtonControl compAdd={compAdd} curShutDown={false} />;
+  return (
+    <ButtonTemplate
+      color={'success'}
+      disabled={false}
+      className={'btn btn-add'}
+      callback={compAdd}
+      icon={<AddIcon />}
+      text={'Dodaj Komputer'}
+      style={{ positsion: 'absolute', right: '100px' }}
+    />
+  );
 };
 
 export default ComputerAdd;

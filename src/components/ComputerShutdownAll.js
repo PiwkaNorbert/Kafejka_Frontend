@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import HeaderButtonControl from './HeaderButtonControl';
+import ButtonTemplate from './ButtonTemplate';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 
 const ComputerShutdownAll = ({ filia, url }) => {
   const ShutdownAll = useState('');
@@ -20,7 +21,14 @@ const ComputerShutdownAll = ({ filia, url }) => {
     }
   };
   return (
-    <HeaderButtonControl compShutdownAll={compShutdownAll} curShutDown={true} />
+    <ButtonTemplate
+      color={'error'}
+      disabled={false}
+      className={'btn btn-block'}
+      callback={compShutdownAll}
+      icon={<PowerSettingsNewIcon />}
+      text={'Zamknij Wszystkie'}
+    />
   );
 };
 

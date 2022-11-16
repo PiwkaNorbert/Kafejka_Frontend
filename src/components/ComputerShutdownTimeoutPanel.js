@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, CardActions, Box, TextField, Hidden } from '@mui/material';
+import ButtonTemplate from './ButtonTemplate';
 
 const ComputerShutdownTimeoutPanel = ({ computer, index, url, callback }) => {
   const [shutdownTimeout, setShutdownTimeout] = useState('');
 
   // Set status Shutdown Time
-  const compShutDownTimeout = async (e, value) => {
-    const urlShutdownTimeout = `${url}shutdown-timeout/${e}/${value}/`;
+  const compShutDownTimeout = async value => {
+    const urlShutdownTimeout = `${url}shutdown-timeout/${computer.pk}/${
+      document.querySelector(`#closeTime${index}`).value
+    }/`;
     try {
       await axios
         .get(urlShutdownTimeout, {
@@ -37,34 +40,16 @@ const ComputerShutdownTimeoutPanel = ({ computer, index, url, callback }) => {
             {computer.fields.t}
           </Box>
         </Box>
-        <Button
-          variant="contained"
+        <ButtonTemplate
+          variant={'contained'}
           color={computer.fields.f === 5 ? 'warning' : 'primary'}
-          size="small"
-          key={index}
-          type="submit"
           fullWidth={true}
-          sx={{
-            minWidth: 'fit-content',
-            boxShadow: '2px 3px 2px 1px rgb(0 0 0 / 40%)',
-            fontWeight: '900',
-          }}
           disabled={computer.fields.f === 5 && computer.fields.t === 0}
-          onClick={e => {
-            e.preventDefault();
-            compShutDownTimeout(
-              computer.pk,
-              document.querySelector(`#closeTime${index}`).value
-            );
-            console.log(
-              document.querySelectorAll(`.kafeika-komputer__timeout-content`)
-                .textContent
-            );
-            callback();
-          }}
-        >
-          {`${computer.fields.f === 5 ? 'Anuluj' : 'Zamknij'}`}
-        </Button>
+          key={index}
+          className={'btn btn-cancel'}
+          callback={compShutDownTimeout}
+          text={`${computer.fields.f === 5 ? 'Anuluj' : 'Zamknij'}`}
+        />
       </Box>
       <TextField
         type="number"

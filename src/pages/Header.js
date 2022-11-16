@@ -9,11 +9,13 @@ import ComputerAdd from '../components/ComputerAdd';
 import WifiIcon from '@mui/icons-material/Wifi';
 import ComputerIcon from '@mui/icons-material/Computer';
 import SettingIcon from '@mui/icons-material/Settings';
+import Feather from '../components/Feather';
+
+import LegimiAdmin from './LegimiCodes';
 
 const Headers = ({ verificationCode }) => {
   let { curFilia } = useParams();
 
-  //34004b40a0ce84853b64700605d9694fb11e898c10d48878cc8773f21e0edb97
   const url = `http://192.168.15.115:8000/${verificationCode}/`;
 
   const [tabIndex, setTabIndex] = useState(0);
@@ -21,11 +23,18 @@ const Headers = ({ verificationCode }) => {
   const handleTabChange = (event, newTabIndex) => {
     setTabIndex(newTabIndex);
   };
-  const smallScreen = useMediaQuery('(max-width: 768px)');
+  let smallScreen = useMediaQuery('(max-width: 768px)');
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: smallScreen ? 'column' : null,
+        }}
+      >
         <Tabs
           orientation={smallScreen ? 'vertical' : 'horizonal'}
           className="option__tabs"
@@ -36,18 +45,75 @@ const Headers = ({ verificationCode }) => {
           <Tab icon={<ComputerIcon />} label="Komputery" />
           <Tab icon={<WifiIcon />} label="WiFi" />
           <Tab icon={<SettingIcon />} label="Ustawienia" />
-          {tabIndex === 0 && curFilia !== undefined && (
-            <ComputerShutdownAll filia={curFilia} url={url} />
-          )}
-          {tabIndex === 2 && curFilia !== undefined && (
-            <ComputerAdd filia={curFilia} url={url} />
-          )}
+          <Tab
+            sx={{ justifyContent: 'space-around' }}
+            icon={<Feather />}
+            label="Legimi"
+            filia={curFilia}
+          />
         </Tabs>
+        {tabIndex === 0 && curFilia !== undefined && (
+          <ComputerShutdownAll filia={curFilia} url={url} />
+        )}
+        {tabIndex === 2 && curFilia !== undefined && (
+          <ComputerAdd filia={curFilia} url={url} />
+        )}
+        {/* {tabIndex === 3 && curFilia !== undefined && (
+          <div class="nav-position">
+            <div
+              class="toggle-position"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-end !important',
+              }}
+            >
+              <span>&nbsp;Kolory Dostepnosci </span>
+
+              <div class="btn btn-cp">
+                <div
+                  id="palette-colors"
+                  class="btn-indicator btn-cp__indicator"
+                >
+                  <div class="btn-icon-container btn-cp__icon-container">
+                    <i
+                      class="fa-solid fa-droplet btn-icon btn-cp__icon"
+                      aria-hidden="true"
+                    ></i>
+                  </div>
+                </div>
+              </div>
+              <span>&nbsp;Ukryj wyczerpane kody </span>
+              <div class="btn btn-hc">
+                <div id="hide" class="btn-indicator btn-hc__indicator">
+                  <div class="btn-icon-container btn-hc__icon-container">
+                    <i
+                      class="fa-solid fa-eye btn-icon btn-hc__icon"
+                      aria-hidden="true"
+                    ></i>
+                  </div>
+                </div>
+              </div>
+              <span>&nbsp;Tryb Nocny </span>
+
+              <div class="btn btn-dm">
+                <div id="darkmode" class="btn-indicator btn-dm-indicator">
+                  <div class="btn-icon-container btn-dm__icon-container">
+                    <i
+                      class="fa-solid fa-sun btn-icon btn-dm__icon"
+                      aria-hidden="true"
+                    ></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )} */}
       </Box>
       <Box sx={{ paddingBlock: 1 }}>
         {tabIndex === 0 && (
           <Box>
-            <ComputerPage showComps={true} url={url} />
+            <ComputerPage filia={curFilia} showComps={true} url={url} />
           </Box>
         )}
         {tabIndex === 1 && (
@@ -57,7 +123,12 @@ const Headers = ({ verificationCode }) => {
         )}
         {tabIndex === 2 && (
           <Box>
-            <ComputerPage showComps={false} url={url} />
+            <ComputerPage filia={curFilia} showComps={false} url={url} />
+          </Box>
+        )}
+        {tabIndex === 3 && (
+          <Box>
+            <LegimiAdmin />
           </Box>
         )}
       </Box>
