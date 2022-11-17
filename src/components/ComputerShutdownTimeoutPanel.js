@@ -7,16 +7,12 @@ const ComputerShutdownTimeoutPanel = ({ computer, index, url, callback }) => {
   const [shutdownTimeout, setShutdownTimeout] = useState('');
 
   // Set status Shutdown Time
-  const compShutDownTimeout = async value => {
+  const compShutDownTimeout = async () => {
     const urlShutdownTimeout = `${url}shutdown-timeout/${computer.pk}/${
       document.querySelector(`#closeTime${index}`).value
     }/`;
     try {
-      await axios
-        .get(urlShutdownTimeout, {
-          shutdownTimeout,
-        })
-        .then(res => setShutdownTimeout(res));
+      await axios(urlShutdownTimeout).then(res => setShutdownTimeout(res));
     } catch (err) {
       console.log(err);
     }
@@ -46,7 +42,7 @@ const ComputerShutdownTimeoutPanel = ({ computer, index, url, callback }) => {
           fullWidth={true}
           disabled={computer.fields.f === 5 && computer.fields.t === 0}
           key={index}
-          className={'btn btn-cancel'}
+          className={'btn-cancel'}
           callback={compShutDownTimeout}
           text={`${computer.fields.f === 5 ? 'Anuluj' : 'Zamknij'}`}
         />

@@ -1,55 +1,78 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import LegimiCodesAdd from '../components/LegimiCodesAdd';
+import { CircularProgress } from '@mui/material';
 
 import axios from 'axios';
 
-const LegimiCodes = () => {
+const LegimiCodes = ({}) => {
   const [legimiCodes, setLegimiCodes] = useState([]);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState();
 
   let { curFilia } = useParams();
 
-  const urlLegmi = `http://192.168.15.14:8000/json-codes/`;
+  const urlLegmi = `http://192.168.15.115:7000/`;
 
   const getLegimiCodes = async () => {
     try {
-      await axios(urlLegmi).then(response => {
+      await axios(`${urlLegmi}json-codes/`).then(response => {
         setLegimiCodes(response.data);
-        setLoading(true);
+        setIsLoading(false);
       });
     } catch {
       setError(`Unable to fetch Data`);
-      setLoading(true);
-    }
-    {
-      setLoading(false);
+      setIsLoading(true);
     }
   };
 
   useEffect(() => {
+    setIsLoading(true);
+
     getLegimiCodes();
-    setInterval(getLegimiCodes, 100000);
+    setInterval(getLegimiCodes, 10000);
   }, []);
 
-  const legimiCodesList = legimiCodes
-    .filter(computer =>
-      curFilia === undefined ? true : computer.fields.filia == curFilia
+  // .filter(code =>
+  //   curFilia === undefined ? true : code.fields.index == curFilia
+  // )
+  const legimiCodesList = legimiCodes.map((code, index) => {
+    return (
+      <tr key={index}>
+        <td>{code.fields.filiaName}</td>
+
+        <td>{code.fields.codesNumber}</td>
+
+        <td>{code.fields.address}</td>
+      </tr>
+    );
+  });
+  const FiliaCodes = legimiCodes
+    .filter(code =>
+      curFilia === undefined ? true : code.fields.index == curFilia
     )
     .map((code, index) => {
       return (
-        <tr key={index}>
-          <td>{code.fields.filiaName}</td>
-          <td>{code.fields.codesNumber}</td>
-          <td>{code.fields.address}</td>
-        </tr>
+        <h1
+          style={{ fontSize: '1.5rem' }}
+          className="counter__output"
+          key={index}
+        >{`Dostępnychy kodów: ${code.fields.codesNumber}`}</h1>
       );
     });
 
   return (
     <div>
-      <main class="hi">
-        <h1>Filia: {curFilia}</h1>
+      <main style={{ background: 'unset' }}>
+        {!curFilia == '' && !curFilia !== '0' ? (
+          <LegimiCodesAdd
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+            filia={curFilia}
+            url={urlLegmi}
+            FiliaCodes={FiliaCodes}
+          />
+        ) : null}
         <table id="table">
           <thead>
             <tr>
@@ -58,7 +81,15 @@ const LegimiCodes = () => {
               <th>Adres</th>
             </tr>
           </thead>
-          <tbody>{legimiCodesList}</tbody>
+          <tbody>
+            {isLoading ? (
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <CircularProgress className="loading-status" disableShrink />
+              </div>
+            ) : (
+              legimiCodesList
+            )}
+          </tbody>
         </table>
       </main>
       <footer class="footer-wrap">

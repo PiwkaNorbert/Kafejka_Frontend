@@ -3,7 +3,15 @@ import { Box } from '@mui/material';
 import ComputerShutdown from './ComputerShutdown';
 import ComputerDelete from './ComputerDelete';
 
-const ComputerIndex = ({ computer, index, url, showComps, getDataSlow }) => {
+const ComputerIndex = ({
+  computer,
+  index,
+  url,
+  showComps,
+  getDataSlow,
+  isLoading,
+  setIsLoading,
+}) => {
   const statusCheck = () => {
     if (computer.fields.online === 0) {
     }
@@ -26,13 +34,20 @@ const ComputerIndex = ({ computer, index, url, showComps, getDataSlow }) => {
       </Box>
 
       {showComps ? (
-        <ComputerShutdown computer={computer} url={url} />
+        <ComputerShutdown
+          computer={computer}
+          url={url}
+          isloading={isLoading}
+          setIsLoading={setIsLoading}
+        />
       ) : (
         <ComputerDelete
           computer={computer}
           index={index}
           url={url}
           callback={getDataSlow}
+          isloading={isLoading}
+          setIsLoading={setIsLoading}
         />
       )}
     </Box>

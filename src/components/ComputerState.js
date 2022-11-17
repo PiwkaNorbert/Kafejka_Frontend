@@ -32,7 +32,7 @@ const ComputerState = ({ computer, url }) => {
           : 'primary'
       }
       disabled={computer.fields.f === 5}
-      className={'btn btn-state'}
+      className={'btn-state'}
       callback={compStatus}
       text={
         computer.fields.f === 0

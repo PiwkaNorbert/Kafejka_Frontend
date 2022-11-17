@@ -17,10 +17,10 @@ const ButtonDelStaShut = ({
       color={color}
       size="small"
       type="submit"
-      disabled={disabled}
       className={className}
       fullWidth={fullWidth}
       onClick={callback}
+      disabled={disabled}
     >
       {icon}
       {text}

@@ -16,6 +16,7 @@ const WifiCodesTable = ({ url, filia, callback }) => {
       });
     } catch (err) {
       console.log(err);
+      setLoading(true);
     }
     {
       setLoading(false);
@@ -25,7 +26,7 @@ const WifiCodesTable = ({ url, filia, callback }) => {
     getCodes();
     setInterval(getCodes, 10000);
   }, []);
-  const wifiCodesValues = codeList.map((code, mep) => {
+  const wifiCodesValues = codeList.map((code, index) => {
     return (
       <TableRow
         sx={{
@@ -34,7 +35,7 @@ const WifiCodesTable = ({ url, filia, callback }) => {
           }`,
           color: 'var(--white)',
         }}
-        key={mep}
+        key={index}
       >
         <TableCell>{code.fields.cz}</TableCell>
         <TableCell sx={{ textAlign: 'right' }}>

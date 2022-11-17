@@ -24,7 +24,7 @@ const ComputerShutdownAll = ({ filia, url }) => {
     <ButtonTemplate
       color={'error'}
       disabled={false}
-      className={'btn btn-block'}
+      className={'btn-block'}
       callback={compShutdownAll}
       icon={<PowerSettingsNewIcon />}
       text={'Zamknij Wszystkie'}

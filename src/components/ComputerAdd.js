@@ -23,7 +23,7 @@ const ComputerAdd = ({ filia, url }) => {
     <ButtonTemplate
       color={'success'}
       disabled={false}
-      className={'btn btn-add'}
+      className={'btn-add'}
       callback={compAdd}
       icon={<AddIcon />}
       text={'Dodaj Komputer'}

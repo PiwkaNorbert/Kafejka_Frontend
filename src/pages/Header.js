@@ -42,11 +42,14 @@ const Headers = ({ verificationCode }) => {
           onChange={handleTabChange}
           selectionFollowsFocus
         >
-          <Tab icon={<ComputerIcon />} label="Komputery" />
-          <Tab icon={<WifiIcon />} label="WiFi" />
-          <Tab icon={<SettingIcon />} label="Ustawienia" />
+          <Tab icon={<ComputerIcon />} value={0} label="Komputery" />
+          {!curFilia == '' && (
+            <Tab value={1} icon={<WifiIcon />} label="WiFi" />
+          )}
+          <Tab icon={<SettingIcon />} value={2} label="Ustawienia" />
           <Tab
             sx={{ justifyContent: 'space-around' }}
+            value={3}
             icon={<Feather />}
             label="Legimi"
             filia={curFilia}

@@ -4,11 +4,7 @@ import axios from 'axios';
 import { CardContent, Box, CircularProgress } from '@mui/material';
 import ComputerOnlineStatus from '../components/ComputerOnlineStatus';
 import ComputerIndex from '../components/ComputerIndex';
-import ComputerShutdown from '../components/ComputerShutdown';
-import ComputerState from '../components/ComputerState';
 import ComputerShutdownTimeoutPanel from '../components/ComputerShutdownTimeoutPanel';
-import ComputerDelete from '../components/ComputerDelete';
-import ComputerAdd from '../components/ComputerAdd';
 
 const ComputerPage = ({ filia, showComps, url }) => {
   const [computers, setComputer] = useState([]);
@@ -76,6 +72,8 @@ const ComputerPage = ({ filia, showComps, url }) => {
               url={url}
               callback={getDataSlow}
               showComps={showComps}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
             />
             {showComps ? (
               <ComputerOnlineStatus computer={computer} url={url} />
