@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import axios from 'axios';
 import ButtonTemplate from './ButtonTemplate';
 
-const ComputerShutdown = ({ computer, url }) => {
+export default function ComputerShutdown({
+  computer,
+  url,
+  isLoading,
+  setIsLoading,
+}) {
+  console.log(isLoading);
   // Set status Shutdown
-  const compShutdown = async () => {
+  const compShutdown = () => {
     const urlShutdown = `${url}shutdown-pc/${computer.pk}/`;
     try {
-      await axios(urlShutdown);
+      axios(urlShutdown);
+      setIsLoading(false);
     } catch (err) {
-      console.log(err);
+      throw Error('Unable to fetch data');
+      setIsLoading(true);
     }
   };
 
@@ -18,11 +26,10 @@ const ComputerShutdown = ({ computer, url }) => {
       variant={'contained'}
       color={'error'}
       fullWidth={true}
-      disabled={computer.fields.f === 5 && computer.fields.t === 0}
+      disabled={isLoading}
       className={'btn-shutdown'}
       callback={compShutdown}
       text={'Wyłacz'}
     />
   );
-};
-export default ComputerShutdown;
+}

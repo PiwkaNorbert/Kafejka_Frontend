@@ -4,17 +4,11 @@ import ButtonTemplate from './ButtonTemplate';
 import AddIcon from '@mui/icons-material/Add';
 
 const ComputerAdd = ({ filia, url }) => {
-  const add = useState('');
-
   // Send a get to add a new computer
-  const compAdd = async () => {
+  const compAdd = () => {
     const urlAdd = `${url}add-pc/${filia}/`;
     try {
-      await axios.get(urlAdd, {
-        add,
-        title: 'Add',
-        completed: false,
-      });
+      axios(urlAdd);
     } catch (err) {
       console.log(err);
     }

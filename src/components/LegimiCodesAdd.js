@@ -11,18 +11,12 @@ const LegimiCodesAdd = ({
   isLoading,
   setIsLoading,
 }) => {
-  const [legimiValue, setLegimiValue] = useState([]);
-  // const [isLoading, setIsLoading] = useState(false);
-
   const setLegimiCodes = async e => {
     const urlLegimiCodes = `${url}${e ? 'add' : 'sub'}/${filia},0/`;
     try {
-      await axios(urlLegimiCodes).then(resource => {
-        setLegimiValue(resource.data);
-        setIsLoading(false);
-      });
+      await axios(urlLegimiCodes);
+      setIsLoading(false);
     } catch (err) {
-      console.log(err);
       setIsLoading(true);
     }
   };

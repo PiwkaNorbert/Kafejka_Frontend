@@ -29,8 +29,7 @@ const LegimiCodes = ({}) => {
   useEffect(() => {
     setIsLoading(true);
 
-    getLegimiCodes();
-    setInterval(getLegimiCodes, 10000);
+    setInterval(getLegimiCodes, 2000);
   }, []);
 
   // .filter(code =>

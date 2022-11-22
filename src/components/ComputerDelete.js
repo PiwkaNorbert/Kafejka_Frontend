@@ -1,20 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ButtonTemplate from './ButtonTemplate';
-import { CircularProgress } from '@mui/material';
-import { findAllByLabelText } from '@testing-library/react';
+import { CircularProgress, Button } from '@mui/material';
 
 const ComputerDelete = ({ computer, url }) => {
-  const [isLoading, setIsLoading] = useState(false);
-
+  const [isDisabled, setIsDisabled] = useState(false);
   // Set status Shutdown
   const compDelete = async () => {
     const urlDelete = `${url}delete-pc/${computer.pk}/`;
     try {
-      await axios(urlDelete).then(setIsLoading(false));
+      await axios(urlDelete).then(setIsDisabled(false));
     } catch (err) {
-      console.log(err);
-      setIsLoading(true);
+      console.log(`error brah ${err}`);
+      setIsDisabled(true);
     }
   };
   return (
@@ -25,12 +23,12 @@ const ComputerDelete = ({ computer, url }) => {
       callback={e => {
         e.preventDefault();
         compDelete();
-        setIsLoading(true);
+        setIsDisabled(true);
       }}
-      disabled={isLoading || !computer.pk ? true : false}
+      disabled={isDisabled && computer.pk ? true : false}
       className={'btn-delete'}
       text={
-        isLoading ? (
+        isDisabled && computer.pk ? (
           <CircularProgress className="loading-status-btn" disableShrink />
         ) : (
           'Usuń'

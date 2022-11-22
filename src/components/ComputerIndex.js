@@ -8,7 +8,7 @@ const ComputerIndex = ({
   index,
   url,
   showComps,
-  getDataSlow,
+  getDataSlow = true,
   isLoading,
   setIsLoading,
 }) => {
@@ -37,7 +37,7 @@ const ComputerIndex = ({
         <ComputerShutdown
           computer={computer}
           url={url}
-          isloading={isLoading}
+          isLoading={isLoading}
           setIsLoading={setIsLoading}
         />
       ) : (
@@ -46,8 +46,6 @@ const ComputerIndex = ({
           index={index}
           url={url}
           callback={getDataSlow}
-          isloading={isLoading}
-          setIsLoading={setIsLoading}
         />
       )}
     </Box>
