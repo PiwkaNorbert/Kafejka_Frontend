@@ -16,8 +16,7 @@ export default function ComputerShutdown({
       axios(urlShutdown);
       setIsLoading(false);
     } catch (err) {
-      throw Error('Unable to fetch data');
-      setIsLoading(true);
+      throw Error('Unable to delete computer');
     }
   };
 

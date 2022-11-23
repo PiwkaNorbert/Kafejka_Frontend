@@ -26,6 +26,7 @@ const ComputerPage = ({ filia, showComps, url }) => {
                   url={url}
                   showComps={showComps}
                   getDataImmediately={getDataImmediately}
+                  filia={filia}
                 />
               ),
             };
@@ -43,11 +44,11 @@ const ComputerPage = ({ filia, showComps, url }) => {
   };
 
   // Called after an interaction is made, to poll updated computer status after a short time
-  const getDataImmediately = async () => {
+  const getDataImmediately = () => {
     getData(true);
   };
 
-  const getDataSlowCached = async () => {
+  const getDataSlowCached = () => {
     getData(false);
   };
 

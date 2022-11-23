@@ -16,7 +16,7 @@ import LegimiAdmin from './LegimiCodes';
 const Headers = ({ verificationCode }) => {
   let { curFilia } = useParams();
 
-  const url = `http://192.168.15.115:8000/${verificationCode}/`;
+  const url = `http://192.168.15.160:8000/${verificationCode}/`;
 
   const [tabIndex, setTabIndex] = useState(0);
 

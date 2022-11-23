@@ -3,9 +3,20 @@ import { CardContent, Box, CircularProgress } from '@mui/material';
 import ComputerIndex from '../components/ComputerIndex';
 import ComputerOnlineStatus from '../components/ComputerOnlineStatus';
 import ComputerShutdownTimeoutPanel from '../components/ComputerShutdownTimeoutPanel';
+import axios from 'axios';
 const Computer = ({ _data, index, url, showComps, getDataImmediately }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState(_data);
+  const [updateComputerData, setUpdateComputerData] = useState('');
+
+  const updateData = () => {
+    try {
+      axios(`${url}komps/${_data.fields.filia}/${_data.pk}`);
+      setIsLoading(false).then(res => setUpdateComputerData(res));
+    } catch (err) {
+      throw Error('Unable to update data');
+    }
+  };
   //write a method to update `data` based on an API response (from axios)
   //  you can then pass this method into the props of any button,
   //   and the button can use it after performing an API call
@@ -22,6 +33,7 @@ const Computer = ({ _data, index, url, showComps, getDataImmediately }) => {
     // Repeatedly poll all data every 3 seconds
     setIsLoading(true);
     console.log(data);
+    console.log(...updateComputerData);
   }, [data]);
 
   return (
