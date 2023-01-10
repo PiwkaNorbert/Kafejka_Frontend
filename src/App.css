@@ -10,7 +10,9 @@
 *,
 ::before,
 ::after {
-  box-sizing: border-box;
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
 }
 
 ::placeholder {
@@ -21,6 +23,8 @@
 html {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  box-sizing: border-box;
+  font-size: 62.5%;
 }
 body {
   background-color: #eee;
@@ -29,6 +33,12 @@ body {
 table {
   border-collapse: collapse;
 }
+.table__codes-ebook thead th {
+  font-size: 1.8rem;
+}
+.table__codes-ebook tbody td {
+  font-size: 1.6rem;
+}
 .kafeika-komputer__stat {
   width: 100%;
 }
@@ -36,7 +46,7 @@ table {
 .kafeika-komputer__status,
 .kafeika-komputer__timeout {
   min-width: max-content;
-  margin: 8px;
+  margin: 0.8rem;
 }
 .kafeika-komputer__timeout {
   display: flex;
@@ -58,12 +68,12 @@ table {
   text-align: center;
 
   border-radius: 8px;
-  margin-block: 8px;
+  margin-block: 0.8rem;
 }
 .kafeika-komputer__index-content,
 .kafeika-komputer__status-content,
 .kafeika-komputer__timeout-content {
-  border-radius: 8px;
+  border-radius: 0.8rem;
   text-align: center;
   color: var(--white);
 }
@@ -72,7 +82,7 @@ table {
 }
 .kafeika__background-wifi {
   background-color: var(--white);
-  max-width: 500px;
+  max-width: 50rem;
 }
 .green {
   color: var(--green);
@@ -159,7 +169,7 @@ table {
 }
 
 .css-x8el2l-MuiCardContent-root:last-child {
-  padding-bottom: 8px !important;
+  padding-bottom: 0.8rem !important;
 }
 
 .btn-delete,
@@ -175,9 +185,9 @@ table {
   flex-direction: column;
   justify-content: space-between !important;
   text-transform: uppercase;
-  min-height: 72px;
-  padding: 12px 16px !important;
-  font-size: 0.875rem !important;
+  min-height: 7.2rem;
+  padding: 1.2rem 1.6rem !important;
+  font-size: 1rem !important;
   line-height: 1.25 !important;
   position: absolute !important;
   right: 8px;
@@ -187,16 +197,59 @@ table {
   flex-direction: column;
   justify-content: center;
   align-content: center; */
-  text-align: center;
+  /* text-align: center; */
 }
-.control__btn {
-  padding-top: 8px !important;
+.codes__header--1 {
+  font-size: 4.5rem;
+  margin-bottom: 2rem;
+}
+.codes__main {
+  background: unset;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  font-size: 1.6rem;
 }
+.codes__buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  justify-content: center;
+  align-items: baseline;
+  grid-gap: 4rem;
+  margin-bottom: 2rem;
+}
+
+.counter__output {
+  display: grid;
+  justify-items: center;
+}
+.counter__output-header {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+.counter button {
+  margin: 0.5rem;
+}
+.counter button svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.control__btn-sub,
+.control__btn-add {
+  padding-top: 0.8rem !important;
+  display: flex;
+  flex-direction: column;
+  font-size: inherit;
+}
+.control__btn-sub span,
+.control__btn-add span {
+  font-size: 1.4rem;
+}
+
 .loading-status-btn {
-  width: 16px !important;
-  height: 16px !important;
+  width: 1.6rem !important;
+  height: 1.6rem !important;
 }
 @media screen and (max-width: 1080px) {
   .layout-grid {
@@ -206,7 +259,7 @@ table {
   }
   .kafeika__wrap {
     display: block;
-    width: 550px;
+    width: 55rem;
   }
 }
 @media screen and (max-width: 768px) {

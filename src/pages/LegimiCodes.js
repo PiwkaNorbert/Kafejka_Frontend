@@ -5,7 +5,7 @@ import { CircularProgress } from '@mui/material';
 
 import axios from 'axios';
 
-const LegimiCodes = ({}) => {
+const LegimiCodes = () => {
   const [legimiCodes, setLegimiCodes] = useState([]);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState();
@@ -41,42 +41,63 @@ const LegimiCodes = ({}) => {
         <td>{code.fields.filiaName}</td>
 
         <td>{code.fields.codesNumber}</td>
+        <td>{code.fields.empikNumber}</td>
 
         <td>{code.fields.address}</td>
       </tr>
     );
   });
+  let empik = true;
   const FiliaCodes = legimiCodes
     .filter(code =>
-      curFilia === undefined ? true : code.fields.index == curFilia
+      curFilia === undefined ? true : code.fields.index === +curFilia
     )
     .map((code, index) => {
       return (
-        <h1
-          style={{ fontSize: '1.5rem' }}
-          className="counter__output"
-          key={index}
-        >{`Dostępnychy kodów: ${code.fields.codesNumber}`}</h1>
+        <>
+          <div className="counter__output">
+            <h1 className="counter__output-header" key={index}>
+              {`Legimi: ${code.fields.codesNumber}`}
+            </h1>
+            <LegimiCodesAdd
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+              filia={curFilia}
+              url={urlLegmi}
+            />
+          </div>
+          <div className="counter__output">
+            <h1 className="counter__output-header" key={index}>
+              {`Empik: ${code.fields.empikNumber}`}
+            </h1>
+            <LegimiCodesAdd
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+              filia={curFilia}
+              url={urlLegmi}
+              empik={empik}
+            />
+          </div>
+        </>
       );
     });
-
   return (
     <div>
-      <main style={{ background: 'unset' }}>
-        {!curFilia == '' && !curFilia !== '0' ? (
-          <LegimiCodesAdd
-            isLoading={isLoading}
-            setIsLoading={setIsLoading}
-            filia={curFilia}
-            url={urlLegmi}
-            FiliaCodes={FiliaCodes}
-          />
-        ) : null}
-        <table id="table">
+      <main className="codes__main">
+        <div className="codes__header">
+          {!curFilia == '' && !curFilia !== '0' ? (
+            <h1 className="codes__header--1">
+              {curFilia === '0' ? 'Biblioteka Główna' : 'Filia ' + curFilia}
+            </h1>
+          ) : null}
+        </div>
+        <div className="codes__buttons">{FiliaCodes}</div>
+        <table id="table" class="table__codes-ebook">
           <thead>
             <tr>
               <th>Nazwa Filii</th>
-              <th class="number-of-codes">Liczba kodow</th>
+              <th class="number-of-codes">Kody Legimi</th>
+              <th class="number-of-codes">Kody Empik Go</th>
               <th>Adres</th>
             </tr>
           </thead>
@@ -100,10 +121,10 @@ const LegimiCodes = ({}) => {
           <span>
             Copyright
             <br />
-            <a href="https://github.com/mysh3k">Mateusz Rozycki</a> &amp;
-            <a href="https://github.com/PiwkaNorbert">Norbert Piwka</a> <br />
+            <a>Mateusz Rozycki</a> &amp;
+            <a>Norbert Piwka</a> <br />
             2022 <br />
-            Version 4.0
+            Version 5.0
           </span>
         </div>
       </footer>

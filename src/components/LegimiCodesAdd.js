@@ -4,15 +4,14 @@ import ButtonTemplate from './ButtonTemplate';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { CircularProgress } from '@mui/material';
-const LegimiCodesAdd = ({
-  FiliaCodes,
-  filia,
-  url,
-  isLoading,
-  setIsLoading,
-}) => {
+
+const LegimiCodesAdd = ({ filia, url, isLoading, setIsLoading, empik }) => {
   const setLegimiCodes = async e => {
-    const urlLegimiCodes = `${url}${e ? 'add' : 'sub'}/${filia},0/`;
+    const urlLegimiCodes = `${url}${e ? 'add' : 'sub'}/${filia}/${
+      empik ? 1 : 0
+    }/`;
+
+    //EDIT SWITCH
     try {
       await axios(urlLegimiCodes);
       setIsLoading(false);
@@ -22,35 +21,12 @@ const LegimiCodesAdd = ({
   };
 
   return (
-    <div class="counter" style={{ marginBottom: '8px' }}>
-      <h1 style={{ fontSize: '3rem' }}>
-        {filia === '0' ? 'Biblioteka Kraków' : 'Filia ' + filia}
-      </h1>
-      <ButtonTemplate
-        variant={'contained'}
-        color={'success'}
-        disabled={isLoading ? setIsLoading(true) : setIsLoading(false)}
-        className={'control__btn btn-legimi__add'}
-        icon={
-          isLoading ? (
-            <CircularProgress className="loading-status-btn" disableShrink />
-          ) : (
-            <AddIcon />
-          )
-        }
-        text={isLoading ? 'Ładowanie' : 'Dodaj'}
-        type="submit"
-        callback={e => {
-          e.preventDefault();
-          setLegimiCodes(true);
-        }}
-      />
-      <>{FiliaCodes}</>
+    <div class="counter">
       <ButtonTemplate
         variant={'contained'}
         color={'error'}
         disabled={isLoading ? setIsLoading(true) : setIsLoading(false)}
-        className={'control__btn btn-legimi__remove'}
+        className={'control__btn-sub'}
         icon={
           isLoading ? (
             <CircularProgress className="loading-status-btn" disableShrink />
@@ -63,6 +39,25 @@ const LegimiCodesAdd = ({
         callback={e => {
           e.preventDefault();
           setLegimiCodes(false);
+        }}
+      />
+      <ButtonTemplate
+        variant={'contained'}
+        color={'success'}
+        disabled={isLoading ? setIsLoading(true) : setIsLoading(false)}
+        className={'control__btn-add'}
+        icon={
+          isLoading ? (
+            <CircularProgress className="loading-status-btn" disableShrink />
+          ) : (
+            <AddIcon />
+          )
+        }
+        text={isLoading ? 'Ładowanie' : 'Dodaj'}
+        type="submit"
+        callback={e => {
+          e.preventDefault();
+          setLegimiCodes(true);
         }}
       />
     </div>

@@ -23,7 +23,7 @@ const ButtonDelStaShut = ({
       disabled={disabled}
     >
       {icon}
-      {text}
+      <span>{text}</span>
     </Button>
   );
 };

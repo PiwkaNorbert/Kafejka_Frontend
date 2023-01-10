@@ -16,18 +16,15 @@ import LegimiAdmin from './LegimiCodes';
 const Headers = ({ verificationCode }) => {
   let { curFilia } = useParams();
 
-<<<<<<< HEAD
   const url = `http://192.168.15.160:8000/${verificationCode}/`;
-=======
-  const url = `http://192.168.15.115:8000/${verificationCode}/`;
->>>>>>> 2a71e9debaa95ffc886aad93916184bb5856b7a6
 
-  const [tabIndex, setTabIndex] = useState(0);
+  let [tabIndex, setTabIndex] = useState(0);
 
   const handleTabChange = (event, newTabIndex) => {
     setTabIndex(newTabIndex);
   };
   let smallScreen = useMediaQuery('(max-width: 768px)');
+  tabIndex = 3;
 
   return (
     <Box>
@@ -37,6 +34,11 @@ const Headers = ({ verificationCode }) => {
           justifyContent: 'center',
           alignItems: 'center',
           flexDirection: smallScreen ? 'column' : null,
+          position: 'sticky',
+          top: 0,
+          zIndex: 20,
+          backgroundColor: 'var(--white)',
+          borderBottom: '1px solid var(--slider-bg)',
         }}
       >
         <Tabs
@@ -46,16 +48,16 @@ const Headers = ({ verificationCode }) => {
           onChange={handleTabChange}
           selectionFollowsFocus
         >
-          <Tab icon={<ComputerIcon />} value={0} label="Komputery" />
+          <Tab icon={<ComputerIcon />} value={0} label="Komputery" disabled />
           {!curFilia == '' && (
-            <Tab value={1} icon={<WifiIcon />} label="WiFi" />
+            <Tab value={1} icon={<WifiIcon />} label="WiFi" disabled />
           )}
-          <Tab icon={<SettingIcon />} value={2} label="Ustawienia" />
+          <Tab icon={<SettingIcon />} value={2} label="Ustawienia" disabled />
           <Tab
             sx={{ justifyContent: 'space-around' }}
             value={3}
             icon={<Feather />}
-            label="Legimi"
+            label="Ebooki"
             filia={curFilia}
           />
         </Tabs>
