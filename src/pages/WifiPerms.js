@@ -1,17 +1,6 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
-import {
-  Button,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  Box,
-  TextField,
-  CardContent,
-  TableBody,
-  TableCell,
-} from '@mui/material';
+import { Button, Box, TextField, CardContent, InputBase } from '@mui/material';
 import WifiCodesTable from '../components/WifiCodesTable';
 
 const WifiPerms = ({ index, url, filia }) => {
@@ -30,7 +19,7 @@ const WifiPerms = ({ index, url, filia }) => {
 
   const handleClick = () => {
     // 👇 "inputRef.current.value" is input value
-    console.log(inputRef.current.value);
+    // console.log(inputRef.current.value);
     cardHotspotCode(filia, inputRef.current.value);
   };
 
@@ -46,8 +35,8 @@ const WifiPerms = ({ index, url, filia }) => {
         className="kafeika__background-wifi "
         sx={{ boxShadow: 2, borderRadius: 3, padding: '10px', margin: 1 }}
       >
-        <Box>
-          <form>
+        <Box className="wifi__form">
+          <form className="wifi__form-codes">
             <TextField
               id={`hotspot${index}`}
               name="hotspot"
@@ -61,21 +50,17 @@ const WifiPerms = ({ index, url, filia }) => {
               }}
               inputRef={inputRef}
               InputProps={{
-                inputProps: { min: 999999999 },
+                inputProps: { min: 999999999, max: 999999999999999999 },
+                disableUnderline: true,
               }}
-              sx={{ display: 'grid', padding: 0, margin: 0 }}
             />
             <Button
               variant="contained"
               size="small"
               key={index}
               type="submit"
-              fullWidth={true}
-              sx={{
-                minWidth: 'fit-content',
-                boxShadow: '2px 3px 2px 1px rgb(0 0 0 / 40%)',
-                fontWeight: '900',
-              }}
+              fullWidth={false}
+              className="wifi__button"
               onClick={e => {
                 e.preventDefault();
                 handleClick();
@@ -87,29 +72,20 @@ const WifiPerms = ({ index, url, filia }) => {
             </Button>
           </form>
         </Box>
-        <Box>
-          <p>Karty oczekujące na połaczenie</p>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow
-                  style={{
-                    borderRadius: '12px',
-                    backgroundColor: '#36304a',
-                    color: 'var(--white)',
-                  }}
-                >
-                  <TableCell sx={{ color: 'var(--white)' }}>Czas</TableCell>
-                  <TableCell sx={{ textAlign: 'right', color: 'var(--white)' }}>
-                    Numer karty czytelnika
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <WifiCodesTable url={url} filia={filia} />
-              </TableBody>
-            </Table>
-          </TableContainer>
+        <Box className="wifi__table">
+          <h3 className="wifi__heading-3">Karty oczekujące na połaczenie</h3>
+
+          <table className="wifi__table-codes">
+            <thead>
+              <tr>
+                <th>Czas</th>
+                <th>Numer karty czytelnika</th>
+              </tr>
+            </thead>
+            <tbody>
+              <WifiCodesTable url={url} filia={filia} />
+            </tbody>
+          </table>
         </Box>
       </CardContent>
     </div>

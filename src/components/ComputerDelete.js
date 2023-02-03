@@ -3,13 +3,23 @@ import axios from 'axios';
 import ButtonTemplate from './ButtonTemplate';
 import { CircularProgress, Button } from '@mui/material';
 
-const ComputerDelete = ({ computer, url }) => {
+const ComputerDelete = ({
+  computer,
+  index,
+  url,
+  setComputerUpdateData,
+  setComputers,
+}) => {
   const [isDisabled, setIsDisabled] = useState(false);
   // Set status Shutdown
   const compDelete = async () => {
     const urlDelete = `${url}delete-pc/${computer.pk}/`;
     try {
-      await axios(urlDelete).then(setIsDisabled(false));
+      await axios.get(urlDelete).then(response => {
+        setIsDisabled(false);
+        console.log(response);
+        setComputers(response);
+      });
     } catch (err) {
       console.log(`error brah ${err}`);
       setIsDisabled(true);

@@ -1,46 +1,29 @@
 import { useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { CardContent, Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress, CardContent } from '@mui/material';
+import ComputerIndex from '../components/ComputerIndex';
+import ComputerOnlineStatus from '../components/ComputerOnlineStatus';
+import ComputerShutdownTimeoutPanel from '../components/ComputerShutdownTimeoutPanel';
 
 import Computer from '../components/Computer';
 
 const ComputerPage = ({ filia, showComps, url }) => {
-  const [computers, setComputer] = useState([]);
+  const [computers, setComputers] = useState([]);
   let { curFilia } = useParams();
 
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
   const getData = async e => {
-    await axios(`${url}${e ? 'fast-komps/' : 'komps/'}`)
+    await axios(`${url}${e === true ? 'fast-komps/' : 'komps/'}`)
       .then(response => {
-        setComputer(
-          response.data.flatMap((data, index) => {
-            return {
-              filia: data.fields.filia,
-              component: (
-                <Computer
-                  _data={data}
-                  index={index}
-                  url={url}
-                  showComps={showComps}
-                  getDataImmediately={getDataImmediately}
-                  filia={filia}
-                />
-              ),
-            };
-          })
-        );
+        setComputers(response.data);
         setIsLoading(false);
       })
       .catch(() => {
         setError(`Unable to fetch Data`);
         setIsLoading(true);
       });
-    // const response3 = await axios(
-    //   `${url}${e == true ? "fast-komps/" : "komps/"}`
-    // );
   };
 
   // Called after an interaction is made, to poll updated computer status after a short time
@@ -51,7 +34,6 @@ const ComputerPage = ({ filia, showComps, url }) => {
   const getDataSlowCached = () => {
     getData(false);
   };
-
   let didInit = false;
   useEffect(() => {
     if (!didInit) {
@@ -60,16 +42,70 @@ const ComputerPage = ({ filia, showComps, url }) => {
       setIsLoading(true);
 
       getData(true);
-      setInterval(getDataSlowCached, 10000);
+      setInterval(getDataSlowCached, 6000);
     }
   }, []);
-
   const computerArrayValues2 = computers
-    .filter(computer => {
-      return filia === undefined || computer.filia === +filia;
-    })
-    .map((computer, _) => computer.component);
+    .filter(computer => filia === undefined || computer.fields.filia === +filia)
+    .map((computer, index) => {
+      return (
+        <CardContent
+          sx={{
+            boxShadow: 2,
+            borderRadius: 3,
+            padding: 1,
+            margin: 1,
+          }}
+          className="kafeika__background"
+          disabled={
+            isLoading ? null : (
+              <div style={{ zIndex: 1, backgroundColor: 'red' }}>
+                <CircularProgress className="loading-status" disableShrink />
+              </div>
+            )
+          }
+          key={index}
+        >
+          <Box className="kafeika__wrap">
+            <ComputerIndex
+              computer={computer}
+              index={index}
+              url={url}
+              callback={getDataImmediately}
+              showComps={showComps}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+            />
+            {showComps ? (
+              <ComputerOnlineStatus
+                computer={computer}
+                index={index}
+                url={url}
+                callback={getDataImmediately}
+                showComps={showComps}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+              />
+            ) : null}
+            {showComps ? (
+              <ComputerShutdownTimeoutPanel
+                computer={computer}
+                index={index}
+                url={url}
+                callback={getDataImmediately}
+                showComps={showComps}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+              />
+            ) : null}
+          </Box>
 
+          <Box sx={{ textAlign: 'end', color: 'grey', p: 0, m: 0 }}>
+            ID: {computer.pk}
+          </Box>
+        </CardContent>
+      );
+    });
   return (
     <Box>
       {isLoading ? (

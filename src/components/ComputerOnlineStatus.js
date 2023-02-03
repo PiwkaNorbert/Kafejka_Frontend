@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '@mui/material';
 import ComputerState from './ComputerState';
 
-const ComputerOnlineStatus = ({ computer, url }) => {
+const ComputerOnlineStatus = ({ computer, index, url, callback }) => {
   return (
     <Box className={`kafeika-komputer__status`}>
       <Box className={`kafeika-komputer__status-computer`}>
@@ -24,7 +24,7 @@ const ComputerOnlineStatus = ({ computer, url }) => {
             : 'Zamykanie'}
         </Box>
       </Box>
-      <ComputerState computer={computer} url={url} />
+      <ComputerState computer={computer} url={url} callback={callback} />
     </Box>
   );
 };

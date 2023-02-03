@@ -6,7 +6,8 @@ import LegimiAdmin from './pages/LegimiCodes';
 
 // import * as dotenv from 'dotenv'; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 // dotenv.config();
-
+const SecurityKeyLink = window.location.pathname.split('/');
+const securityKey = SecurityKeyLink[1];
 
 function App() {
   return (
@@ -14,17 +15,17 @@ function App() {
       <Router>
         <Routes>
           <Route
-            path={`${verificationCode}`}
+            path={`${securityKey}`}
             exact
-            element={<Headers verificationCode={verificationCode} />}
+            element={<Headers securityKey={securityKey} />}
           />
           <Route
-            path={`${verificationCode}/:curFilia`}
-            element={<Headers verificationCode={verificationCode} />}
+            path={`${securityKey}/:curFilia`}
+            element={<Headers securityKey={securityKey} />}
           />
           <Route
-            path={`${verificationCode}/legimi_admin/`}
-            element={<LegimiAdmin verificationCode={verificationCode} />}
+            path={`${securityKey}/legimi_admin/`}
+            element={<LegimiAdmin />}
           />
         </Routes>
       </Router>

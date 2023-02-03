@@ -21,7 +21,6 @@ const ComputerAdd = ({ filia, url }) => {
       callback={compAdd}
       icon={<AddIcon />}
       text={'Dodaj Komputer'}
-      style={{ positsion: 'absolute', right: '100px' }}
     />
   );
 };

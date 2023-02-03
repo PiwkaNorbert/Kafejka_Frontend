@@ -13,18 +13,20 @@ import Feather from '../components/Feather';
 
 import LegimiAdmin from './LegimiCodes';
 
-const Headers = ({ verificationCode }) => {
-  let { curFilia } = useParams();
+const Headers = ({ securityKey }) => {
+  let [tabIndex, setTabIndex] = useState(
+    JSON.parse(localStorage.getItem('set-tab-index')) || 0
+  );
 
-  const url = `http://192.168.15.160:8000/${verificationCode}/`;
-
-  let [tabIndex, setTabIndex] = useState(0);
-
-  const handleTabChange = (event, newTabIndex) => {
-    setTabIndex(newTabIndex);
+  const handleClick = event => {
+    localStorage.setItem('set-tab-index', JSON.stringify(tabIndex));
   };
-  let smallScreen = useMediaQuery('(max-width: 768px)');
-  tabIndex = 3;
+
+  const urlStalowy = window.location.href.includes('192.168.200.');
+  const urlFortiClient = window.location.href.includes('192.168.3.');
+  const url = `http://192.168.200.30:8005/${securityKey}/`;
+  let smallScreen = useMediaQuery('(max-width: 500px)');
+  let { curFilia } = useParams();
 
   return (
     <Box>
@@ -34,7 +36,7 @@ const Headers = ({ verificationCode }) => {
           justifyContent: 'center',
           alignItems: 'center',
           flexDirection: smallScreen ? 'column' : null,
-          position: 'sticky',
+          position: smallScreen ? null : 'sticky',
           top: 0,
           zIndex: 20,
           backgroundColor: 'var(--white)',
@@ -45,20 +47,33 @@ const Headers = ({ verificationCode }) => {
           orientation={smallScreen ? 'vertical' : 'horizonal'}
           className="option__tabs"
           value={tabIndex}
-          onChange={handleTabChange}
+          onChange={(e, index) => setTabIndex(index)}
           selectionFollowsFocus
         >
-          <Tab icon={<ComputerIcon />} value={0} label="Komputery" disabled />
-          {!curFilia == '' && (
-            <Tab value={1} icon={<WifiIcon />} label="WiFi" disabled />
-          )}
-          <Tab icon={<SettingIcon />} value={2} label="Ustawienia" disabled />
           <Tab
-            sx={{ justifyContent: 'space-around' }}
-            value={3}
+            icon={<ComputerIcon />}
+            label="Komputery"
+            disabled={urlFortiClient}
+          />
+          {!curFilia == '' && (
+            <Tab
+              icon={<WifiIcon />}
+              label="WiFi"
+              onClick={handleClick}
+              disabled={urlFortiClient}
+            />
+          )}
+          <Tab
+            icon={<SettingIcon />}
+            label="Ustawienia"
+            disabled={urlStalowy || handleClick}
+            onClick={handleClick}
+          />
+          <Tab
             icon={<Feather />}
             label="Ebooki"
             filia={curFilia}
+            onClick={handleClick}
           />
         </Tabs>
         {tabIndex === 0 && curFilia !== undefined && (

@@ -8,13 +8,11 @@ export default function ComputerShutdown({
   isLoading,
   setIsLoading,
 }) {
-  console.log(isLoading);
   // Set status Shutdown
   const compShutdown = () => {
     const urlShutdown = `${url}shutdown-pc/${computer.pk}/`;
     try {
       axios(urlShutdown);
-      setIsLoading(false);
     } catch (err) {
       throw Error('Unable to delete computer');
     }
@@ -25,7 +23,6 @@ export default function ComputerShutdown({
       variant={'contained'}
       color={'error'}
       fullWidth={true}
-      disabled={isLoading}
       className={'btn-shutdown'}
       callback={compShutdown}
       text={'Wyłacz'}
