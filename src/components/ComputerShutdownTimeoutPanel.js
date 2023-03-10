@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, CardActions, Box, TextField, Hidden } from '@mui/material';
+import { Box, Input, TextField, InputAdornment } from '@mui/material';
 import ButtonTemplate from './ButtonTemplate';
 
-const ComputerShutdownTimeoutPanel = ({ computer, index, url, callback }) => {
+const ComputerShutdownTimeoutPanel = ({ computer, index, url }) => {
   const [shutdownTimeout, setShutdownTimeout] = useState('');
+  const [num, setNum] = React.useState();
 
   // Set status Shutdown Time
   const compShutDownTimeout = async () => {
@@ -13,6 +14,7 @@ const ComputerShutdownTimeoutPanel = ({ computer, index, url, callback }) => {
     }/`;
     try {
       await axios(urlShutdownTimeout).then(res => setShutdownTimeout(res));
+      document.querySelector(`#closeTime${index}`).value = 5;
     } catch (err) {
       console.log(err);
     }
@@ -20,22 +22,7 @@ const ComputerShutdownTimeoutPanel = ({ computer, index, url, callback }) => {
 
   return (
     <Box className={`kafeika-komputer__timeout`}>
-      <Box>
-        <Box className={`kafeika-komputer__timeout-computer`}>
-          <Box sx={{ padding: 1, textAlign: 'center', margin: 'auto' }}>
-            Czas
-          </Box>
-          <Box
-            className={'kafeika-komputer__timeout-content'}
-            sx={{
-              padding: 1,
-              textAlign: 'center',
-              backgroundColor: 'var(--timeout-grey)',
-            }}
-          >
-            {computer.fields.t}
-          </Box>
-        </Box>
+      <Box className={`kafeika-komputer__timeout-computer`}>
         <ButtonTemplate
           variant={'contained'}
           color={computer.fields.f === 5 ? 'warning' : 'primary'}
@@ -44,24 +31,24 @@ const ComputerShutdownTimeoutPanel = ({ computer, index, url, callback }) => {
           key={index}
           className={'btn-cancel'}
           callback={compShutDownTimeout}
-          text={`${computer.fields.f === 5 ? 'Anuluj' : 'Zamknij'}`}
+          text={`${computer.fields.f === 5 ? 'Anuluj' : 'Wyłacz za'}`}
+        />
+        <input
+          placeholder="min"
+          size="small"
+          id={`closeTime${index}`}
+          name="closeTime"
+          type="number"
+          min={5}
+          max={60}
+          step={5}
+          onChange={e => {
+            if (e >= 5 && e <= 60) return setNum(e.target.value);
+            return null;
+          }}
+          className="kafeika-komputer__timeout-computer--input"
         />
       </Box>
-      <TextField
-        type="number"
-        helperText="5-60min"
-        id={`closeTime${index}`}
-        InputProps={{
-          inputProps: { min: 5, max: 60, step: 5, defaultValue: 5 },
-        }}
-        name="closeTime"
-        variant="standard"
-        color="primary"
-        InputLabelProps={{
-          shrink: true,
-        }}
-        sx={{ display: 'grid', padding: 0, margin: 1 }}
-      />
     </Box>
   );
 };

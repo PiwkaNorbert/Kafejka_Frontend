@@ -1,90 +1,59 @@
-import { useParams } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
 import { Box, CircularProgress, CardContent } from '@mui/material';
 import ComputerIndex from '../components/ComputerIndex';
 import ComputerOnlineStatus from '../components/ComputerOnlineStatus';
 import ComputerShutdownTimeoutPanel from '../components/ComputerShutdownTimeoutPanel';
-
-import Computer from '../components/Computer';
+import { useQuery } from '@tanstack/react-query';
 
 const ComputerPage = ({ filia, showComps, url }) => {
-  const [computers, setComputers] = useState([]);
-  let { curFilia } = useParams();
+  const computerQuery = useQuery(['komps'], () =>
+    fetch(`${url}komps/${filia}/`).then(res => res.json())
+  );
 
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const getData = async e => {
-    await axios(`${url}${e === true ? 'fast-komps/' : 'komps/'}`)
-      .then(response => {
-        setComputers(response.data);
-        setIsLoading(false);
-      })
-      .catch(() => {
-        setError(`Unable to fetch Data`);
-        setIsLoading(true);
-      });
-  };
+  if (computerQuery.isLoading)
+    return (
+      <div class="la-ball-clip-rotate la-md la-dark">
+        <div></div>
+      </div>
+    );
+  if (computerQuery.error)
+    return (
+      <h1>
+        Nastąpił Error, Proszę skontatkuj sie z administratorem systemów 112
+      </h1>
+    );
 
-  // Called after an interaction is made, to poll updated computer status after a short time
-  const getDataImmediately = () => {
-    getData(true);
-  };
-
-  const getDataSlowCached = () => {
-    getData(false);
-  };
-  let didInit = false;
-  useEffect(() => {
-    if (!didInit) {
-      didInit = true;
-      // Repeatedly poll all data every 3 seconds
-      setIsLoading(true);
-
-      getData(true);
-      setInterval(getDataSlowCached, 6000);
-    }
-  }, []);
-  const computerArrayValues2 = computers
-    .filter(computer => filia === undefined || computer.fields.filia === +filia)
+  const computers = computerQuery.data
+    ?.filter(
+      computer => filia === undefined || computer.fields.filia === +filia
+    )
     .map((computer, index) => {
       return (
         <CardContent
           sx={{
             boxShadow: 2,
             borderRadius: 3,
-            padding: 1,
             margin: 1,
           }}
           className="kafeika__background"
-          disabled={
-            isLoading ? null : (
-              <div style={{ zIndex: 1, backgroundColor: 'red' }}>
-                <CircularProgress className="loading-status" disableShrink />
-              </div>
-            )
-          }
           key={index}
         >
-          <Box className="kafeika__wrap">
-            <ComputerIndex
-              computer={computer}
-              index={index}
-              url={url}
-              callback={getDataImmediately}
-              showComps={showComps}
-              isLoading={isLoading}
-              setIsLoading={setIsLoading}
-            />
+          <ComputerIndex
+            computer={computer}
+            index={index}
+            url={url}
+            // callback={getDataImmediately}
+            showComps={showComps}
+            computerQuery={computerQuery}
+          />
+
+          <Box className="kafeika__wrap" sx={{ margin: 1 }}>
             {showComps ? (
               <ComputerOnlineStatus
                 computer={computer}
-                index={index}
                 url={url}
-                callback={getDataImmediately}
                 showComps={showComps}
-                isLoading={isLoading}
-                setIsLoading={setIsLoading}
+                computerQuery={computerQuery}
               />
             ) : null}
             {showComps ? (
@@ -92,29 +61,49 @@ const ComputerPage = ({ filia, showComps, url }) => {
                 computer={computer}
                 index={index}
                 url={url}
-                callback={getDataImmediately}
-                showComps={showComps}
-                isLoading={isLoading}
-                setIsLoading={setIsLoading}
               />
             ) : null}
           </Box>
 
-          <Box sx={{ textAlign: 'end', color: 'grey', p: 0, m: 0 }}>
-            ID: {computer.pk}
-          </Box>
+          {computerQuery.isFetching ? (
+            <div
+              className="la-ball-clip-rotate la-dark la-sm"
+              sx={{
+                textAlign: 'end',
+                color: 'grey',
+                p: 0,
+                m: 0,
+                width: '10px',
+                height: '10px',
+              }}
+            >
+              <div></div>
+            </div>
+          ) : (
+            <Box
+              sx={{
+                textAlign: 'end',
+                color: 'grey',
+                p: 0,
+                margin: '0 8px 0 0',
+              }}
+            >
+              ID: {computer.pk}
+            </Box>
+          )}
         </CardContent>
       );
     });
+
   return (
     <Box>
-      {isLoading ? (
+      {computerQuery.isLoading ? (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <CircularProgress className="loading-status" disableShrink />
         </div>
       ) : (
         <Box className={`${showComps ? 'layout-grid' : 'layout-flex'}`}>
-          {computerArrayValues2}
+          {computers}
         </Box>
       )}
     </Box>

@@ -15,10 +15,10 @@ import LegimiAdmin from './LegimiCodes';
 
 const Headers = ({ securityKey }) => {
   let [tabIndex, setTabIndex] = useState(
-    JSON.parse(localStorage.getItem('set-tab-index')) || 0
+    JSON.parse(localStorage.getItem('set-tab-index'))
   );
 
-  const handleClick = event => {
+  const handleClick = () => {
     localStorage.setItem('set-tab-index', JSON.stringify(tabIndex));
   };
 
@@ -64,25 +64,57 @@ const Headers = ({ securityKey }) => {
             />
           )}
           <Tab
-            icon={<SettingIcon />}
-            label="Ustawienia"
-            disabled={urlStalowy || handleClick}
-            onClick={handleClick}
-          />
-          <Tab
             icon={<Feather />}
             label="Ebooki"
             filia={curFilia}
+            onClick={handleClick}
+          />
+          <Tab
+            icon={<SettingIcon />}
+            label="Ustawienia"
+            disabled={urlStalowy || handleClick}
             onClick={handleClick}
           />
         </Tabs>
         {tabIndex === 0 && curFilia !== undefined && (
           <ComputerShutdownAll filia={curFilia} url={url} />
         )}
-        {tabIndex === 2 && curFilia !== undefined && (
+        {tabIndex === 3 && curFilia !== undefined && (
           <ComputerAdd filia={curFilia} url={url} />
         )}
-        {/* {tabIndex === 3 && curFilia !== undefined && (
+      </Box>
+      <Box>
+        {tabIndex === 0 && (
+          <Box>
+            <ComputerPage filia={curFilia} showComps={true} url={url} />
+          </Box>
+        )}
+        {tabIndex === 1 && (
+          <Box>
+            {curFilia !== undefined && <WifiPerms filia={curFilia} url={url} />}
+          </Box>
+        )}
+        {tabIndex === 2 && (
+          <Box>
+            <LegimiAdmin />
+          </Box>
+        )}
+        {tabIndex === 3 && (
+          <Box>
+            <ComputerPage filia={curFilia} showComps={false} url={url} />
+          </Box>
+        )}
+      </Box>
+    </Box>
+  );
+};
+
+export default Headers;
+
+///////////////////////////// buttons from legimi
+
+{
+  /* {tabIndex === 3 && curFilia !== undefined && (
           <div class="nav-position">
             <div
               class="toggle-position"
@@ -132,32 +164,5 @@ const Headers = ({ securityKey }) => {
               </div>
             </div>
           </div>
-        )} */}
-      </Box>
-      <Box sx={{ paddingBlock: 1 }}>
-        {tabIndex === 0 && (
-          <Box>
-            <ComputerPage filia={curFilia} showComps={true} url={url} />
-          </Box>
-        )}
-        {tabIndex === 1 && (
-          <Box>
-            {curFilia !== undefined && <WifiPerms filia={curFilia} url={url} />}
-          </Box>
-        )}
-        {tabIndex === 2 && (
-          <Box>
-            <ComputerPage filia={curFilia} showComps={false} url={url} />
-          </Box>
-        )}
-        {tabIndex === 3 && (
-          <Box>
-            <LegimiAdmin />
-          </Box>
-        )}
-      </Box>
-    </Box>
-  );
-};
-
-export default Headers;
+        )} */
+}

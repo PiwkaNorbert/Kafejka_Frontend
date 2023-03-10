@@ -18,8 +18,6 @@ const WifiPerms = ({ index, url, filia }) => {
   };
 
   const handleClick = () => {
-    // 👇 "inputRef.current.value" is input value
-    // console.log(inputRef.current.value);
     cardHotspotCode(filia, inputRef.current.value);
   };
 
@@ -54,7 +52,7 @@ const WifiPerms = ({ index, url, filia }) => {
                 disableUnderline: true,
               }}
             />
-            <Button
+            {/* <Button
               variant="contained"
               size="small"
               key={index}
@@ -69,7 +67,7 @@ const WifiPerms = ({ index, url, filia }) => {
               }}
             >
               ok
-            </Button>
+            </Button> */}
           </form>
         </Box>
         <Box className="wifi__table">

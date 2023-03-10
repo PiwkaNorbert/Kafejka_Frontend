@@ -26,9 +26,9 @@ const ComputerState = ({ computer, url }) => {
       fullWidth={true}
       color={
         computer.fields.f === 0
-          ? 'success'
-          : computer.fields.f === 1
           ? 'error'
+          : computer.fields.f === 1
+          ? 'success'
           : 'primary'
       }
       disabled={computer.fields.f === 5}
@@ -36,9 +36,9 @@ const ComputerState = ({ computer, url }) => {
       callback={compStatus}
       text={
         computer.fields.f === 0
-          ? 'Odblokuj'
+          ? 'Zablokowany'
           : computer.fields.f === 1
-          ? 'Zablokuj'
+          ? 'Odblokowany'
           : 'Zamykanie'
       }
     />

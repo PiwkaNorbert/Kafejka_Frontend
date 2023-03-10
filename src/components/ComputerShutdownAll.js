@@ -27,7 +27,7 @@ const ComputerShutdownAll = ({ filia, url }) => {
       className={'btn-block'}
       callback={compShutdownAll}
       icon={<PowerSettingsNewIcon />}
-      text={'Zamknij Wszystkie'}
+      text={'Wyłącz Wszystkie'}
     />
   );
 };
