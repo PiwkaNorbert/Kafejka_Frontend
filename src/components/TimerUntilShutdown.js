@@ -1,37 +1,43 @@
 import React from 'react';
+import { Box } from '@mui/system';
+// import startlogoutTimer from '../helper/startlogoutTimer';
 
-const startlogoutTimer = function () {
-  const tick = function () {
-    const min = String(Math.trunc(time / 60)).padStart(2, '0');
-    const sec = String(time % 60).padStart(2, '0');
-    //in each call, print the remaing time to UI
+const TimerUntilShutdown = function ({ computer }) {
+  const startlogoutTimer = function () {
+    const labelTimer = document.querySelector('.timer');
+    const tick = function () {
+      const min = String(Math.trunc(time / 60)).padStart(2, '0');
+      const sec = String(time % 60).padStart(2, '0');
+      //in each call, print the remaing time to UI
 
-    labelTimer.textContent = `${min}:${sec}`;
+      labelTimer.textContent = `${min}:${sec}`;
+      console.log(min, sec);
+      if (time === 0) {
+        clearInterval(timer);
+      }
+      time--;
+      // when 0 seconds, sotp timer and log out user
+    };
+    // set time to 15 minutes
 
-    if (time === 0) {
-      clearInterval(timer);
-      labelWelcome.textContent = `Log in to get started`;
-      containerApp.style.opacity = 0;
-    }
-    time--;
-    // when 0 seconds, sotp timer and log out user
+    var diff = computer.fields.timestamp_time - new Date().getTime();
+
+    console.log(diff);
+    var time = diff / (1000 * 60 * 60 * 24);
+    //call the timer every second
+    tick();
+    const timer = setInterval(tick, 1000);
+    return timer;
   };
-  // set time to 15 minutes
-  let time = 60;
-  //call the timer every second
-  tick();
-  const timer = setInterval(tick, 1000);
-  return timer;
-};
+  const diff = computer.fields.timestamp_time - new Date().getTime();
 
-export default TimerUntilShutdown = function () {
+  console.log(diff);
   return (
     <>
-      <Box sx={{ padding: 1, textAlign: 'center' }}>Czas</Box>
+      <Box>Czas</Box>
       <Box
         className={'kafeika-komputer__timeout-content'}
         sx={{
-          padding: 1,
           textAlign: 'center',
           backgroundColor: 'var(--timeout-grey)',
         }}
@@ -42,3 +48,4 @@ export default TimerUntilShutdown = function () {
     </>
   );
 };
+export default TimerUntilShutdown;

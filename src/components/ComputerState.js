@@ -3,7 +3,7 @@ import { Button, CardActions } from '@mui/material';
 import axios from 'axios';
 import ButtonTemplate from './ButtonTemplate';
 
-const ComputerState = ({ computer, url }) => {
+const ComputerState = ({ computer, url, computerQuery }) => {
   const status = useState('');
 
   // Set status Blocked or Unblocked
@@ -31,7 +31,7 @@ const ComputerState = ({ computer, url }) => {
           ? 'success'
           : 'primary'
       }
-      disabled={computer.fields.f === 5}
+      disabled={computerQuery.isFetching}
       className={'btn-state'}
       callback={compStatus}
       text={

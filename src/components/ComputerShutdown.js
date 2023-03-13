@@ -4,7 +4,7 @@ import ButtonTemplate from './ButtonTemplate';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import Tooltip from '@mui/material/Tooltip';
 
-export default function ComputerShutdown({ computer, url }) {
+export default function ComputerShutdown({ computer, url, computerQuery }) {
   // Set status Shutdown
   const compShutdown = () => {
     const urlShutdown = `${url}shutdown-pc/${computer.pk}/`;

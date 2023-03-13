@@ -51,7 +51,6 @@ table {
 }
 .kafeika-komputer__timeout {
   display: flex;
-  background-color: var(--bg-slate-100);
   overflow: hidden;
   border-radius: 8px;
 }
@@ -644,4 +643,8 @@ input[type='number'] {
 }
 .number-of-codes div span {
   font-size: 1.8rem;
+}
+.timer {
+  display: flex;
+  gap: 1rem;
 }

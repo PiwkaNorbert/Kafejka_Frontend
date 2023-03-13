@@ -16,14 +16,19 @@ const ComputerOnlineStatus = ({ computer, url, callback, computerQuery }) => {
           fontWeight: 700,
         }}
       >
-        {computerQuery?.isFetching ? (
+        {computerQuery?.isLoading ? (
           <div className="la-ball-clip-rotate la-dark la-sm">
             <div></div>
           </div>
         ) : (
           <>
             <p>Stan</p>
-            <ComputerState computer={computer} url={url} callback={callback} />
+            <ComputerState
+              computer={computer}
+              url={url}
+              callback={callback}
+              computerQuery={computerQuery}
+            />
           </>
         )}
       </Box>

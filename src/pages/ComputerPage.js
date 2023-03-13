@@ -61,36 +61,27 @@ const ComputerPage = ({ filia, showComps, url }) => {
                 computer={computer}
                 index={index}
                 url={url}
+                computerQuery={computerQuery}
               />
             ) : null}
           </Box>
 
-          {computerQuery.isFetching ? (
-            <div
-              className="la-ball-clip-rotate la-dark la-sm"
-              sx={{
-                textAlign: 'end',
-                color: 'grey',
-                p: 0,
-                m: 0,
-                width: '10px',
-                height: '10px',
-              }}
-            >
-              <div></div>
-            </div>
-          ) : (
-            <Box
-              sx={{
-                textAlign: 'end',
-                color: 'grey',
-                p: 0,
-                margin: '0 8px 0 0',
-              }}
-            >
-              ID: {computer.pk}
-            </Box>
-          )}
+          <Box
+            className={`${
+              computerQuery.isFetching
+                ? 'la-ball-clip-rotate la-dark la-sm'
+                : null
+            }`}
+            sx={{
+              textAlign: 'end',
+              color: 'grey',
+              p: 0,
+              m: 1,
+              marginLeft: 'auto',
+            }}
+          >
+            {computerQuery.isFetching ? <div></div> : 'ID:' + computer.pk}
+          </Box>
         </CardContent>
       );
     });

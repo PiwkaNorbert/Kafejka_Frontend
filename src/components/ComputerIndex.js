@@ -8,6 +8,8 @@ import ComputerShutdown from '../components/ComputerShutdown';
 import WifiOffIcon from '@mui/icons-material/WifiOff';
 import WifiIcon from '@mui/icons-material/Wifi';
 
+import TimerUntilShutdown from './TimerUntilShutdown';
+
 const ComputerIndex = ({ computer, index, url, showComps, computerQuery }) => {
   return (
     <>
@@ -34,10 +36,9 @@ const ComputerIndex = ({ computer, index, url, showComps, computerQuery }) => {
               computerQuery={computerQuery}
             />
           </Box>
-          <Box
-            className={'timer'}
-            sx={{ fontSize: '1.6rem', flex: '1 1 0' }}
-          ></Box>
+          <Box className={'timer'} sx={{ fontSize: '1.6rem', flex: '1 1 0' }}>
+            <TimerUntilShutdown computer={computer} />
+          </Box>
           <Box
             sx={{
               color: `${computer.fields.online >= 60 ? '#F00' : '#2a2'}`,
