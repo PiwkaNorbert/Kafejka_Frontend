@@ -21,6 +21,7 @@ const ErrorCallback = () => {
         <p className="error__text--2">
           Proszę poczekać cierpliwie, próbujemy naprawić problem.
         </p>
+        Proszę skontatkuj sie z administratorem systemów 112
       </div>
     </Box>
   );

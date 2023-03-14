@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, CircularProgress, CardContent } from '@mui/material';
 import ComputerIndex from '../components/ComputerIndex';
 import ComputerOnlineStatus from '../components/ComputerOnlineStatus';
 import ComputerShutdownTimeoutPanel from '../components/ComputerShutdownTimeoutPanel';
 import { useQuery } from '@tanstack/react-query';
+import ErrorCallback from '../components/Errors/ErrorCallback';
 
 const ComputerPage = ({ filia, showComps, url }) => {
   const computerQuery = useQuery(['komps'], () =>
@@ -12,16 +13,13 @@ const ComputerPage = ({ filia, showComps, url }) => {
 
   if (computerQuery.isLoading)
     return (
-      <div class="la-ball-clip-rotate la-md la-dark">
-        <div></div>
+      <div className="codes__loading">
+        <h2 className="codes__header--2">Nawiązywanie połączenia...</h2>
+        <CircularProgress className="loading-status" disableShrink />
       </div>
     );
-  if (computerQuery.error)
-    return (
-      <h1>
-        Nastąpił Error, Proszę skontatkuj sie z administratorem systemów 112
-      </h1>
-    );
+
+  if (computerQuery.error) return <ErrorCallback />;
 
   const computers = computerQuery.data
     ?.filter(
@@ -46,7 +44,6 @@ const ComputerPage = ({ filia, showComps, url }) => {
             showComps={showComps}
             computerQuery={computerQuery}
           />
-
           <Box className="kafeika__wrap" sx={{ margin: 1 }}>
             {showComps ? (
               <ComputerOnlineStatus
@@ -68,7 +65,7 @@ const ComputerPage = ({ filia, showComps, url }) => {
 
           <Box
             className={`${
-              computerQuery.isFetching
+              computerQuery.isLoading
                 ? 'la-ball-clip-rotate la-dark la-sm'
                 : null
             }`}
@@ -76,7 +73,7 @@ const ComputerPage = ({ filia, showComps, url }) => {
               textAlign: 'end',
               color: 'grey',
               p: 0,
-              m: 1,
+              marginRight: 1,
               marginLeft: 'auto',
             }}
           >

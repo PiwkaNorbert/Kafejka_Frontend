@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Box, Input, TextField, InputAdornment } from '@mui/material';
+import { Box } from '@mui/material';
 import ButtonTemplate from './ButtonTemplate';
 
 const ComputerShutdownTimeoutPanel = ({
@@ -19,7 +19,8 @@ const ComputerShutdownTimeoutPanel = ({
     }/`;
     try {
       await axios(urlShutdownTimeout).then(res => setShutdownTimeout(res));
-      document.querySelector(`#closeTime${index}`).value = 5;
+      document.querySelector(`#closeTime${index}`).value = '';
+      computerQuery.refetch();
     } catch (err) {
       console.log(err);
     }
@@ -40,7 +41,7 @@ const ComputerShutdownTimeoutPanel = ({
             variant={'contained'}
             color={computer.fields.f === 5 ? 'warning' : 'primary'}
             fullWidth={true}
-            disabled={computer.fields.f === 5 && computer.fields.t === 0}
+            disabled={computerQuery.isFetching ? true : false}
             key={index}
             className={'btn-cancel'}
             callback={compShutDownTimeout}
@@ -50,6 +51,7 @@ const ComputerShutdownTimeoutPanel = ({
             placeholder="min"
             size="small"
             id={`closeTime${index}`}
+            disabled={computerQuery.isFetching ? true : false}
             name="closeTime"
             type="number"
             min={5}

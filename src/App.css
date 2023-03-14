@@ -51,7 +51,6 @@ table {
 }
 .kafeika-komputer__timeout {
   display: flex;
-  overflow: hidden;
   border-radius: 8px;
 }
 /* .kafeika-komputer__index-computer {
@@ -60,6 +59,13 @@ table {
 } */
 .kafeika__wrap {
   gap: 10px;
+}
+
+.kafeika-komputer__timeout-content {
+  text-align: center;
+  background-color: var(--text-gray-600);
+  padding: 4px;
+  font-size: 1.4rem;
 }
 .kafeika-komputer__status-computer p {
   margin-right: 8px;
@@ -455,6 +461,7 @@ input[type='number'] {
   background-color: var(--bg-slate-100);
   align-self: stretch;
   padding: 0 8px;
+  border-radius: 8px;
 }
 
 .kafeika-komputer__timeout-computer--input::placeholder {
@@ -647,4 +654,7 @@ input[type='number'] {
 .timer {
   display: flex;
   gap: 1rem;
+}
+.MuiTooltip-tooltip {
+  font-size: 1.2rem !important;
 }

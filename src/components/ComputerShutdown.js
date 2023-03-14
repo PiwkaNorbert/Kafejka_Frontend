@@ -1,15 +1,15 @@
-import React, { useState, Suspense } from 'react';
+import React from 'react';
 import axios from 'axios';
 import ButtonTemplate from './ButtonTemplate';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
-import Tooltip from '@mui/material/Tooltip';
 
 export default function ComputerShutdown({ computer, url, computerQuery }) {
   // Set status Shutdown
-  const compShutdown = () => {
+  const compShutdown = async () => {
     const urlShutdown = `${url}shutdown-pc/${computer.pk}/`;
     try {
-      axios(urlShutdown);
+      await axios(urlShutdown);
+      computerQuery.refetch();
     } catch (err) {
       throw new Error('Unable to delete computer');
     }
@@ -22,6 +22,7 @@ export default function ComputerShutdown({ computer, url, computerQuery }) {
       icon={
         <PowerSettingsNewIcon sx={{ fontSize: '2.0rem', margin: '0 4px' }} />
       }
+      disabled={computerQuery.isFetching ? true : false}
       callback={compShutdown}
       text={'Wyłącz'}
     />

@@ -77,7 +77,7 @@ const LegimiCodes = () => {
     .map(code => {
       return (
         <>
-          {!curFilia == '' && !curFilia !== '0' ? (
+          {curFilia !== '' && !curFilia !== '0' ? (
             <>
               {/* TODO make it a one liner
               <h1 className="counter__output-header" key={code.fields.index}>
@@ -135,13 +135,13 @@ const LegimiCodes = () => {
           <thead>
             <tr>
               <th>Nazwa Filii</th>
-              <th class="number-of-codes">
+              <th className="number-of-codes">
                 <div>
                   <span>Kody Legimi</span>
                   <Switch onClick={filterLegimi} />
                 </div>
               </th>
-              <th class="number-of-codes">
+              <th className="number-of-codes">
                 <div>
                   <span>Kody Empik Go</span>
                   <Switch onClick={filterEmpik} />

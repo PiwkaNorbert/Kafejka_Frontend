@@ -1,20 +1,13 @@
-import React, { useState } from 'react';
-import { Button, CardActions } from '@mui/material';
+import React from 'react';
 import axios from 'axios';
 import ButtonTemplate from './ButtonTemplate';
 
 const ComputerState = ({ computer, url, computerQuery }) => {
-  const status = useState('');
-
   // Set status Blocked or Unblocked
+  const urlBlock = `${url}block-pc/${computer.pk}/`;
   const compStatus = async () => {
-    const urlBlock = `${url}block-pc/${computer.pk}/`;
     try {
-      await axios.get(urlBlock, {
-        status,
-        title: 'Zablokuj Odblokuj',
-        completed: false,
-      });
+      await axios(urlBlock);
     } catch (err) {
       console.log(err);
     }

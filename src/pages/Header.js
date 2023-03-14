@@ -44,7 +44,7 @@ const Headers = ({ securityKey }) => {
         }}
       >
         <Tabs
-          orientation={smallScreen ? 'vertical' : 'horizonal'}
+          orientation={`${smallScreen ? 'vertical' : 'horizonal'}`}
           className="option__tabs"
           value={tabIndex}
           onChange={(e, index) => setTabIndex(index)}
@@ -53,14 +53,14 @@ const Headers = ({ securityKey }) => {
           <Tab
             icon={<ComputerIcon />}
             label="Komputery"
-            disabled={urlFortiClient}
+            disabled={urlFortiClient ? true : false}
           />
-          {!curFilia == '' && (
+          {curFilia !== undefined && (
             <Tab
               icon={<WifiIcon />}
               label="WiFi"
               onClick={handleClick}
-              disabled={urlFortiClient}
+              disabled={urlFortiClient ? true : false}
             />
           )}
           <Tab
@@ -72,7 +72,7 @@ const Headers = ({ securityKey }) => {
           <Tab
             icon={<SettingIcon />}
             label="Ustawienia"
-            disabled={urlStalowy || handleClick}
+            disabled={urlStalowy ? true : false}
             onClick={handleClick}
           />
         </Tabs>

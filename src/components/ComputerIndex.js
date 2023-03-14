@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Box } from '@mui/material';
 import ComputerDelete from './ComputerDelete';
 
@@ -19,11 +19,11 @@ const ComputerIndex = ({ computer, index, url, showComps, computerQuery }) => {
             margin: '0 8px 8px 8px',
             display: 'flex',
             alignItems: 'center',
+            fontSize: '1.6rem',
+            gap: '1rem',
           }}
         >
-          <Box sx={{ fontSize: '1.6rem', marginRight: 0.5 }}>
-            Komputer {index + 1}
-          </Box>
+          <Box sx={{ fontSize: '1.6rem' }}>Komputer {index + 1}</Box>
           <Box
             sx={{
               color: `${computer.fields.online >= 60 ? '#2a2' : '#F00'}`,
@@ -36,7 +36,7 @@ const ComputerIndex = ({ computer, index, url, showComps, computerQuery }) => {
               computerQuery={computerQuery}
             />
           </Box>
-          <Box className={'timer'} sx={{ fontSize: '1.6rem', flex: '1 1 0' }}>
+          <Box className={'timer'} sx={{ flex: '1 1 0' }}>
             <TimerUntilShutdown computer={computer} />
           </Box>
           <Box

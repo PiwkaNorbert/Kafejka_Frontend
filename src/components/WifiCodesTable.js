@@ -1,35 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { TableRow, TableCell } from '@mui/material';
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import ErrorCallback from './Errors/ErrorCallback';
 
-const WifiCodesTable = ({ url, filia, callback }) => {
-  const [codeList, setCodeList] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const urlGetCodes = `${url}get-codes/${filia}/`;
-
-  const getCodes = async () => {
-    setLoading(true);
-    try {
-      await axios(urlGetCodes).then(response => {
-        setCodeList(response.data);
-        setLoading(true);
-      });
-    } catch (err) {
-      console.log(err);
-      setLoading(true);
-    }
-    {
-      setLoading(false);
-    }
-  };
-  useEffect(() => {
-    getCodes();
-    setInterval(getCodes, 10000);
-  }, []);
-  const wifiCodesValues = codeList.map((code, index) => {
+const WifiCodesTable = ({ url, filia }) => {
+  const wifiCodesQuery = useQuery(['wifiCodes'], () =>
+    fetch(`${url}get-codes/${filia}/`).then(res => res.json())
+  );
+  if (wifiCodesQuery.isLoading)
     return (
-      <TableRow
-        sx={{
+      <tr className="la-ball-clip-rotate la-dark la-sm">
+        <td></td>
+      </tr>
+    );
+  if (wifiCodesQuery.error) return <ErrorCallback />;
+
+  const wifiCodesValues = wifiCodesQuery.data.map((code, index) => {
+    return (
+      <tr
+        style={{
           backgroundColor: `${
             code.fields.w === 0 ? 'var(--red)' : 'var(--green)'
           }`,
@@ -37,13 +25,13 @@ const WifiCodesTable = ({ url, filia, callback }) => {
         }}
         key={index}
       >
-        <TableCell>{code.fields.cz}</TableCell>
-        <TableCell sx={{ textAlign: 'right' }}>
-          {Math.floor(Math.abs(+code.fields.nr + 1745) / 3)}
-        </TableCell>
-      </TableRow>
+        <td>{code.fields.cz}</td>
+        <td style={{ textAlign: 'right' }}>
+          {Math.trunc(Math.abs(+code.fields.nr + 1745) / 3)}
+        </td>
+      </tr>
     );
   });
-  return <>{wifiCodesValues}</>;
+  return wifiCodesValues;
 };
 export default WifiCodesTable;
