@@ -8,8 +8,7 @@ export default function ComputerShutdown({ computer, url, computerQuery }) {
   const compShutdown = async () => {
     const urlShutdown = `${url}shutdown-pc/${computer.pk}/`;
     try {
-      await axios(urlShutdown);
-      computerQuery.refetch();
+      await axios(urlShutdown).then(() => computerQuery.refetch());
     } catch (err) {
       throw new Error('Unable to delete computer');
     }

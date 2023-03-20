@@ -2,34 +2,15 @@ import React, { useState } from 'react';
 import LegimiCodesButtons from '../components/LegimiCodesButtons';
 import { useParams } from 'react-router-dom';
 import { CircularProgress, Switch } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
 import ErrorCallback from '../components/Errors/ErrorCallback';
+import { useEbookData } from '../helper/useEbookData';
 const LegimiCodes = () => {
   const [filterLegimiValue, setFilterLegimi] = useState();
   const [filterEmpikValue, setFilterEmpik] = useState();
 
   let { curFilia } = useParams();
 
-  const hostnameDomain = window.location.hostname.includes('192.168.200.30');
-  const hostnameForward = window.location.hostname.includes('192.168.200.37');
-  const hostnameStalowe = window.location.hostname.includes('192.168.3.34');
-  const port = '8000';
-  const urlStalowy = `http://192.168.3.34:${port}/`;
-  const urlDomena = `http://192.168.200.30:${port}/`;
-  const urlForward = `http://192.168.200.37:${port}/`;
-
-  let urlLegmi = hostnameDomain
-    ? urlDomena
-    : hostnameForward
-    ? urlForward
-    : hostnameStalowe
-    ? urlStalowy
-    : urlForward;
-
-  const fetchCodes = () =>
-    fetch(`${urlLegmi}json-codes/`).then(res => res.json());
-
-  const legimiQuery = useQuery(['codes'], fetchCodes);
+  const legimiQuery = useEbookData();
 
   const filterLegimi = e => {
     if (e.target.checked) {
@@ -79,39 +60,29 @@ const LegimiCodes = () => {
         <>
           {curFilia !== '' && !curFilia !== '0' ? (
             <>
-              {/* TODO make it a one liner
-              <h1 className="counter__output-header" key={code.fields.index}>
-                  { ? `Empik: ${code.fields.empikNumber}`:`Legimi: ${code.fields.codesNumber}` }
-                </h1>
-                <LegimiCodesAdd filia={curFilia} url={urlLegmi} legimiQuery={legimiQuery} empik={ ?empik : null} 
-                */}
-
+              {/* TODO make it a one liner */}
+              {/* <h1 className="counter__output-header" key={code.fields.index}>
+                {empik
+                  ? `Empik: ${code.fields.empikNumber}`
+                  : `Legimi: ${code.fields.codesNumber}`}
+              </h1>
+              <LegimiCodesButtons filia={curFilia} empik={ ?empik : null}  /> */}
               <div className="codes__header">
                 <h1 className="codes__header--1">{code.fields.filiaName}</h1>
               </div>
-
               <div className="counter__output">
                 <h1 className="counter__output-header" key={code.fields.index}>
-                  {`Legimi: ${code.fields.codesNumber}`}
+                  {code.fields.codesNumber}
+                  <span> Legimi</span>
                 </h1>
-                <LegimiCodesButtons
-                  filia={curFilia}
-                  url={urlLegmi}
-                  refetch={legimiQuery.refetch}
-                  legimiQuery={legimiQuery}
-                />
+                <LegimiCodesButtons filia={curFilia} />
               </div>
               <div className="counter__output">
                 <h1 className="counter__output-header" key={code.fields.index}>
-                  {`Empik: ${code.fields.empikNumber}`}
+                  {code.fields.empikNumber}
+                  <span> Empik</span>
                 </h1>
-                <LegimiCodesButtons
-                  filia={curFilia}
-                  url={urlLegmi}
-                  empik={empik}
-                  refetch={legimiQuery.refetch}
-                  legimiQuery={legimiQuery}
-                />
+                <LegimiCodesButtons filia={curFilia} empik={empik} />
               </div>
             </>
           ) : null}
@@ -165,19 +136,14 @@ const LegimiCodes = () => {
           </tbody>
         </table>
       </main>
-      <footer class="footer-wrap">
-        <div class="ftr-container">
-          <span>
-            Ostatnia aktualizacja: <br />
-            2022-11-16 14:13:12
-          </span>
+      <footer className="footer-wrap">
+        <div className="ftr-container">
           <span>
             Copyright
             <br />
             <a>Mateusz Rozycki</a> &amp;
             <a> Norbert Piwka</a> <br />
             2022 <br />
-            Version 5.0
           </span>
         </div>
       </footer>

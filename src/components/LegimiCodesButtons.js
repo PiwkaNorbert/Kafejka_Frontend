@@ -3,19 +3,18 @@ import axios from 'axios';
 import ButtonTemplate from './ButtonTemplate';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { CircularProgress, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
+import { useEbookData } from '../helper/useEbookData';
 
-const LegimiCodesButtons = ({ filia, url, empik, legimiQuery }) => {
+const LegimiCodesButtons = ({ filia, empik }) => {
+  const legimiQuery = useEbookData();
+
   const setLegimiCodes = async e => {
-    const urlLegimiCodes = `${url}${e ? 'add' : 'sub'}/${filia}/${
-      empik ? 1 : 0
-    }/`;
+    const urlLegimiCodes = `/${e ? 'add' : 'sub'}/${filia}/${empik ? 1 : 0}/`;
 
-    //EDIT SWITCH
-
-    axios(urlLegimiCodes);
-    legimiQuery?.refetch();
-    legimiQuery?.refetch();
+    axios(urlLegimiCodes).then(() => {
+      legimiQuery?.refetch();
+    });
   };
   return (
     <div class="counter">

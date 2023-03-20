@@ -1,15 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Box, CircularProgress, CardContent } from '@mui/material';
 import ComputerIndex from '../components/ComputerIndex';
 import ComputerOnlineStatus from '../components/ComputerOnlineStatus';
 import ComputerShutdownTimeoutPanel from '../components/ComputerShutdownTimeoutPanel';
-import { useQuery } from '@tanstack/react-query';
 import ErrorCallback from '../components/Errors/ErrorCallback';
+import { useComputerData } from '../helper/useComputerData';
 
 const ComputerPage = ({ filia, showComps, url }) => {
-  const computerQuery = useQuery(['komps'], () =>
-    fetch(`${url}komps/${filia}/`).then(res => res.json())
-  );
+  const computerQuery = useComputerData(filia, url);
 
   if (computerQuery.isLoading)
     return (
@@ -27,20 +25,11 @@ const ComputerPage = ({ filia, showComps, url }) => {
     )
     .map((computer, index) => {
       return (
-        <CardContent
-          sx={{
-            boxShadow: 2,
-            borderRadius: 3,
-            margin: 1,
-          }}
-          className="kafeika__background"
-          key={index}
-        >
+        <CardContent className="kafeika__background" key={index}>
           <ComputerIndex
             computer={computer}
             index={index}
             url={url}
-            // callback={getDataImmediately}
             showComps={showComps}
             computerQuery={computerQuery}
           />

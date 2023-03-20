@@ -18,9 +18,10 @@ const ComputerShutdownTimeoutPanel = ({
       document.querySelector(`#closeTime${index}`).value
     }/`;
     try {
-      await axios(urlShutdownTimeout).then(res => setShutdownTimeout(res));
+      await axios(urlShutdownTimeout)
+        .then(res => setShutdownTimeout(res))
+        .then(() => computerQuery.refetch());
       document.querySelector(`#closeTime${index}`).value = '';
-      computerQuery.refetch();
     } catch (err) {
       console.log(err);
     }

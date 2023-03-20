@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@mui/material';
 
-const ButtonDelStaShut = ({
+const ButtonTemplate = ({
   color,
   className,
   disabled,
@@ -28,4 +28,4 @@ const ButtonDelStaShut = ({
   );
 };
 
-export default ButtonDelStaShut;
+export default ButtonTemplate;

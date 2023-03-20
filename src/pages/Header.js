@@ -1,17 +1,19 @@
-import React from 'react';
-import { Box, Tab, Tabs, useMediaQuery } from '@mui/material';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+
+import { Box, Tab, Tabs, useMediaQuery } from '@mui/material';
+import WifiIcon from '@mui/icons-material/Wifi';
+import ComputerIcon from '@mui/icons-material/Computer';
+import SettingIcon from '@mui/icons-material/Settings';
+import InfoIcon from '@mui/icons-material/Info';
+
 import ComputerPage from '../pages/ComputerPage';
 import WifiPerms from '../pages/WifiPerms';
 import ComputerShutdownAll from '../components/ComputerShutdownAll';
 import ComputerAdd from '../components/ComputerAdd';
-import WifiIcon from '@mui/icons-material/Wifi';
-import ComputerIcon from '@mui/icons-material/Computer';
-import SettingIcon from '@mui/icons-material/Settings';
 import Feather from '../components/Feather';
-
 import LegimiAdmin from './LegimiCodes';
+import { Information } from './Information';
 
 const Headers = ({ securityKey }) => {
   let [tabIndex, setTabIndex] = useState(
@@ -25,8 +27,8 @@ const Headers = ({ securityKey }) => {
   const urlStalowy = window.location.href.includes('192.168.200.');
   const urlFortiClient = window.location.href.includes('192.168.3.');
   const url = `http://192.168.200.30:8005/${securityKey}/`;
-  let smallScreen = useMediaQuery('(max-width: 500px)');
   let { curFilia } = useParams();
+  let smallScreen = useMediaQuery('(max-width: 631px)');
 
   return (
     <Box>
@@ -50,9 +52,11 @@ const Headers = ({ securityKey }) => {
           onChange={(e, index) => setTabIndex(index)}
           selectionFollowsFocus
         >
+          <Tab icon={<InfoIcon />} label="Informacje" onClick={handleClick} />
           <Tab
             icon={<ComputerIcon />}
-            label="Komputery"
+            label="Kafejka"
+            onClick={handleClick}
             disabled={urlFortiClient ? true : false}
           />
           {curFilia !== undefined && (
@@ -76,35 +80,26 @@ const Headers = ({ securityKey }) => {
             onClick={handleClick}
           />
         </Tabs>
-        {tabIndex === 0 && curFilia !== undefined && (
+        {tabIndex === 1 && curFilia !== undefined && (
           <ComputerShutdownAll filia={curFilia} url={url} />
         )}
-        {tabIndex === 3 && curFilia !== undefined && (
+        {tabIndex === 4 && curFilia !== undefined && (
           <ComputerAdd filia={curFilia} url={url} />
         )}
       </Box>
-      <Box>
-        {tabIndex === 0 && (
-          <Box>
-            <ComputerPage filia={curFilia} showComps={true} url={url} />
-          </Box>
-        )}
-        {tabIndex === 1 && (
-          <Box>
-            {curFilia !== undefined && <WifiPerms filia={curFilia} url={url} />}
-          </Box>
-        )}
-        {tabIndex === 2 && (
-          <Box>
-            <LegimiAdmin />
-          </Box>
-        )}
-        {tabIndex === 3 && (
-          <Box>
-            <ComputerPage filia={curFilia} showComps={false} url={url} />
-          </Box>
-        )}
-      </Box>
+      {tabIndex === 0 && <Information />}
+      {tabIndex === 1 && (
+        <ComputerPage filia={curFilia} showComps={true} url={url} />
+      )}
+      {tabIndex === 2 && (
+        <>
+          {curFilia !== undefined && <WifiPerms filia={curFilia} url={url} />}
+        </>
+      )}
+      {tabIndex === 3 && <LegimiAdmin />}
+      {tabIndex === 4 && (
+        <ComputerPage filia={curFilia} showComps={false} url={url} />
+      )}
     </Box>
   );
 };

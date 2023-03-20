@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box } from '@mui/system';
-const nav = document.querySelector('.css-4nt3dv');
-const navHeight = nav?.getBoundingClientRect().height;
 const ErrorCallback = () => {
+  const nav = document.querySelector('.css-4nt3dv');
+  const navHeight = nav?.getBoundingClientRect()?.height;
   return (
     <Box
       className="error"
@@ -21,7 +21,6 @@ const ErrorCallback = () => {
         <p className="error__text--2">
           Proszę poczekać cierpliwie, próbujemy naprawić problem.
         </p>
-        Proszę skontatkuj sie z administratorem systemów 112
       </div>
     </Box>
   );
