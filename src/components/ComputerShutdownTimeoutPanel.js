@@ -42,11 +42,13 @@ const ComputerShutdownTimeoutPanel = ({
             variant={'contained'}
             color={computer.fields.f === 5 ? 'warning' : 'primary'}
             fullWidth={true}
-            disabled={computerQuery.isFetching ? true : false}
+            disabled={
+              computerQuery.isFetching || computer.fields.f === 5 ? true : false
+            }
             key={index}
             className={'btn-cancel'}
             callback={compShutDownTimeout}
-            text={`${computer.fields.f === 5 ? 'Anuluj' : 'Wyłacz za'}`}
+            text={`${computer.fields.f === 5 ? 'Wyłączanie' : 'Wyłącz za'}`}
           />
           <input
             placeholder="min"

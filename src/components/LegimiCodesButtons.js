@@ -5,16 +5,65 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { Tooltip } from '@mui/material';
 import { useEbookData } from '../helper/useEbookData';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LegimiCodesButtons = ({ filia, empik }) => {
   const legimiQuery = useEbookData();
+  const url = `http://192.168.200.37:8000/`;
+
+  // };
+  // const notify = () => {
+  //   toast('Default Notification !');
+
+  //   toast.success('Success Notification !', {
+  //     position: toast.POSITION.TOP_CENTER,
+  //   });
+
+  //   toast.error('Error Notification !', {
+  //     position: toast.POSITION.TOP_LEFT,
+  //   });
+
+  //   toast.warn('Warning Notification !', {
+  //     position: toast.POSITION.BOTTOM_LEFT,
+  //   });
+
+  //   toast.info('Info Notification !', {
+  //     position: toast.POSITION.BOTTOM_CENTER,
+  //   });
+
+  //   toast('Custom Style Notification with css class!', {
+  //     position: toast.POSITION.BOTTOM_RIGHT,
+  //     className: 'foo-bar',
+  //   });
+  // };
 
   const setLegimiCodes = async e => {
-    const urlLegimiCodes = `/${e ? 'add' : 'sub'}/${filia}/${empik ? 1 : 0}/`;
+    const urlLegimiCodes = `${url}${e ? 'add' : 'sub'}/${filia}/${
+      empik ? 1 : 0
+    }/`;
 
-    axios(urlLegimiCodes).then(() => {
-      legimiQuery?.refetch();
-    });
+    axios(urlLegimiCodes)
+      .then(response => {
+        legimiQuery?.refetch();
+
+        if (response.status === 200) {
+          if (response.config.url.includes('add')) {
+            toast.success('Dodałeś kod', { icon: '➕' });
+          }
+          if (response.config.url.includes('sub')) {
+            toast.success('Usunełeś kod', { icon: '➖' });
+          }
+        }
+        if (response.status !== 200) {
+          toast.error('Błąd', { icon: '❌' });
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        toast.error('Błąd', { icon: '❌' });
+        throw new Error(error);
+      });
   };
   return (
     <div class="counter">
@@ -63,6 +112,13 @@ const LegimiCodesButtons = ({ filia, empik }) => {
           }}
         />
       </Tooltip>
+      <ToastContainer
+        position="bottom-right"
+        pauseOnHover={false}
+        newestOnTop={true}
+        limit={3}
+        autoClose={2000}
+      />
     </div>
   );
 };

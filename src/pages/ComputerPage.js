@@ -5,7 +5,8 @@ import ComputerOnlineStatus from '../components/ComputerOnlineStatus';
 import ComputerShutdownTimeoutPanel from '../components/ComputerShutdownTimeoutPanel';
 import ErrorCallback from '../components/Errors/ErrorCallback';
 import { useComputerData } from '../helper/useComputerData';
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const ComputerPage = ({ filia, showComps, url }) => {
   const computerQuery = useComputerData(filia, url);
 
@@ -68,6 +69,7 @@ const ComputerPage = ({ filia, showComps, url }) => {
           >
             {computerQuery.isFetching ? <div></div> : 'ID:' + computer.pk}
           </Box>
+          <ToastContainer limit={1} />
         </CardContent>
       );
     });

@@ -14,12 +14,17 @@ import ComputerAdd from '../components/ComputerAdd';
 import Feather from '../components/Feather';
 import LegimiAdmin from './LegimiCodes';
 import { Information } from './Information';
+import { useTheme } from '@mui/material/styles';
+import DarkModeButton from '../components/DarkModeButton';
 
-const Headers = ({ securityKey }) => {
+const Headers = ({ securityKey, colorMode }) => {
   let [tabIndex, setTabIndex] = useState(
-    JSON.parse(localStorage.getItem('set-tab-index'))
+    JSON.parse(
+      localStorage.getItem('set-tab-index') === null
+        ? 0
+        : localStorage.getItem('set-tab-index')
+    )
   );
-
   const handleClick = () => {
     localStorage.setItem('set-tab-index', JSON.stringify(tabIndex));
   };
@@ -80,6 +85,9 @@ const Headers = ({ securityKey }) => {
             onClick={handleClick}
           />
         </Tabs>
+        <Box>
+          <DarkModeButton colorMode={colorMode} />
+        </Box>
         {tabIndex === 1 && curFilia !== undefined && (
           <ComputerShutdownAll filia={curFilia} url={url} />
         )}

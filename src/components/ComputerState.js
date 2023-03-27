@@ -1,16 +1,25 @@
 import React from 'react';
 import axios from 'axios';
 import ButtonTemplate from './ButtonTemplate';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ComputerState = ({ computer, url, computerQuery }) => {
   // Set status Blocked or Unblocked
   const urlBlock = `${url}block-pc/${computer.pk}/`;
-  const compStatus = async () => {
-    try {
-      await axios(urlBlock);
-    } catch (err) {
-      console.log(err);
-    }
+
+  const compStatus = () => {
+    axios(urlBlock)
+      .then(response => {
+        computerQuery.refetch();
+        if (response.status === 200) {
+          console.log('Zmieniono status komputera');
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        toast.error(`Nie udało się zmienić statusu komputera`);
+      });
   };
 
   return (

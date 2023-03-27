@@ -23,7 +23,9 @@ const WifiCodesTable = ({ url, filia }) => {
             {code.fields.w === 0 ? 'Oczekuję Połączenie' : 'Połączony'}
           </span>
         </td>
+        
       </tr>
+      
     );
   });
   return wifiCodesData;

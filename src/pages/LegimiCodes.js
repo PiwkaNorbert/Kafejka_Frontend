@@ -1,16 +1,28 @@
 import React, { useState } from 'react';
 import LegimiCodesButtons from '../components/LegimiCodesButtons';
 import { useParams } from 'react-router-dom';
-import { CircularProgress, Switch } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import ErrorCallback from '../components/Errors/ErrorCallback';
 import { useEbookData } from '../helper/useEbookData';
+import { SideBar } from '../components/SideBar';
 const LegimiCodes = () => {
   const [filterLegimiValue, setFilterLegimi] = useState();
   const [filterEmpikValue, setFilterEmpik] = useState();
-
+  const legimiQuery = useEbookData();
   let { curFilia } = useParams();
 
-  const legimiQuery = useEbookData();
+  const [sidebarOpen, setSideBarOpen] = useState(
+    JSON.parse(
+      localStorage.getItem('sidebar') === null
+        ? false
+        : localStorage.getItem('sidebar')
+    )
+  );
+
+  const handleViewSidebar = () => {
+    setSideBarOpen(!sidebarOpen);
+    localStorage.setItem('sidebar', JSON.stringify(!sidebarOpen));
+  };
 
   const filterLegimi = e => {
     if (e.target.checked) {
@@ -39,6 +51,14 @@ const LegimiCodes = () => {
       </tr>
     );
   };
+  if (legimiQuery.isLoading)
+    return (
+      <div className="codes__loading">
+        <h2 className="codes__header--2">Nawiązywanie połączenia...</h2>
+        <CircularProgress className="loading-status" disableShrink />
+      </div>
+    );
+  if (legimiQuery.error) return <ErrorCallback />;
 
   const legimiCodesList = legimiQuery.data?.map(code => tableValues(code));
 
@@ -51,6 +71,7 @@ const LegimiCodes = () => {
     .map(code => tableValues(code));
 
   let empik = true;
+
   const FiliaCodes = legimiQuery.data
     ?.filter(code =>
       curFilia === undefined ? true : code.fields.index === +curFilia
@@ -90,18 +111,18 @@ const LegimiCodes = () => {
       );
     });
 
-  if (legimiQuery.isLoading)
-    return (
-      <div className="codes__loading">
-        <h2 className="codes__header--2">Nawiązywanie połączenia...</h2>
-        <CircularProgress className="loading-status" disableShrink />
-      </div>
-    );
-  if (legimiQuery.error) return <ErrorCallback />;
   return (
     <div>
       <main className="codes__main">
         <div className="codes__container">{FiliaCodes}</div>
+        <span>
+          <SideBar
+            isOpen={sidebarOpen}
+            filterLegimi={filterLegimi}
+            filterEmpik={filterEmpik}
+            toggleSidebar={handleViewSidebar}
+          />
+        </span>
         <table id="table" class="table__codes-ebook">
           <thead>
             <tr>
@@ -109,13 +130,11 @@ const LegimiCodes = () => {
               <th className="number-of-codes">
                 <div>
                   <span>Kody Legimi</span>
-                  <Switch onClick={filterLegimi} />
                 </div>
               </th>
               <th className="number-of-codes">
                 <div>
                   <span>Kody Empik Go</span>
-                  <Switch onClick={filterEmpik} />
                 </div>
               </th>
               <th>Adres</th>
