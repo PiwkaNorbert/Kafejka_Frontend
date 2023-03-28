@@ -91,6 +91,12 @@ export default function ToggleColorMode() {
     cssColorChanger('white', '#fff', '#000');
     cssColorChanger('table-row-even-color', '#fff', '#111');
     cssColorChanger('bg-slate-100', '#E2E8F', '#555');
+    cssColorChanger('body-bg-color', '#eee', '#121212');
+    cssColorChanger(
+      'icon-fill-color-lm',
+      'rgba(0, 0, 0, 0.6)',
+      'rgba(255, 255, 255, 0.7)'
+    );
   }, [mode]);
 
   return (

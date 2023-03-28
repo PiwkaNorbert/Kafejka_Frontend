@@ -85,7 +85,7 @@ const Headers = ({ securityKey, colorMode }) => {
             onClick={handleClick}
           />
         </Tabs>
-        <Box>
+        <Box sx={{ p: 2, display: 'grid' }}>
           <DarkModeButton colorMode={colorMode} />
         </Box>
         {tabIndex === 1 && curFilia !== undefined && (

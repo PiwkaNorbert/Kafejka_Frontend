@@ -79,7 +79,7 @@ const LegimiCodes = () => {
     .map(code => {
       return (
         <>
-          {curFilia !== '' && !curFilia !== '0' ? (
+          {curFilia !== '' && !curFilia !== '0' && curFilia !== undefined ? (
             <>
               {/* TODO make it a one liner */}
               {/* <h1 className="counter__output-header" key={code.fields.index}>

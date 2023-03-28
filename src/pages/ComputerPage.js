@@ -61,7 +61,7 @@ const ComputerPage = ({ filia, showComps, url }) => {
             }`}
             sx={{
               textAlign: 'end',
-              color: 'grey',
+              color: '#444',
               p: 0,
               marginRight: 1,
               marginLeft: 'auto',

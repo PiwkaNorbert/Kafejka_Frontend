@@ -33,7 +33,7 @@ const ComputerShutdownTimeoutPanel = ({
         className={`kafeika-komputer__timeout-computer`}
         sx={{
           backgroundColor: `${
-            computerQuery?.isFetching ? 'transparent' : 'var(--bg-slate-100)'
+            computerQuery?.isFetching ? 'transparent' : 'var(--body-bg-color)'
           }`,
         }}
       >
