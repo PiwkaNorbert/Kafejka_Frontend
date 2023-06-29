@@ -5,12 +5,10 @@ import Headers from './pages/Header';
 import LegimiAdmin from './pages/LegimiCodes';
 import ErrorCallback from './components/Errors/ErrorCallback';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-import { useTheme, ThemeProvider, createTheme } from '@mui/material/styles';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-
-import DarkModeButton from './components/DarkModeButton';
-import { light } from '@mui/material/styles/createPalette';
 
 const queryClient = new QueryClient();
 const SecurityKeyLink = window.location.pathname.split('/');
@@ -51,6 +49,13 @@ export function App() {
             />
           </Routes>
         </Router>
+        <ToastContainer
+          position="bottom-right"
+          pauseOnHover={true}
+          newestOnTop={true}
+          limit={3}
+          autoClose={2000}
+        />
       </div>
     </QueryClientProvider>
   );
@@ -87,16 +92,9 @@ export default function ToggleColorMode() {
       `${mode === 'light' ? fromColor : toColor}`
     );
   }
+
   useEffect(() => {
-    cssColorChanger('white', '#fff', '#000');
-    cssColorChanger('table-row-even-color', '#fff', '#111');
-    cssColorChanger('bg-slate-100', '#E2E8F', '#555');
-    cssColorChanger('body-bg-color', '#eee', '#121212');
-    cssColorChanger(
-      'icon-fill-color-lm',
-      'rgba(0, 0, 0, 0.6)',
-      'rgba(255, 255, 255, 0.7)'
-    );
+    document.documentElement.setAttribute('data-theme', mode);
   }, [mode]);
 
   return (

@@ -5,14 +5,11 @@ import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 
 const ComputerShutdownAll = ({ filia, url }) => {
   // Send a get to shutdown all computers
-  const compShutdownAll = async () => {
+  const compShutdownAll = () => {
     const urlSDAll = `${url}shutdown-all/${filia}/`;
-    try {
-      await axios(urlSDAll);
-    } catch (err) {
-      console.log(err);
-    }
+    axios(urlSDAll).catch(err => console.log(err));
   };
+
   return (
     <ButtonTemplate
       color={'error'}

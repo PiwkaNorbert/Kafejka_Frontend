@@ -5,38 +5,11 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { Tooltip } from '@mui/material';
 import { useEbookData } from '../helper/useEbookData';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 const LegimiCodesButtons = ({ filia, empik }) => {
   const legimiQuery = useEbookData();
   const url = `http://192.168.200.37:8000/`;
-
-  // };
-  // const notify = () => {
-  //   toast('Default Notification !');
-
-  //   toast.success('Success Notification !', {
-  //     position: toast.POSITION.TOP_CENTER,
-  //   });
-
-  //   toast.error('Error Notification !', {
-  //     position: toast.POSITION.TOP_LEFT,
-  //   });
-
-  //   toast.warn('Warning Notification !', {
-  //     position: toast.POSITION.BOTTOM_LEFT,
-  //   });
-
-  //   toast.info('Info Notification !', {
-  //     position: toast.POSITION.BOTTOM_CENTER,
-  //   });
-
-  //   toast('Custom Style Notification with css class!', {
-  //     position: toast.POSITION.BOTTOM_RIGHT,
-  //     className: 'foo-bar',
-  //   });
-  // };
 
   const setLegimiCodes = async e => {
     const urlLegimiCodes = `${url}${e ? 'add' : 'sub'}/${filia}/${
@@ -112,13 +85,6 @@ const LegimiCodesButtons = ({ filia, empik }) => {
           }}
         />
       </Tooltip>
-      <ToastContainer
-        position="bottom-right"
-        pauseOnHover={false}
-        newestOnTop={true}
-        limit={3}
-        autoClose={2000}
-      />
     </div>
   );
 };

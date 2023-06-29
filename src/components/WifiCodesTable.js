@@ -1,8 +1,11 @@
 import React from 'react';
 import { useHotspotData } from '../helper/useHotspotData';
+import { useParams } from 'react-router-dom';
 
-const WifiCodesTable = ({ url, filia }) => {
-  const wifiCodesQuery = useHotspotData(url, filia);
+const WifiCodesTable = ({ url }) => {
+  const { curFilia } = useParams();
+
+  const wifiCodesQuery = useHotspotData(url, curFilia);
   const wifiCodesData = wifiCodesQuery.data.map((code, index) => {
     return (
       <tr
@@ -23,9 +26,7 @@ const WifiCodesTable = ({ url, filia }) => {
             {code.fields.w === 0 ? 'Oczekuję Połączenie' : 'Połączony'}
           </span>
         </td>
-        
       </tr>
-      
     );
   });
   return wifiCodesData;

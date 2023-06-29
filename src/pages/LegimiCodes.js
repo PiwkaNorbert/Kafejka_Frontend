@@ -123,7 +123,7 @@ const LegimiCodes = () => {
             toggleSidebar={handleViewSidebar}
           />
         </span>
-        <table id="table" class="table__codes-ebook">
+        <table id="table" className="table__codes-ebook">
           <thead>
             <tr>
               <th>Nazwa Filii</th>

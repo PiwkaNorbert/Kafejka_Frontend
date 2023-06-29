@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '@mui/material';
 import ComputerState from './ComputerState';
 
-const ComputerOnlineStatus = ({ computer, url, callback, computerQuery }) => {
+const ComputerOnlineStatus = ({ computer, url, computerQuery }) => {
   return (
     <Box
       className={`kafeika-komputer__status`}
@@ -26,7 +26,6 @@ const ComputerOnlineStatus = ({ computer, url, callback, computerQuery }) => {
             <ComputerState
               computer={computer}
               url={url}
-              callback={callback}
               computerQuery={computerQuery}
             />
           </>
@@ -37,22 +36,3 @@ const ComputerOnlineStatus = ({ computer, url, callback, computerQuery }) => {
 };
 
 export default ComputerOnlineStatus;
-
-{
-  /* <Box
-  className={`kafeika-komputer__status-content ${
-    computer.fields.f === 0
-      ? 'bg-red'
-      : computer.fields.f === 1
-      ? 'bg-green'
-      : 'bg-blue'
-  }`}
-  sx={{ padding: 1, fontStyle: 'italic', fontSize: '14px' }}
->
-  {computer.fields.f === 0
-    ? 'Zablokowany'
-    : computer.fields.f === 1
-    ? 'Odblokowany'
-    : 'Zamykanie'}
-</Box> */
-}

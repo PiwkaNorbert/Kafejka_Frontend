@@ -10,6 +10,7 @@ const ButtonTemplate = ({
   fullWidth,
   callback,
   variant,
+  value,
 }) => {
   return (
     <Button
@@ -21,6 +22,7 @@ const ButtonTemplate = ({
       fullWidth={fullWidth}
       onClick={callback}
       disabled={disabled}
+      value={value}
     >
       {icon}
       <span>{text}</span>

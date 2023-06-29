@@ -8,10 +8,10 @@ const TimerUntilShutdown = function ({ computer }) {
 
   let Tick = function () {
     let min = String(Math.trunc(time / 60)).padStart(1, '0');
-    // const sec = String(time % 60).padStart(2, '0');
-
-    if (min >= 0) return `${min} min`;
+    const sec = String(time % 60).padStart(2, '0');
+    if (min >= 0) return `${min}:${sec}`;
   };
+
   if (shutdownTime === null || time < 0) return '';
   if (curTime >= shutdownTime - 86400 && time > 0)
     return (

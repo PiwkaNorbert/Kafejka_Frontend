@@ -9,7 +9,6 @@ const ComputerShutdownTimeoutPanel = ({
   url,
   computerQuery,
 }) => {
-  const [shutdownTimeout, setShutdownTimeout] = useState('');
   const [num, setNum] = React.useState();
 
   // Set status Shutdown Time
@@ -17,14 +16,11 @@ const ComputerShutdownTimeoutPanel = ({
     const urlShutdownTimeout = `${url}shutdown-timeout/${computer.pk}/${
       document.querySelector(`#closeTime${index}`).value
     }/`;
-    try {
-      await axios(urlShutdownTimeout)
-        .then(res => setShutdownTimeout(res))
-        .then(() => computerQuery.refetch());
-      document.querySelector(`#closeTime${index}`).value = '';
-    } catch (err) {
-      console.log(err);
-    }
+
+    await axios(urlShutdownTimeout)
+      .then(() => computerQuery.refetch())
+      .catch(err => console.log(err))
+      .finally(() => (document.querySelector(`#closeTime${index}`).value = ''));
   };
 
   return (

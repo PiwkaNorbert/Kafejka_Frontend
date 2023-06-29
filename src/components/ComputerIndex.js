@@ -37,7 +37,7 @@ const ComputerIndex = ({ computer, index, url, showComps, computerQuery }) => {
             />
           </Box>
           <Box className={'timer'} sx={{ flex: '1 1 0' }}>
-            <TimerUntilShutdown computer={computer} />
+            <TimerUntilShutdown computer={computer} url={url} />
           </Box>
           <Box
             sx={{
@@ -57,7 +57,11 @@ const ComputerIndex = ({ computer, index, url, showComps, computerQuery }) => {
       ) : (
         <Box className={`kafeika-komputer__index`}>
           <Box className={`kafeika-komputer__index-computer`}>
-            <ComputerDelete computer={computer} index={index} url={url} />
+            <ComputerDelete
+              computer={computer}
+              url={url}
+              computerQuery={computerQuery}
+            />
           </Box>
         </Box>
       )}

@@ -1,44 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
 import ButtonTemplate from './ButtonTemplate';
-import { CircularProgress, Button } from '@mui/material';
+import { CircularProgress } from '@mui/material';
+import buttonCommand from '../helper/buttonCommand';
 
-const ComputerDelete = ({
-  computer,
-  index,
-  url,
-  setComputerUpdateData,
-  setComputers,
-}) => {
-  const [isDisabled, setIsDisabled] = useState(false);
-  // Set status Shutdown
-  const compDelete = async () => {
-    const urlDelete = `${url}delete-pc/${computer.pk}/`;
-    try {
-      await axios.get(urlDelete).then(response => {
-        setIsDisabled(false);
-        console.log(response);
-        setComputers(response);
-      });
-    } catch (err) {
-      console.log(`error brah ${err}`);
-      setIsDisabled(true);
-    }
+const ComputerDelete = ({ computer, url, computerQuery }) => {
+  // Delete pc
+  const handleDeletedButton = e => {
+    const deletePCURL = `${url}delete-pc/${e.currentTarget.value}/`;
+    buttonCommand(
+      deletePCURL,
+      'Błąd podczas usuwania komputera',
+      computerQuery
+    );
   };
   return (
     <ButtonTemplate
       variant={'contained'}
       color={'error'}
       fullWidth={true}
-      callback={e => {
-        e.preventDefault();
-        compDelete();
-        setIsDisabled(true);
-      }}
-      disabled={isDisabled && computer.pk ? true : false}
+      callback={handleDeletedButton}
+      value={computer.pk}
+      disabled={computerQuery.isLoading && computer.pk ? true : false}
       className={'btn-delete'}
       text={
-        isDisabled && computer.pk ? (
+        computerQuery.isLoading ? (
           <CircularProgress className="loading-status-btn" disableShrink />
         ) : (
           'Usuń'
