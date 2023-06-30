@@ -15,13 +15,54 @@ export const Information = function () {
           Kliknij tutaj
         </a>
       </CardContent>
+
+      <CardContent className="information-container info-con">
+        <h3 className="info__header--3">v4.3</h3>
+
+        <p className="info__date">Czerwiec 30, 2023</p>
+        <h2 className="info__header--4">Code Quality</h2>
+        <ul className="info__list">
+          <li>
+            Ogromny <span className="highlight">Refactor</span>
+          </li>
+          <li>General code quality and performance</li>
+        </ul>
+        <h2 className="info__header--4">UI</h2>
+        <ul className="info__list">
+          <li>
+            Dodano
+            <span className="highlight">Toast Notifikacje</span> tak aby
+            działały poprawnie, i bez duplikatów
+          </li>
+          <li>
+            Dodano <span className="highlight">useMutation</span> i{' '}
+            <span className="highlight">axios</span>
+          </li>
+          <li>
+            Dodano <span className="highlight">Cachowanie</span> aby nie było
+            trzeba pobierac danych za każdym razem gdy zmienimy zakładkę (np. z
+            WIFI na INFORMACJE) i wrócimy z powrotem na WIFI
+          </li>
+          <li>
+            {' '}
+            Dodano{' '}
+            <span className="highlight">
+              Licznik czasu pozostałęgo na stanowisku w czasie rzeczywistym
+            </span>
+          </li>
+          <li>Optymalizacja kodu i poprawa wydajności</li>
+        </ul>
+      </CardContent>
       <CardContent className="information-container info-con">
         <h3 className="info__header--3">v4.2.2</h3>
 
         <p className="info__date">Kwi 6, 2023</p>
         <h2 className="info__header--4">Code Quality</h2>
         <ul className="info__list">
-          <li>Link do szkolenia <span className="highlight">"KLIKNIJ TUTAJ"</span> został naprawiony</li>
+          <li>
+            Link do szkolenia <span className="highlight">"KLIKNIJ TUTAJ"</span>{' '}
+            został naprawiony
+          </li>
           <li>Theme managment w CSS</li>
         </ul>
         <h2 className="info__header--4">UI</h2>
