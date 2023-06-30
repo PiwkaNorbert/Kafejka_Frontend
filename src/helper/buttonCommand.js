@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 export default function buttonCommand(url, errorMsg, computer, extra) {
+  return null;
   axios(url)
     .then(response => {
       console.log(response);

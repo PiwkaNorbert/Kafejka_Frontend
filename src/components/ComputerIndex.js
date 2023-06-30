@@ -10,7 +10,7 @@ import WifiIcon from '@mui/icons-material/Wifi';
 
 import TimerUntilShutdown from './TimerUntilShutdown';
 
-const ComputerIndex = ({ computer, index, url, showComps, computerQuery }) => {
+const ComputerIndex = ({ computer, index, url, showComps }) => {
   return (
     <>
       {showComps ? (
@@ -30,11 +30,7 @@ const ComputerIndex = ({ computer, index, url, showComps, computerQuery }) => {
               flex: '1 1 0',
             }}
           >
-            <ComputerShutdown
-              computer={computer}
-              url={url}
-              computerQuery={computerQuery}
-            />
+            <ComputerShutdown computer={computer} url={url} />
           </Box>
           <Box className={'timer'} sx={{ flex: '1 1 0' }}>
             <TimerUntilShutdown computer={computer} url={url} />
@@ -55,15 +51,7 @@ const ComputerIndex = ({ computer, index, url, showComps, computerQuery }) => {
           </Box>
         </Box>
       ) : (
-        <Box className={`kafeika-komputer__index`}>
-          <Box className={`kafeika-komputer__index-computer`}>
-            <ComputerDelete
-              computer={computer}
-              url={url}
-              computerQuery={computerQuery}
-            />
-          </Box>
-        </Box>
+        <ComputerDelete computer={computer} url={url} />
       )}
     </>
   );

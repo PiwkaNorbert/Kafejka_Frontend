@@ -1,53 +1,57 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import ButtonTemplate from './ButtonTemplate';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { Tooltip } from '@mui/material';
-import { useEbookData } from '../helper/useEbookData';
 import { toast } from 'react-toastify';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const LegimiCodesButtons = ({ filia, empik }) => {
-  const legimiQuery = useEbookData();
   const url = `http://192.168.200.37:8000/`;
+  const queryClient = useQueryClient();
+  const [typeOfCode, setTypeOfCode] = useState(null);
 
-  const setLegimiCodes = async e => {
-    const urlLegimiCodes = `${url}${e ? 'add' : 'sub'}/${filia}/${
-      empik ? 1 : 0
-    }/`;
-
-    axios(urlLegimiCodes)
-      .then(response => {
-        legimiQuery?.refetch();
-
-        if (response.status === 200) {
-          if (response.config.url.includes('add')) {
-            toast.success('Dodałeś kod', { icon: '➕' });
+  const legimiCodesMutation = useMutation(
+    async state => {
+      const urlLegimiCodes = `${url}${state ? 'add' : 'sub'}/${filia}/${
+        empik ? 1 : 0
+      }/`;
+      setTypeOfCode(state);
+      const { data, status } = await axios(urlLegimiCodes);
+      if (status !== 200) {
+        throw new Error('Błąd połączenia z serwerem');
+      }
+      return data;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['codes']);
+        toast.success(
+          `${typeOfCode ? 'Dodałeś' : 'Usunełeś'} kod ${
+            empik ? 'EmpikGo' : 'Legimi'
+          }`,
+          {
+            icon: '➕',
           }
-          if (response.config.url.includes('sub')) {
-            toast.success('Usunełeś kod', { icon: '➖' });
-          }
-        }
-        if (response.status !== 200) {
-          toast.error('Błąd', { icon: '❌' });
-        }
-      })
-      .catch(error => {
-        console.error(error);
+        );
+      },
+      onError: () => {
         toast.error('Błąd', { icon: '❌' });
-        throw new Error(error);
-      });
-  };
+      },
+    }
+  );
+
   return (
     <div class="counter">
       <Tooltip title="Usuń" placement="top">
         <ButtonTemplate
           variant={'contained'}
           color={'error'}
-          disabled={legimiQuery?.isLoading ? true : false}
+          disabled={legimiCodesMutation.isLoading}
           className={'control__btn-sub'}
           icon={
-            legimiQuery?.isRefetching ? (
+            legimiCodesMutation?.isLoading ? (
               <div class="la-ball-clip-rotate la-sm">
                 <div></div>
               </div>
@@ -58,7 +62,8 @@ const LegimiCodesButtons = ({ filia, empik }) => {
           type="submit"
           callback={e => {
             e.preventDefault();
-            setLegimiCodes(false);
+            if (legimiCodesMutation.isLoading) return;
+            legimiCodesMutation.mutate(false);
           }}
         />
       </Tooltip>
@@ -67,10 +72,10 @@ const LegimiCodesButtons = ({ filia, empik }) => {
         <ButtonTemplate
           variant={'contained'}
           color={'success'}
-          disabled={legimiQuery?.isLoading ? true : false}
+          disabled={legimiCodesMutation.isLoading}
           className={`control__btn-add`}
           icon={
-            legimiQuery?.isRefetching ? (
+            legimiCodesMutation.isLoading ? (
               <div class="la-ball-clip-rotate la-sm">
                 <div></div>
               </div>
@@ -81,7 +86,9 @@ const LegimiCodesButtons = ({ filia, empik }) => {
           type="submit"
           callback={e => {
             e.preventDefault();
-            setLegimiCodes(true);
+            if (legimiCodesMutation.isLoading) return;
+
+            legimiCodesMutation.mutate(true);
           }}
         />
       </Tooltip>

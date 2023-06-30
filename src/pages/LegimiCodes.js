@@ -5,6 +5,7 @@ import { CircularProgress } from '@mui/material';
 import ErrorCallback from '../components/Errors/ErrorCallback';
 import { useEbookData } from '../helper/useEbookData';
 import { SideBar } from '../components/SideBar';
+
 const LegimiCodes = () => {
   const [filterLegimiValue, setFilterLegimi] = useState();
   const [filterEmpikValue, setFilterEmpik] = useState();
@@ -63,13 +64,12 @@ const LegimiCodes = () => {
   const legimiCodesList = legimiQuery.data?.map(code => tableValues(code));
 
   const legimiCodesListFiltered = legimiQuery.data
-    ?.filter(code => code.fields.codesNumber !== 0)
+    ?.filter(code => code.fields.codesNumber !== 0 && filterLegimiValue)
     .map(code => tableValues(code));
 
   const empikCodesListFiltered = legimiQuery.data
-    ?.filter(code => code.fields.empikNumber !== 0)
+    ?.filter(code => code.fields.empikNumber !== 0 && filterEmpikValue)
     .map(code => tableValues(code));
-
   let empik = true;
 
   const FiliaCodes = legimiQuery.data
@@ -81,13 +81,6 @@ const LegimiCodes = () => {
         <>
           {curFilia !== '' && !curFilia !== '0' && curFilia !== undefined ? (
             <>
-              {/* TODO make it a one liner */}
-              {/* <h1 className="counter__output-header" key={code.fields.index}>
-                {empik
-                  ? `Empik: ${code.fields.empikNumber}`
-                  : `Legimi: ${code.fields.codesNumber}`}
-              </h1>
-              <LegimiCodesButtons filia={curFilia} empik={ ?empik : null}  /> */}
               <div className="codes__header">
                 <h1 className="codes__header--1">{code.fields.filiaName}</h1>
               </div>

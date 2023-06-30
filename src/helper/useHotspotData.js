@@ -15,11 +15,10 @@ export function useHotspotData(url, filia) {
     ['wifiCodes', filia],
     () => fetchHotspotData(url, filia),
     {
+      staleTime: 1000 * 60 * 10,
+
       onError: error => {
         toast.error(error.message, { icon: '❌' });
-      },
-      onSuccess: () => {
-        toast.success('Pobrano dane', { icon: '👍', toastId: 'hotspot' });
       },
     }
   );

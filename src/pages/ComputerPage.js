@@ -5,11 +5,15 @@ import ComputerOnlineStatus from '../components/ComputerOnlineStatus';
 import ComputerShutdownTimeoutPanel from '../components/ComputerShutdownTimeoutPanel';
 import ErrorCallback from '../components/Errors/ErrorCallback';
 import { useComputerData } from '../helper/useComputerData';
+import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-const ComputerPage = ({ filia, showComps, url }) => {
-  const computerQuery = useComputerData(filia, url);
+const ComputerPage = ({ showComps, url }) => {
+  let { curFilia: filia } = useParams();
+  const { data, isError, isLoading, isFetching, fetchStatus, state } =
+    useComputerData(filia, url);
 
-  if (computerQuery.isLoading)
+  if (isLoading)
     return (
       <div className="codes__loading">
         <h2 className="codes__header--2">Nawiązywanie połączenia...</h2>
@@ -17,9 +21,13 @@ const ComputerPage = ({ filia, showComps, url }) => {
       </div>
     );
 
-  if (computerQuery.error) return <ErrorCallback />;
+  if (isError) return <ErrorCallback />;
+  if (fetchStatus === 'paused' && state === 'loading') {
+    toast.error('Serwer nie odpowiada. Sprawdź połączenie z internetem.');
+    return <div style={{ color: 'red' }}>paused</div>;
+  }
 
-  const computers = computerQuery.data
+  const computers = data
     ?.filter(
       computer => filia === undefined || computer.fields.filia === +filia
     )
@@ -31,32 +39,28 @@ const ComputerPage = ({ filia, showComps, url }) => {
             index={index}
             url={url}
             showComps={showComps}
-            computerQuery={computerQuery}
           />
           <Box className="kafeika__wrap" sx={{ margin: 1 }}>
-            {showComps ? (
-              <ComputerOnlineStatus
-                computer={computer}
-                url={url}
-                showComps={showComps}
-                computerQuery={computerQuery}
-              />
-            ) : null}
-            {showComps ? (
-              <ComputerShutdownTimeoutPanel
-                computer={computer}
-                index={index}
-                url={url}
-                computerQuery={computerQuery}
-              />
-            ) : null}
+            {showComps && (
+              <>
+                <ComputerOnlineStatus
+                  computer={computer}
+                  url={url}
+                  showComps={showComps}
+                  isLoading={isLoading}
+                />
+                <ComputerShutdownTimeoutPanel
+                  computer={computer}
+                  index={index}
+                  url={url}
+                />
+              </>
+            )}
           </Box>
 
           <Box
             className={`${
-              computerQuery.isLoading
-                ? 'la-ball-clip-rotate la-dark la-sm'
-                : null
+              isLoading ? 'la-ball-clip-rotate la-dark la-sm' : null
             }`}
             sx={{
               textAlign: 'end',
@@ -66,7 +70,7 @@ const ComputerPage = ({ filia, showComps, url }) => {
               marginLeft: 'auto',
             }}
           >
-            {computerQuery.isFetching ? <div></div> : 'ID:' + computer.pk}
+            {isFetching ? <div></div> : 'ID:' + computer.pk}
           </Box>
         </CardContent>
       );
@@ -74,7 +78,7 @@ const ComputerPage = ({ filia, showComps, url }) => {
 
   return (
     <Box>
-      {computerQuery.isLoading ? (
+      {isLoading ? (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <CircularProgress className="loading-status" disableShrink />
         </div>

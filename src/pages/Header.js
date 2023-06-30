@@ -31,6 +31,29 @@ const Headers = ({ securityKey, colorMode }) => {
   const urlStalowy = window.location.href.includes('192.168.200.');
   const urlFortiClient = window.location.href.includes('192.168.3.');
   const url = `http://192.168.200.37:8005/${securityKey}/`;
+  const TABS = [
+    {
+      index: 0,
+      component: <Information />,
+    },
+    {
+      index: 1,
+      component: <ComputerPage showComps={true} url={url} />,
+    },
+    {
+      index: 2,
+      component: <WifiPerms url={url} />,
+    },
+    {
+      index: 3,
+      component: <LegimiAdmin />,
+    },
+    {
+      index: 4,
+      component: <ComputerPage showComps={false} url={url} />,
+    },
+  ];
+
   let { curFilia } = useParams();
   let smallScreen = useMediaQuery('(max-width: 850px)');
 
@@ -82,19 +105,13 @@ const Headers = ({ securityKey, colorMode }) => {
           <ComputerAdd filia={curFilia} url={url} />
         )}
       </Box>
-      {tabIndex === 0 && <Information />}
-      {tabIndex === 1 && (
-        <ComputerPage filia={curFilia} showComps={true} url={url} />
-      )}
-      {tabIndex === 2 && (
-        <>
-          {curFilia !== undefined && <WifiPerms filia={curFilia} url={url} />}
-        </>
-      )}
-      {tabIndex === 3 && <LegimiAdmin />}
-      {tabIndex === 4 && (
-        <ComputerPage filia={curFilia} showComps={false} url={url} />
-      )}
+      {TABS.map(tab => {
+        if (tab.index === tabIndex) {
+          return tab.component;
+        } else {
+          return null;
+        }
+      })}
     </>
   );
 };

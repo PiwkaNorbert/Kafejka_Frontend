@@ -10,6 +10,8 @@ import { ToastContainer } from 'react-toastify';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
 const queryClient = new QueryClient();
 const SecurityKeyLink = window.location.pathname.split('/');
 const securityKey = SecurityKeyLink[1];
@@ -57,6 +59,7 @@ export function App() {
           autoClose={2000}
         />
       </div>
+      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 }

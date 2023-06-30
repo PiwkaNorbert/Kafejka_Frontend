@@ -1,35 +1,63 @@
 import React from 'react';
 import ButtonTemplate from './ButtonTemplate';
-import { CircularProgress } from '@mui/material';
-import buttonCommand from '../helper/buttonCommand';
+import { Box, CircularProgress } from '@mui/material';
+import { useParams } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
-const ComputerDelete = ({ computer, url, computerQuery }) => {
-  // Delete pc
-  const handleDeletedButton = e => {
-    const deletePCURL = `${url}delete-pc/${e.currentTarget.value}/`;
-    buttonCommand(
-      deletePCURL,
-      'Błąd podczas usuwania komputera',
-      computerQuery
-    );
-  };
-  return (
-    <ButtonTemplate
-      variant={'contained'}
-      color={'error'}
-      fullWidth={true}
-      callback={handleDeletedButton}
-      value={computer.pk}
-      disabled={computerQuery.isLoading && computer.pk ? true : false}
-      className={'btn-delete'}
-      text={
-        computerQuery.isLoading ? (
-          <CircularProgress className="loading-status-btn" disableShrink />
-        ) : (
-          'Usuń'
-        )
+const ComputerDelete = ({ computer, url }) => {
+  const { curFilia } = useParams();
+  const queryClient = useQueryClient();
+
+  const deletePCMutation = useMutation(
+    async compId => {
+      const deletePCURL = `${url}delete-pc/${compId}/`;
+
+      const { data, status } = await axios.get(deletePCURL);
+      if (status !== 200) {
+        throw new Error(`Nastpił problem: ${status}`);
       }
-    />
+      return data;
+    },
+    {
+      onSuccess: response => {
+        queryClient.invalidateQueries(['komps', curFilia]);
+        toast.success('Komputer został usunięty', { icon: '✅' });
+        // queryClient.setQueryData(['komps', curFilia], old => {
+
+        // });
+      },
+      onError: error => {
+        console.error(error);
+        toast.error('Komputer niezostał usunięty', { icon: '❌' });
+      },
+    }
+  );
+
+  return (
+    <Box className={`kafeika-komputer__index`}>
+      <Box className={`kafeika-komputer__index-computer`}>
+        <ButtonTemplate
+          variant={'contained'}
+          color={'error'}
+          fullWidth={true}
+          disabled={deletePCMutation.isLoading}
+          callback={() => {
+            if (deletePCMutation.isLoading) return;
+            deletePCMutation.mutate(computer.pk);
+          }}
+          className={'btn-delete'}
+          text={
+            deletePCMutation.isLoading ? (
+              <CircularProgress className="loading-status-btn" disableShrink />
+            ) : (
+              'Usuń'
+            )
+          }
+        />
+      </Box>
+    </Box>
   );
 };
 

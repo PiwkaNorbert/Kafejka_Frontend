@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '@mui/material';
 import ComputerState from './ComputerState';
 
-const ComputerOnlineStatus = ({ computer, url, computerQuery }) => {
+const ComputerOnlineStatus = ({ computer, url, isLoading }) => {
   return (
     <Box
       className={`kafeika-komputer__status`}
@@ -16,18 +16,14 @@ const ComputerOnlineStatus = ({ computer, url, computerQuery }) => {
           fontWeight: 700,
         }}
       >
-        {computerQuery?.isLoading ? (
+        {isLoading ? (
           <div className="la-ball-clip-rotate la-dark la-sm">
             <div></div>
           </div>
         ) : (
           <>
             <p>Stan</p>
-            <ComputerState
-              computer={computer}
-              url={url}
-              computerQuery={computerQuery}
-            />
+            <ComputerState computer={computer} url={url} />
           </>
         )}
       </Box>

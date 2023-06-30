@@ -1,15 +1,7 @@
 import React, { useRef } from 'react';
 import axios from 'axios';
-import {
-  Box,
-  TextField,
-  CardContent,
-  Button,
-  CircularProgress,
-} from '@mui/material';
+import { Box, TextField, CardContent, Button } from '@mui/material';
 import WifiCodesTable from '../components/WifiCodesTable';
-import { useHotspotData } from '../helper/useHotspotData';
-import ErrorCallback from '../components/Errors/ErrorCallback';
 import { toast } from 'react-toastify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
@@ -17,8 +9,9 @@ import { useParams } from 'react-router-dom';
 const WifiPerms = ({ index, url }) => {
   const inputRef = useRef(null);
   const { curFilia } = useParams();
-  const wifiCodesQuery = useHotspotData(url, curFilia);
+
   const queryClient = useQueryClient();
+
   const cardHotspotCode = async value => {
     try {
       const urlHotspotCode = `${url}hotspot-code/${+curFilia}/${
@@ -38,6 +31,7 @@ const WifiPerms = ({ index, url }) => {
   const addCodeMutation = useMutation(cardHotspotCode, {
     onSuccess: () => {
       toast.success('Kod został wysłany!', { icon: '👍', toastId: 'addCode' });
+      inputRef.current.value = '';
       queryClient.invalidateQueries(['wifiCodes', curFilia]);
     },
     onError: error => {
@@ -45,14 +39,6 @@ const WifiPerms = ({ index, url }) => {
     },
   });
 
-  if (wifiCodesQuery.isLoading)
-    return (
-      <div className="codes__loading">
-        <h2 className="codes__header--2">Nawiązywanie połączenia...</h2>
-        <CircularProgress className="loading-status" disableShrink />
-      </div>
-    );
-  if (wifiCodesQuery.error) return <ErrorCallback />;
   return (
     <div>
       <div
@@ -68,9 +54,8 @@ const WifiPerms = ({ index, url }) => {
               className="wifi__form-codes"
               onSubmit={e => {
                 e.preventDefault();
+                if (addCodeMutation.isLoading) return;
                 addCodeMutation.mutate(+inputRef.current.value);
-
-                inputRef.current.value = '';
               }}
             >
               <TextField
