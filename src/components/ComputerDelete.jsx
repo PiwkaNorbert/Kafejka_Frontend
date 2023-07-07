@@ -1,10 +1,10 @@
-import React from 'react';
 import ButtonTemplate from './ButtonTemplate';
 import { Box, CircularProgress } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import PropTypes from 'prop-types';
 
 const ComputerDelete = ({ computer, url }) => {
   const { curFilia } = useParams();
@@ -21,7 +21,7 @@ const ComputerDelete = ({ computer, url }) => {
       return data;
     },
     {
-      onSuccess: response => {
+      onSuccess: () => {
         toast.success('Komputer został usunięty', { icon: '✅' });
         // queryClient.setQueryData(['komps', curFilia], old => {
 
@@ -46,12 +46,12 @@ const ComputerDelete = ({ computer, url }) => {
           fullWidth={true}
           disabled={deletePCMutation.isLoading}
           callback={() => {
-            if (deletePCMutation.isLoading) return;
-            deletePCMutation.mutate(computer.pk);
+            if (deletePCMutation?.isLoading) return;
+            deletePCMutation?.mutate(computer?.pk);
           }}
           className={'btn-delete'}
           text={
-            deletePCMutation.isLoading ? (
+            deletePCMutation?.isLoading ? (
               <CircularProgress className="loading-status-btn" disableShrink />
             ) : (
               'Usuń'
@@ -61,6 +61,11 @@ const ComputerDelete = ({ computer, url }) => {
       </Box>
     </Box>
   );
+};
+
+ComputerDelete.propTypes = {
+  computer: PropTypes.object.isRequired,
+  url: PropTypes.string.isRequired,
 };
 
 export default ComputerDelete;

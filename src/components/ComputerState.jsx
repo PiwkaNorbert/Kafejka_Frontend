@@ -1,9 +1,10 @@
-import React from 'react';
 import axios from 'axios';
 import ButtonTemplate from './ButtonTemplate';
 import { toast } from 'react-toastify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
+
+import PropTypes from 'prop-types';
 
 const ComputerState = ({ computer, url }) => {
   // Set status Blocked or Unblocked
@@ -33,8 +34,8 @@ const ComputerState = ({ computer, url }) => {
           }
         );
 
-        queryClient.setQueryData(['komps', curFilia], old => {
-          return old.map(comp => {
+        queryClient.setQueryData(['komps', curFilia], oldData => {
+          return oldData.map(comp => {
             if (comp.pk === response[0].pk) {
               return {
                 ...comp,
@@ -86,6 +87,11 @@ const ComputerState = ({ computer, url }) => {
       />
     </>
   );
+};
+
+ComputerState.propTypes = {
+  computer: PropTypes.object.isRequired,
+  url: PropTypes.string.isRequired,
 };
 
 export default ComputerState;

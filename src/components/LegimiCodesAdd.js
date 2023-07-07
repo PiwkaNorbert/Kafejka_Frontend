@@ -13,7 +13,6 @@ const LegimiCodesAdd = ({ filia, url, isLoading, setIsLoading, empik }) => {
       const urlLegimiCodes = `${url}${state ? 'add' : 'sub'}/${filia}/${
         empik ? 1 : 0
       }/`;
-      console.log(urlLegimiCodes);
       const { data, status } = await axios(urlLegimiCodes);
       if (status !== 200) {
         throw new Error('Błąd połączenia z serwerem');

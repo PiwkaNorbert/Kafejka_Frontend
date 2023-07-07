@@ -12,7 +12,7 @@ export async function fetchComputerData(url, filia) {
 
 export function useComputerData(filia, url) {
   return useQuery(['komps', filia], () => fetchComputerData(url, filia), {
-    staleTime: 1000 * 60 * 10,
+    staleTime: 1000 * 60 * 1,
 
     onError: error => {
       toast.error(error.message, { icon: '❌' });

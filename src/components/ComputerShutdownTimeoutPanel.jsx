@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import axios from 'axios';
 import { Box } from '@mui/material';
 import ButtonTemplate from './ButtonTemplate';
@@ -10,11 +10,12 @@ import {
 import { toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
 
+import PropTypes from 'prop-types';
+
 const ComputerShutdownTimeoutPanel = ({ computer, index, url }) => {
   const [num, setNum] = useState(
     Math.min(Math.max(parseInt(computer.fields.shutdown_timeout), 1), 60)
   );
-  const inputRef = useRef(null);
   const fetching = useIsFetching();
   const { curFilia } = useParams();
   const queryClient = useQueryClient();
@@ -30,6 +31,7 @@ const ComputerShutdownTimeoutPanel = ({ computer, index, url }) => {
       }
       return data;
     },
+
     {
       onSuccess: response => {
         toast.success(
@@ -39,18 +41,20 @@ const ComputerShutdownTimeoutPanel = ({ computer, index, url }) => {
             toastId: 'timeout',
           }
         );
-        inputRef.current.value = '';
+        setNum(undefined);
 
+        // queryClient.invalidateQueries(['komps', curFilia]);
         queryClient.setQueryData(['komps', curFilia], old => {
           return old.map(comp => {
             if (comp.pk === response[0].pk) {
               return {
                 ...comp,
-                fields: response[0].fields,
+                fields: { ...response[0].fields },
               };
             } else {
               return {
                 ...comp,
+                fields: { ...comp.fields },
               };
             }
           });
@@ -94,32 +98,44 @@ const ComputerShutdownTimeoutPanel = ({ computer, index, url }) => {
             className={'btn-cancel'}
             text={`${computer.fields.f === 5 ? 'Wyłączanie' : 'Wyłącz za'}`}
           />
-          <input
-            placeholder="min"
-            size="small"
-            ref={inputRef}
-            disabled={pcTimerMutation.isFetching}
-            name="closeTime"
-            type="number"
-            min={5}
-            max={60}
-            onChange={e => {
-              if (
-                (e.target.value >= 1 && e.target.value <= 60) ||
-                e.target.value === '' ||
-                e.target.value === null
-              )
-                return setNum(e.target.value);
-              return toast.error('Wprowadź liczbę od 1 do 60.', {
-                icon: '❌',
-              });
-            }}
+          <select
             className="kafeika-komputer__timeout-computer--input"
-          />
+            disabled={pcTimerMutation.isFetching || computer.fields.online > 60}
+            onChange={e => setNum(e.target.value)}
+            defaultValue={5}
+          >
+            {options.map((option, index) => (
+              <option key={index} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </form>
       </Box>
     </Box>
   );
+};
+
+// options for a select with increments of 5 up to 60
+const options = [
+  { value: 5, label: '5' },
+  { value: 10, label: '10' },
+  { value: 15, label: '15' },
+  { value: 20, label: '20' },
+  { value: 25, label: '25' },
+  { value: 30, label: '30' },
+  { value: 35, label: '35' },
+  { value: 40, label: '40' },
+  { value: 45, label: '45' },
+  { value: 50, label: '50' },
+  { value: 55, label: '55' },
+  { value: 60, label: '60' },
+];
+
+ComputerShutdownTimeoutPanel.propTypes = {
+  computer: PropTypes.object.isRequired,
+  url: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
 };
 
 export default ComputerShutdownTimeoutPanel;

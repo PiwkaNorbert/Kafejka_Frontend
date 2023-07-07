@@ -1,13 +1,13 @@
-import React from 'react';
 import ButtonTemplate from './ButtonTemplate';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
-import buttonCommand from '../helper/buttonCommand';
 import { useParams } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-export default function ComputerShutdown({ computer, url }) {
+import PropTypes from 'prop-types';
+
+function ComputerShutdown({ computer, url }) {
   const queryClient = useQueryClient();
   const { curFilia } = useParams();
 
@@ -67,3 +67,8 @@ export default function ComputerShutdown({ computer, url }) {
     />
   );
 }
+ComputerShutdown.propTypes = {
+  computer: PropTypes.object.isRequired,
+  url: PropTypes.string.isRequired,
+};
+export default ComputerShutdown;

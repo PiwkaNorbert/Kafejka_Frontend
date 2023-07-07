@@ -1,10 +1,11 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import axios from 'axios';
 import { Box, TextField, CardContent, Button } from '@mui/material';
 import WifiCodesTable from '../components/WifiCodesTable';
 import { toast } from 'react-toastify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const WifiPerms = ({ index, url }) => {
   const inputRef = useRef(null);
@@ -110,4 +111,10 @@ const WifiPerms = ({ index, url }) => {
   );
 };
 
+WifiPerms.propTypes = {
+  index: PropTypes.number,
+  url: PropTypes.string.isRequired,
+};
 export default WifiPerms;
+
+// 'index' is missing in props validation  react/prop-types
