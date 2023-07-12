@@ -15,7 +15,7 @@ const WifiPerms = ({ index, url }) => {
 
   const cardHotspotCode = async value => {
     try {
-      const urlHotspotCode = `${url}hotspot-code/${+curFilia}/${
+      const urlHotspotCode = `${url}hotspot-code/${curFilia}/${
         value * 3 - 1745
       }/`;
       const { data, status } = await axios.get(urlHotspotCode);

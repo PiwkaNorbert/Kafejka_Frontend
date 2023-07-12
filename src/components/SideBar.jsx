@@ -26,6 +26,9 @@ function SideBar(props) {
         <span>Kody Empik</span>
 
         <Switch onClick={props.filterEmpik} />
+        <span>Pole Edycji</span>
+
+        <Switch onClick={props.showInputCodes} />
       </div>
     </>
   );

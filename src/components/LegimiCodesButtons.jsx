@@ -9,8 +9,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import PropTypes from 'prop-types';
 
-const LegimiCodesButtons = ({ filia, empik }) => {
-  const url = `http://192.168.200.37:8000/`;
+const LegimiCodesButtons = ({ filia, empik, url, children }) => {
   const queryClient = useQueryClient();
   const [typeOfCode, setTypeOfCode] = useState(null);
 
@@ -47,56 +46,53 @@ const LegimiCodesButtons = ({ filia, empik }) => {
   );
 
   return (
-    <div className="counter">
-      <Tooltip title="Usuń" placement="top">
-        <ButtonTemplate
-          variant={'contained'}
-          color={'error'}
-          disabled={legimiCodesMutation.isLoading}
-          className={'control__btn-sub'}
-          icon={
-            legimiCodesMutation?.isLoading ? (
-              <div className="la-ball-clip-rotate la-sm">
-                <div></div>
-              </div>
-            ) : (
-              <RemoveIcon />
-            )
-          }
-          type="submit"
-          callback={e => {
-            e.preventDefault();
-            if (legimiCodesMutation.isLoading) return;
-            legimiCodesMutation.mutate(false);
-          }}
-        />
-      </Tooltip>
+    <>
+      <ButtonTemplate
+        variant={'contained'}
+        color={'error'}
+        disabled={legimiCodesMutation.isLoading}
+        className={'control__btn-sub'}
+        icon={
+          legimiCodesMutation?.isLoading ? (
+            <div className="la-ball-clip-rotate la-sm">
+              <div></div>
+            </div>
+          ) : (
+            <RemoveIcon />
+          )
+        }
+        type="submit"
+        callback={e => {
+          e.preventDefault();
+          if (legimiCodesMutation.isLoading) return;
+          legimiCodesMutation.mutate(false);
+        }}
+      />
+      {children}
 
-      <Tooltip title="Dodaj" placement="top">
-        <ButtonTemplate
-          variant={'contained'}
-          color={'success'}
-          disabled={legimiCodesMutation.isLoading}
-          className={`control__btn-add`}
-          icon={
-            legimiCodesMutation.isLoading ? (
-              <div className="la-ball-clip-rotate la-sm">
-                <div></div>
-              </div>
-            ) : (
-              <AddIcon />
-            )
-          }
-          type="submit"
-          callback={e => {
-            e.preventDefault();
-            if (legimiCodesMutation.isLoading) return;
+      <ButtonTemplate
+        variant={'contained'}
+        color={'success'}
+        disabled={legimiCodesMutation.isLoading}
+        className={`control__btn-add`}
+        icon={
+          legimiCodesMutation.isLoading ? (
+            <div className="la-ball-clip-rotate la-sm">
+              <div></div>
+            </div>
+          ) : (
+            <AddIcon />
+          )
+        }
+        type="submit"
+        callback={e => {
+          e.preventDefault();
+          if (legimiCodesMutation.isLoading) return;
 
-            legimiCodesMutation.mutate(true);
-          }}
-        />
-      </Tooltip>
-    </div>
+          legimiCodesMutation.mutate(true);
+        }}
+      />
+    </>
   );
 };
 

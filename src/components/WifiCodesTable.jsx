@@ -12,7 +12,9 @@ const WifiCodesTable = ({ url }) => {
     <>
       {isLoading ? (
         <tr colSpan="100" className="codes__loading-2">
-          <CircularProgress className="loading-status" disableShrink />
+          <td>
+            <CircularProgress className="loading-status" disableShrink />
+          </td>
         </tr>
       ) : isError ? (
         <div className="codes__error">Nastąpił Błąd: {error.message}</div>

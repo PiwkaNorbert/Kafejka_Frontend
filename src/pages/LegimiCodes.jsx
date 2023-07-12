@@ -1,14 +1,25 @@
 import { useState } from 'react';
 import LegimiCodesButtons from '../components/LegimiCodesButtons';
 import { useParams } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import ErrorCallback from '../components/Errors/ErrorCallback';
 import { useEbookData } from '../helper/useEbookData';
 import SideBar from '../components/SideBar';
+import { toast } from 'react-toastify';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import CheckIcon from '@mui/icons-material/Check';
 
 const LegimiCodes = () => {
   const [filterLegimiValue, setFilterLegimi] = useState();
   const [filterEmpikValue, setFilterEmpik] = useState();
+  const [inputValueLegimi, setInputValueLegimi] = useState();
+  const [inputValueEmpik, setInputValueEmpik] = useState();
+  const [showInputs, setShowInputs] = useState(false);
+
+  const url = `http://192.168.200.37:8000/`;
+
+  const queryClient = useQueryClient();
   const legimiQuery = useEbookData();
   let { curFilia } = useParams();
 
@@ -39,6 +50,35 @@ const LegimiCodes = () => {
       setFilterEmpik(false);
     }
   };
+  const showInputCodes = e => {
+    if (e.target.checked) {
+      setShowInputs(true);
+    } else {
+      setShowInputs(false);
+    }
+  };
+
+  const codeInputMutation = useMutation(
+    body => {
+      // use axios.post
+      return axios.post(`${url}start-point/${curFilia}/`, body, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    },
+    {
+      onError: error => {
+        toast.error(error.message, {
+          toastId: 'LegitmiCodes',
+          position: 'top-right',
+        });
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries('codes');
+      },
+    }
+  );
 
   const tableValues = function (code) {
     return (
@@ -79,27 +119,175 @@ const LegimiCodes = () => {
     .map(code => {
       return (
         <>
-          {curFilia !== '' && !curFilia !== '0' && curFilia !== undefined ? (
+          {curFilia !== '' && !curFilia !== '0' && curFilia !== undefined && (
             <>
               <div className="codes__header">
                 <h1 className="codes__header--1">{code.fields.filiaName}</h1>
               </div>
               <div className="counter__output">
                 <h1 className="counter__output-header" key={code.fields.index}>
-                  {code.fields.codesNumber}
-                  <span> Legimi</span>
+                  {!showInputs && <span>{code.fields.codesNumber}</span>}
+                  Legimi
                 </h1>
-                <LegimiCodesButtons filia={curFilia} />
+                <div className={showInputs ? 'codes__form' : undefined}>
+                  {showInputs && (
+                    <form
+                      className="codes__form-codes"
+                      onSubmit={e => {
+                        e.preventDefault();
+                        codeInputMutation.mutate(
+                          {
+                            amount: +e.target.legimi.value,
+                            type: 'legimi',
+                          },
+                          {
+                            onSuccess: response => {
+                              console.log(response);
+                              toast.success(
+                                `${response.data[0].fields.codesNumber} Kody Legimi `,
+                                {
+                                  toastId: 'LegitmiCodes',
+                                  position: 'top-right',
+                                }
+                              );
+                              setInputValueLegimi('');
+                            },
+                          }
+                        );
+                      }}
+                    >
+                      <input
+                        maxLength="3"
+                        min="0"
+                        max="999"
+                        type="number"
+                        name="legimi"
+                        className="counter__code-input "
+                        placeholder={code.fields.codesNumber}
+                        value={inputValueLegimi}
+                        onChange={e => {
+                          if (
+                            e.target.value.length <= 3 &&
+                            e.target.value.length >= 0
+                          ) {
+                            setInputValueLegimi(e.target.value);
+                          } else {
+                            toast.error(
+                              'Legimi, proszę wpisać liczbę od 0 do 999',
+                              {
+                                toastId: 'LegimiCodes',
+                                position: 'top-right',
+                              }
+                            );
+                            console.error('Proszę wpisać liczbę od 0 do 999');
+                          }
+                        }}
+                      />
+                      <Button
+                        sx={{
+                          maxHeight: 'min-content',
+                          boxShadow: 'none',
+                          borderRadius: '4px',
+                          p: '1rem',
+                        }}
+                        className="counter__code-input--btn"
+                        variant="contained"
+                        type="submit"
+                        disabled={codeInputMutation.isLoading}
+                      >
+                        {/* OK */}
+                        <CheckIcon />
+                      </Button>
+                    </form>
+                  )}
+                  <LegimiCodesButtons filia={curFilia} url={url} />
+                </div>
               </div>
               <div className="counter__output">
                 <h1 className="counter__output-header" key={code.fields.index}>
-                  {code.fields.empikNumber}
-                  <span> Empik</span>
+                  {!showInputs && <span>{code.fields.empikNumber}</span>}
+                  Empik
                 </h1>
-                <LegimiCodesButtons filia={curFilia} empik={empik} />
+                <div className={showInputs ? 'codes__form' : undefined}>
+                  {showInputs && (
+                    <form
+                      className="codes__form-codes"
+                      onSubmit={e => {
+                        e.preventDefault();
+                        codeInputMutation.mutate(
+                          {
+                            amount: +e.target.empik.value,
+                            type: 'empik',
+                          },
+                          {
+                            onSuccess: response => {
+                              toast.success(
+                                `${response.data[0].fields.empikNumber} Kody Empik `,
+                                {
+                                  toastId: 'EmpikCodes',
+                                  position: 'top-right',
+                                }
+                              );
+
+                              setInputValueEmpik('');
+                            },
+                          }
+                        );
+                      }}
+                    >
+                      <input
+                        maxLength="3"
+                        min="0"
+                        max="999"
+                        type="number"
+                        name="empik"
+                        className="counter__code-input"
+                        placeholder={code.fields.empikNumber}
+                        value={inputValueEmpik}
+                        onChange={e => {
+                          if (
+                            e.target.value.length <= 3 &&
+                            e.target.value.length >= 0
+                          ) {
+                            setInputValueEmpik(e.target.value);
+                          } else {
+                            toast.error(
+                              'Legimi, proszę wpisać liczbę od 0 do 999',
+                              {
+                                toastId: 'LegitmiCodes',
+                                position: 'top-right',
+                              }
+                            );
+                            console.error('Proszę wpisać liczbę od 0 do 999');
+                          }
+                        }}
+                      />
+                      <Button
+                        sx={{
+                          maxHeight: 'min-content',
+                          boxShadow: 'none',
+                          borderRadius: '4px',
+                          p: '1rem',
+                        }}
+                        className="counter__code-input--btn"
+                        variant="contained"
+                        type="submit"
+                        disabled={codeInputMutation.isLoading}
+                      >
+                        {/* OK */}
+                        <CheckIcon />
+                      </Button>
+                    </form>
+                  )}
+                  <LegimiCodesButtons
+                    filia={curFilia}
+                    empik={empik}
+                    url={url}
+                  />
+                </div>
               </div>
             </>
-          ) : null}
+          )}
         </>
       );
     });
@@ -114,6 +302,7 @@ const LegimiCodes = () => {
             filterLegimi={filterLegimi}
             filterEmpik={filterEmpik}
             toggleSidebar={handleViewSidebar}
+            showInputCodes={showInputCodes}
           />
         </span>
         <table id="table" className="table__codes-ebook">

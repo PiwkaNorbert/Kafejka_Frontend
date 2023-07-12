@@ -14,7 +14,6 @@ const TimerUntilShutdown = function ({ computer }) {
       const shutdownTime = computer.fields.timestamp_time;
       const timeLeft = shutdownTime - curTime;
       setTime(timeLeft);
-      console.log(timeLeft);
       if (timeLeft === 0) {
         queryClient.invalidateQueries(['komps', curFilia]);
       }
@@ -29,7 +28,7 @@ const TimerUntilShutdown = function ({ computer }) {
     return `${min}:${sec}`;
   };
 
-  if (time <= 0) return '';
+  if (time <= 0) return;
 
   return (
     <Box className={'kafeika-komputer__timeout-content'}>

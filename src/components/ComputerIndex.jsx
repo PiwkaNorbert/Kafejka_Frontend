@@ -30,8 +30,8 @@ const ComputerIndex = ({ computer, index, url, showComps }) => {
             <ComputerShutdown computer={computer} url={url} />
           </Box>
           <Box className={'timer'} sx={{ flex: '1 1 0' }}>
-            {!computer.fields.t === 0 && (
-              <TimerUntilShutdown computer={computer} url={url} />
+            {computer.fields.t !== 0 && (
+              <TimerUntilShutdown computer={computer} />
             )}
           </Box>
           <Box

@@ -397,29 +397,65 @@ option {
   border-radius: 8px;
   background-color: var(--white);
   box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.1);
+  max-height: 142px;
+}
+.counter__output-container {
+  display: flex;
+}
+.counter__output-container:first-child {
+  display: flex;
+  margin-bottom: 1.5rem;
 }
 .counter__output-header {
   font-size: 2.5rem;
-  margin-bottom: 1rem;
+  margin: 0 1rem 1rem;
+  font-weight: 600;
 }
-.counter__output-header > span {
+.counter__output-header input {
+  border: none;
+  border-radius: 4px;
+  font-size: 2rem;
+  background-color: red;
+  width: 55px;
+  padding: 0.5rem 1rem;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #eee;
+  resize: none;
+  height: 35px;
+}
+.counter__output-header span {
   font-size: 2.5rem;
-  font-weight: 300;
+  font-weight: 900;
+  padding-right: 1rem;
 }
-.counter button {
-  margin: 0.5rem;
-}
-.counter button svg {
-  width: 2rem;
-  height: 2rem;
+
+.counter__code-input {
+  font-size: 1.8rem;
+  border: none;
+  background-color: var(--body-bg-color) !important;
+  align-self: stretch;
+  padding: 0 8px;
+  width: calc(50% - 0.25rem);
+  border-radius: 4px;
+  border-top-left-radius: 10px;
 }
 
 .control__btn-sub,
-.control__btn-add {
+.control__btn-add,
+.counter__code-input--btn {
   display: grid;
   justify-items: center;
   align-items: center;
   font-size: inherit;
+  width: calc(50% - 0.25rem);
+}
+.control__btn-sub,
+.counter__code-input {
+  margin-right: 0.25rem !important;
+}
+.control__btn-add,
+.counter__code-input--btn {
+  margin-left: 0.25rem !important;
 }
 .control__btn-sub span,
 .control__btn-add span {
@@ -469,16 +505,31 @@ option {
   height: 1.6rem !important;
 }
 /* WIFI CARD styling*/
+.wifi__form {
+  background-color: #eee;
+  border-radius: 10px;
+  /* overflow: hidden; */
+}
+.codes__form {
+  border-radius: 10px;
+  overflow: hidden;
+}
 
 .wifi__form-codes {
   font-size: 1.4rem;
   display: grid;
   border-radius: 10px;
-  overflow: hidden;
   margin-bottom: 1rem;
 
   grid-template-columns: 100% 20%;
 }
+.codes__form-codes {
+  font-size: 2rem;
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+  display: flex;
+}
+
 .wifi__form-codes div {
   font-size: inherit;
 }
