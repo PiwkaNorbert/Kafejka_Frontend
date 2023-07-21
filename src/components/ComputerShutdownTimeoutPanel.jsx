@@ -91,12 +91,12 @@ const ComputerShutdownTimeoutPanel = ({ computer, index, url }) => {
           <ButtonTemplate
             variant={'contained'}
             type="submit"
-            color={computer.fields.f === 5 ? 'warning' : 'primary'}
+            color={'primary'}
             fullWidth={true}
-            disabled={pcTimerMutation.isFetching}
+            disabled={pcTimerMutation.isFetching || computer.fields.f === 5}
             key={index}
             className={'btn-cancel'}
-            text={`${computer.fields.f === 5 ? 'Wyłączanie' : 'Wyłącz za'}`}
+            text={`Wyłącz za`}
           />
           <select
             className="kafeika-komputer__timeout-computer--input"

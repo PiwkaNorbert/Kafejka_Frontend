@@ -91,7 +91,12 @@ export default function ToggleColorMode() {
       }),
     [mode]
   );
-
+  function cssColorChanger(name, fromColor, toColor) {
+    document.documentElement.style.setProperty(
+      `--${name}`,
+      `${mode === 'light' ? fromColor : toColor}`
+    );
+  }
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', mode);
   }, [mode]);
