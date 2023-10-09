@@ -40,23 +40,18 @@ const Headers = ({ securityKey, colorMode }) => {
 
   const TABS = [
     {
-      index: 0,
       component: <Information />,
     },
     {
-      index: 1,
       component: <ComputerPage showComps={true} url={url} />,
     },
     {
-      index: 2,
       component: <WifiPerms url={url} />,
     },
     {
-      index: 3,
       component: <LegimiAdmin />,
     },
     {
-      index: 4,
       component: <ComputerPage showComps={false} url={url} />,
     },
   ];
@@ -89,7 +84,7 @@ const Headers = ({ securityKey, colorMode }) => {
           }}
           selectionFollowsFocus
         >
-          <Tab icon={<InfoIcon />} label="Informacje" onClick={handleClick} />
+          <Tab icon={<InfoIcon />} label="Informacje" />
           <Tab
             icon={<ComputerIcon />}
             label="Kafejka"
@@ -119,11 +114,9 @@ const Headers = ({ securityKey, colorMode }) => {
           <ComputerAdd filia={curFilia} url={url} />
         )}
       </Box>
-      {TABS.map(tab => {
-        if (tab.index === tabIndex) {
-          return (
-            <React.Fragment key={tab.index}>{tab.component}</React.Fragment>
-          );
+      {TABS.map((tab, index) => {
+        if (index === tabIndex) {
+          return <React.Fragment key={index}>{tab.component}</React.Fragment>;
         } else {
           return null;
         }
@@ -134,7 +127,7 @@ const Headers = ({ securityKey, colorMode }) => {
 
 Headers.propTypes = {
   securityKey: PropTypes.string.isRequired,
-  colorMode: PropTypes.object.isRequired,
+  colorMode: PropTypes.object,
 };
 
 export default Headers;

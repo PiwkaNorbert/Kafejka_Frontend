@@ -10,13 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@fontsource/roboto": "^5.0.3",
-    "@mui/icons-material": "^5.11.16",
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
+    "@fontsource/roboto": "^5.0.3",
+    "@mui/icons-material": "^5.11.16",
     "@mui/material": "latest",
     "@tanstack/react-query": "^4.29.19",
-    "@tanstack/react-query-devtools": "^4.29.19",
+    "@tanstack/react-query-devtools": "^4.36.1",
     "axios": "^1.4.0",
     "dotenv": "^16.3.1",
     "react": "^18.2.0",
@@ -31,7 +31,7 @@
     "eslint": "^8.38.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
-    "vite": "^4.3.9",
-    "prettier": "^2.8.8"
+    "prettier": "^2.8.8",
+    "vite": "^4.3.9"
   }
 }

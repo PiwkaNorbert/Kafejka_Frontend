@@ -19,12 +19,12 @@ const ComputerShutdownTimeoutPanel = ({ computer, index, url }) => {
   const fetching = useIsFetching();
   const { curFilia } = useParams();
   const queryClient = useQueryClient();
-
+  const inputRef = useRef(null);
   // Set status Shutdown Time
 
   const pcTimerMutation = useMutation(
-    async compId => {
-      const urlShutdownTimeout = `${url}shutdown-timeout/${computer.pk}/${compId}/`;
+    async closeByAmount => {
+      const urlShutdownTimeout = `${url}shutdown-timeout/${computer.pk}/${closeByAmount}/`;
       const { data, status } = await axios.get(urlShutdownTimeout);
       if (status !== 200) {
         throw new Error(`Nastpił problem: ${status}`);
@@ -42,6 +42,7 @@ const ComputerShutdownTimeoutPanel = ({ computer, index, url }) => {
           }
         );
         setNum(undefined);
+        inputRef.current.value = 0;
 
         // queryClient.invalidateQueries(['komps', curFilia]);
         queryClient.setQueryData(['komps', curFilia], old => {
@@ -100,12 +101,25 @@ const ComputerShutdownTimeoutPanel = ({ computer, index, url }) => {
           />
           <select
             className="kafeika-komputer__timeout-computer--input"
-            disabled={pcTimerMutation.isFetching || computer.fields.online > 60}
-            onChange={e => setNum(e.target.value)}
-            defaultValue={5}
+            disabled={
+              pcTimerMutation.isFetching
+              // ||
+              // computer.fields.online > 60 ||
+              // options.value === 0
+            }
+            ref={inputRef}
+            onChange={e => {
+              console.log(e.target.value);
+              setNum(e.target.value);
+            }}
+            defaultValue={0}
           >
             {options.map((option, index) => (
-              <option key={index} value={option.value}>
+              <option
+                key={index}
+                value={option.value}
+                disabled={option.label == 0}
+              >
                 {option.label}
               </option>
             ))}
@@ -118,6 +132,7 @@ const ComputerShutdownTimeoutPanel = ({ computer, index, url }) => {
 
 // options for a select with increments of 5 up to 60
 const options = [
+  { value: 0, label: '0' },
   { value: 5, label: '5' },
   { value: 10, label: '10' },
   { value: 15, label: '15' },

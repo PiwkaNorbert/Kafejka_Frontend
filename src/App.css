@@ -91,8 +91,8 @@ table {
 .kafeika-komputer__timeout-content {
   text-align: center;
   background-color: var(--text-gray-600);
-  padding: 4px;
-  font-size: 1.4rem;
+  padding: 2px 6px;
+  font-size: 1.6rem;
 }
 .kafeika-komputer__status-computer p {
   margin-right: 8px;
@@ -118,6 +118,7 @@ table {
   text-align: center;
   color: var(--white);
 }
+
 .kafeika__background,
 .information-container {
   background-color: var(--white);

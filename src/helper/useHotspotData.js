@@ -18,7 +18,8 @@ export function useHotspotData(url, filia) {
       staleTime: 1000 * 60 * 10,
 
       onError: error => {
-        toast.error(error.message, { icon: '❌' });
+        console.log(error);
+        return toast.error(error.message, { icon: '❌', toastId: 'wifiCodes' });
       },
     }
   );

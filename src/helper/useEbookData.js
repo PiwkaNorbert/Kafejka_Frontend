@@ -31,7 +31,7 @@ export function useEbookData() {
     staleTime: 1000 * 60 * 10,
     onError: error => {
       console.error(error);
-      toast.error(error.message, { icon: '❌' });
+      toast.error(error.message, { icon: '❌', toastId: 'codes' });
     },
   });
 

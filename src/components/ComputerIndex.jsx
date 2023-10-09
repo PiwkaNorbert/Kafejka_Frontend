@@ -8,6 +8,8 @@ import TimerUntilShutdown from './TimerUntilShutdown';
 import PropTypes from 'prop-types';
 
 const ComputerIndex = ({ computer, index, url, showComps }) => {
+  const curTime = Math.trunc(new Date().getTime() / 1000);
+
   return (
     <>
       {showComps ? (
@@ -30,7 +32,7 @@ const ComputerIndex = ({ computer, index, url, showComps }) => {
             <ComputerShutdown computer={computer} url={url} />
           </Box>
           <Box className={'timer'} sx={{ flex: '1 1 0' }}>
-            {computer.fields.t !== 0 && (
+            {computer.fields.timestamp_time >= curTime && (
               <TimerUntilShutdown computer={computer} />
             )}
           </Box>
