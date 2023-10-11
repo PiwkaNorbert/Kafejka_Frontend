@@ -252,6 +252,7 @@ option {
 .layout-grid {
   display: grid;
   justify-items: center;
+  position: relative;
 }
 
 .css-x8el2l-MuiCardContent-root:last-child {
@@ -303,7 +304,7 @@ option {
   min-height: 7.2rem;
   padding: 1.2rem 1.6rem !important;
   line-height: 1.25 !important;
-  position: absolute !important;
+  /* position: absolute !important; */
   right: 8px;
 }
 .btn-add svg,
@@ -479,7 +480,8 @@ option {
 .icon__feather {
   height: 1.8rem;
   margin-bottom: 6px;
-  filter: grayscale(100%);
+  fill: currentColor;
+  color: currentColor;
 }
 .css-zylse7-MuiButtonBase-root-MuiIconButton-root,
 .css-b57xgn-MuiButtonBase-root-MuiIconButton-root {
@@ -749,82 +751,6 @@ input[type='number'] {
 .kafejka__header--active {
   display: flex !important;
   overflow: hidden;
-}
-
-@media screen and (max-width: 1080px) {
-  .layout-grid {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin: 0 20rem;
-  }
-}
-@media screen and (max-width: 850px) {
-  .App {
-    display: grid;
-    grid-template-columns: 100px 1fr;
-  }
-  .error {
-    display: grid;
-    grid-template-columns: 1fr 100px;
-  }
-  .information-container {
-    width: initial;
-    margin: 8px 2rem;
-  }
-
-  .layout-grid {
-    margin: 0 20px;
-  }
-  .kafejka__header {
-    flex-direction: column;
-    justify-content: start;
-    height: 100vh;
-  }
-  .option__tabs {
-    display: grid;
-    justify-content: center;
-  }
-  /* .css-heg063-MuiTabs-flexContainer {
-    flex-direction: column !important;
-  } */
-  .btn-add,
-  .btn-block {
-    position: unset !important;
-  }
-}
-@media screen and (max-width: 520px) {
-  .App,
-  .error {
-    position: relative;
-    flex-direction: column;
-    display: flex;
-  }
-  .layout-grid,
-  .kafeika__background-wifi,
-  .kafeika__background-info {
-    margin: 8rem 0 0 0;
-  }
-  .kafeika__background {
-    width: 100%;
-  }
-  .kafeika__background,
-  .information-container {
-    border-radius: 0;
-    margin: 0.5px 0 0 1px;
-  }
-  .kafeika__background:first-child,
-  .information-container:first-child {
-    margin-top: 0;
-  }
-  .kafejka__header {
-    position: absolute;
-    width: 100%;
-    display: none;
-  }
-  .navigation {
-    display: block;
-  }
 }
 
 /*        component           */
@@ -1100,4 +1026,105 @@ input[type='number'] {
 .darkmode-span span {
   text-transform: uppercase;
   font-family: inherit;
+}
+.btn-additionalContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  /* width: 100%; */
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+@media screen and (max-width: 1080px) {
+  .layout-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    /* flex-wrap: wrap; */
+    /* margin: 0 20rem; */
+  }
+}
+@media screen and (max-width: 850px) {
+  .App {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    position: relative;
+  }
+  .error {
+    display: grid;
+    grid-template-columns: 1fr 100px;
+  }
+  .information-container {
+    width: initial;
+    margin: 8px 2rem;
+  }
+
+  .layout-grid {
+    margin: 0 20px;
+  }
+  .kafejka__header {
+    flex-direction: column;
+    justify-content: start;
+    height: 100vh;
+  }
+  .option__tabs {
+    display: grid;
+    justify-content: center;
+  }
+  /* .css-heg063-MuiTabs-flexContainer {
+    flex-direction: column !important;
+  } */
+
+  .layout-grid {
+    margin-top: 80px;
+  }
+  .btn-additionalContainer {
+    padding-top: 0.5rem;
+    flex-direction: row;
+    top: -80px;
+  }
+  .btn-add {
+    order: 1;
+  }
+  .btn-block {
+    order: 2;
+  }
+}
+@media screen and (max-width: 520px) {
+  .App,
+  .error {
+    position: relative;
+    flex-direction: column;
+    display: flex;
+  }
+  .layout-grid,
+  .kafeika__background-wifi,
+  .kafeika__background-info {
+    margin: 8rem 0 0 0;
+  }
+  .kafeika__background {
+    width: 100%;
+  }
+  .kafeika__background,
+  .information-container {
+    border-radius: 0;
+    margin: 0.5px 0 0 1px;
+  }
+  .kafeika__background:first-child,
+  .information-container:first-child {
+    margin-top: 0;
+  }
+  .kafejka__header {
+    position: absolute;
+    width: 100%;
+    display: none;
+  }
+  .navigation {
+    display: block;
+  }
 }

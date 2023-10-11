@@ -9,12 +9,14 @@ import { toast } from 'react-toastify';
 
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
+import ComputerAdd from '../components/ComputerAdd';
+import ComputerShutdownAll from '../components/ComputerShutdownAll';
 
 const ComputerPage = ({ showComps, url }) => {
   let { curFilia } = useParams();
   const { data, isError, isLoading, isFetching, fetchStatus, state } =
     useComputerData(curFilia, url);
-
+  console.log(window);
   if (isLoading)
     return (
       <div className="codes__loading">
@@ -22,7 +24,6 @@ const ComputerPage = ({ showComps, url }) => {
         <CircularProgress className="loading-status" disableShrink />
       </div>
     );
-
   if (isError) return <ErrorCallback />;
   if (fetchStatus === 'paused' && state === 'loading') {
     toast.error('Serwer nie odpowiada. Sprawdź połączenie z internetem.');
@@ -31,6 +32,11 @@ const ComputerPage = ({ showComps, url }) => {
 
   return (
     <Box className={`${showComps ? 'layout-grid' : 'layout-flex'}`}>
+      <div className="btn-additionalContainer">
+        <ComputerShutdownAll url={url} />
+        <ComputerAdd url={url} />
+        {window.location.hostname.includes('15.14') && <></>}
+      </div>
       {data.map((computer, index) => {
         return (
           <CardContent className="kafeika__background" key={index}>

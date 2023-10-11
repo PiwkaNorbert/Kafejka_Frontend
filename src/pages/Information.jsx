@@ -15,6 +15,21 @@ export const Information = function () {
         </a>
       </CardContent>
       {/* <code className="highlight"> </code>*/}
+      {/* Lipiec 5, 2023 */}
+      <CardContent className="information-container info-con">
+        <h3 className="info__header--3">v4.3.2</h3>
+
+        <p className="info__date">Wrzesień 9, 2023</p>
+        <h2 className="info__header--4">Code & UI</h2>
+        <ul className="info__list">
+          <li>
+            Zegar odlicza czas poprawnie i już nie znika po odświeżeniu
+            strony/danych po kliknieciu przycisku
+            <code className="highlight">Wyłącz za</code>.
+          </li>
+        </ul>
+      </CardContent>
+
       <CardContent className="information-container info-con">
         <h3 className="info__header--3">v4.3.1</h3>
 

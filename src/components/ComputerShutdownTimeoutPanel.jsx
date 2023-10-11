@@ -24,6 +24,7 @@ const ComputerShutdownTimeoutPanel = ({ computer, index, url }) => {
 
   const pcTimerMutation = useMutation(
     async closeByAmount => {
+      if (closeByAmount === NaN) return;
       const urlShutdownTimeout = `${url}shutdown-timeout/${computer.pk}/${closeByAmount}/`;
       const { data, status } = await axios.get(urlShutdownTimeout);
       if (status !== 200) {
@@ -85,7 +86,7 @@ const ComputerShutdownTimeoutPanel = ({ computer, index, url }) => {
           onSubmit={e => {
             e.preventDefault();
             // mutate based by the input value
-            if (pcTimerMutation.isLoading) return;
+            if (pcTimerMutation.isLoading || isNaN(num)) return;
             pcTimerMutation.mutate(num);
           }}
         >
@@ -102,14 +103,12 @@ const ComputerShutdownTimeoutPanel = ({ computer, index, url }) => {
           <select
             className="kafeika-komputer__timeout-computer--input"
             disabled={
-              pcTimerMutation.isFetching
-              // ||
-              // computer.fields.online > 60 ||
-              // options.value === 0
+              pcTimerMutation.isFetching ||
+              computer.fields.online > 60 ||
+              options.value === 0
             }
             ref={inputRef}
             onChange={e => {
-              console.log(e.target.value);
               setNum(e.target.value);
             }}
             defaultValue={0}

@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import Headers from './pages/Header';
 import ErrorCallback from './components/Errors/ErrorCallback';
@@ -17,42 +12,72 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import PageNotFound from './pages/pageNotFound';
-
-const queryClient = new QueryClient();
-const SecurityKeyLink = window.location.pathname.split('/');
-const securityKey = SecurityKeyLink[1];
+import PanelBibliotekarza from './pages/PanelBibliotekarza';
+import ComputerPage from './pages/ComputerPage';
+import LegimiCodes from './pages/LegimiCodes';
+import { Information } from './pages/Information';
+import WifiPerms from './pages/WifiPerms';
+import TicketPage from './pages/TicketPage';
 
 const ColorModeContext = React.createContext({
   toggleColorMode: () => {},
 });
+const queryClient = new QueryClient();
 
 export function App() {
+  const securityKey = window.location.pathname.split('/')[1];
+  const url = `http://192.168.200.37:8005/${securityKey}/`;
+
   const colorMode = React.useContext(ColorModeContext);
   return (
     <QueryClientProvider client={queryClient}>
       <div className="App">
-        <Router>
+        <BrowserRouter>
+          <Headers securityKey={securityKey} colorMode={colorMode} url={url} />
           <Routes>
-            {securityKey.length === 64 ? (
-              <Route
-                path={`/${securityKey}/:curFilia`}
-                exact
-                element={
-                  <Headers
-                    securityKey={securityKey}
-                    colorMode={colorMode}
-                    errorElement={<ErrorCallback />}
-                  />
-                }
-              />
-            ) : (
+            {securityKey?.length === 64 && (
               <>
-                <Route path="*" element={<Navigate to="/404" replace />} />
-                <Route path="404" element={<PageNotFound />} />
+                <Route
+                  path={`/${securityKey}/:curFilia`}
+                  element={<PanelBibliotekarza />}
+                />
+                {/* information route */}
+                <Route
+                  path={`/${securityKey}/:curFilia/informacje`}
+                  element={<Information />}
+                />
+                {/* Computer route */}
+
+                <Route
+                  path={`/${securityKey}/:curFilia/kafejka`}
+                  element={<ComputerPage showComps={true} url={url} />}
+                />
+                {/* Settings route */}
+                <Route
+                  path={`/${securityKey}/:curFilia/ustawienia`}
+                  element={<ComputerPage showComps={false} url={url} />}
+                />
+                {/* Legimi route */}
+                <Route
+                  path={`/${securityKey}/:curFilia/ebooki`}
+                  element={<LegimiCodes />}
+                />
+                {/* WifiPerms route */}
+                <Route
+                  path={`/${securityKey}/:curFilia/wifi`}
+                  element={<WifiPerms url={url} />}
+                />
+                {/* ticket route */}
+                <Route
+                  path={`/${securityKey}/:curFilia/zgloszenia`}
+                  element={<TicketPage />}
+                />
               </>
             )}
+            <Route path="*" element={<Navigate to="/404" replace />} />
+            <Route path="404" element={<PageNotFound />} />
           </Routes>
-        </Router>
+        </BrowserRouter>
         <ToastContainer
           position="bottom-right"
           pauseOnHover={true}

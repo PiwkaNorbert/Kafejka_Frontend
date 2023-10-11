@@ -1,24 +1,27 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import {
+  Link,
+  NavLink,
+  useLocation,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
 
 import { Box, Tab, Tabs, useMediaQuery } from '@mui/material';
 import WifiIcon from '@mui/icons-material/Wifi';
 import ComputerIcon from '@mui/icons-material/Computer';
 import SettingIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
-
-import ComputerPage from './ComputerPage';
-import WifiPerms from './WifiPerms';
+import Feather from '../components/Feather';
 import ComputerShutdownAll from '../components/ComputerShutdownAll';
 import ComputerAdd from '../components/ComputerAdd';
-import Feather from '../components/Feather';
-import LegimiAdmin from './LegimiCodes';
-import { Information } from './Information';
+
 import DarkModeButton from '../components/DarkModeButton';
 
 import PropTypes from 'prop-types';
+import { HelpCenter, Home } from '@mui/icons-material';
 
-const Headers = ({ securityKey, colorMode }) => {
+const Headers = ({ securityKey, colorMode, url }) => {
   let [tabIndex, setTabIndex] = useState(
     JSON.parse(
       localStorage.getItem('set-tab-index') === null
@@ -26,35 +29,53 @@ const Headers = ({ securityKey, colorMode }) => {
         : localStorage.getItem('set-tab-index')
     )
   );
+  const navigate = useNavigate();
+  const location = useLocation();
+  const curFilia = location.pathname.split('/')[2];
+  const smallScreen = useMediaQuery('(max-width: 850px)');
+
+  const navLinks = [
+    {
+      to: `/${securityKey}/${curFilia}/`,
+      icon: <Home />,
+      label: 'Home',
+    },
+    {
+      to: `/${securityKey}/${curFilia}/informacje`,
+      icon: <InfoIcon />,
+      label: 'Informacje',
+    },
+    {
+      to: `/${securityKey}/${curFilia}/kafejka`,
+      icon: <ComputerIcon />,
+      label: 'Kafejka',
+    },
+    {
+      to: `/${securityKey}/${curFilia}/wifi`,
+      icon: <WifiIcon />,
+      label: 'WiFi',
+    },
+    {
+      to: `/${securityKey}/${curFilia}/ebooki`,
+      icon: <Feather />,
+      label: 'Ebooki',
+    },
+    {
+      to: `/${securityKey}/${curFilia}/ustawienia`,
+      icon: <SettingIcon />,
+      label: 'Ustawienia',
+    },
+    {
+      to: `/${securityKey}/${curFilia}/zgloszenia`,
+      icon: <HelpCenter />,
+      label: 'Zgłoszenia',
+    },
+  ];
+
   const handleClick = value => {
     localStorage.setItem('set-tab-index', JSON.stringify(value));
     setTabIndex(value);
   };
-
-  const urlStalowy = window.location.href.includes('192.168.200.');
-  const urlFortiClient = window.location.href.includes('192.168.3.');
-  const url = `http://192.168.200.37:8005/${securityKey}/`;
-
-  let { curFilia } = useParams();
-  let smallScreen = useMediaQuery('(max-width: 850px)');
-
-  const TABS = [
-    {
-      component: <Information />,
-    },
-    {
-      component: <ComputerPage showComps={true} url={url} />,
-    },
-    {
-      component: <WifiPerms url={url} />,
-    },
-    {
-      component: <LegimiAdmin />,
-    },
-    {
-      component: <ComputerPage showComps={false} url={url} />,
-    },
-  ];
 
   return (
     <>
@@ -84,49 +105,33 @@ const Headers = ({ securityKey, colorMode }) => {
           }}
           selectionFollowsFocus
         >
-          <Tab icon={<InfoIcon />} label="Informacje" />
-          <Tab
-            icon={<ComputerIcon />}
-            label="Kafejka"
-            disabled={urlFortiClient ? true : false}
-          />
-          {curFilia !== undefined && (
+          {navLinks.map((link, index) => (
             <Tab
-              icon={<WifiIcon />}
-              label="WiFi"
-              disabled={urlFortiClient ? true : false}
+              key={index}
+              icon={link.icon}
+              label={link.label}
+              onClick={() => navigate(link.to)}
             />
-          )}
-          <Tab icon={<Feather />} label="Ebooki" filia={curFilia} />
-          <Tab
-            icon={<SettingIcon />}
-            label="Ustawienia"
-            disabled={urlStalowy ? true : false}
-          />
+          ))}
         </Tabs>
         <Box sx={{ p: 2, display: 'grid' }}>
           <DarkModeButton colorMode={colorMode} />
         </Box>
-        {tabIndex === 1 && curFilia !== undefined && (
-          <ComputerShutdownAll filia={curFilia} url={url} />
-        )}
-        {tabIndex === 4 && curFilia !== undefined && (
-          <ComputerAdd filia={curFilia} url={url} />
-        )}
       </Box>
+      {/*
       {TABS.map((tab, index) => {
         if (index === tabIndex) {
           return <React.Fragment key={index}>{tab.component}</React.Fragment>;
         } else {
           return null;
         }
-      })}
+      })} */}
     </>
   );
 };
 
 Headers.propTypes = {
-  securityKey: PropTypes.string.isRequired,
+  securityKey: PropTypes.string,
   colorMode: PropTypes.object,
 };
 
