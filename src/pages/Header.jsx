@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Link,
-  NavLink,
-  useLocation,
-  useNavigate,
-  useParams,
-} from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Box, Tab, Tabs, useMediaQuery } from '@mui/material';
 import WifiIcon from '@mui/icons-material/Wifi';
@@ -13,68 +7,91 @@ import ComputerIcon from '@mui/icons-material/Computer';
 import SettingIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
 import Feather from '../components/Feather';
-import ComputerShutdownAll from '../components/ComputerShutdownAll';
-import ComputerAdd from '../components/ComputerAdd';
 
 import DarkModeButton from '../components/DarkModeButton';
 
 import PropTypes from 'prop-types';
-import { HelpCenter, Home } from '@mui/icons-material';
+import { useEffect } from 'react';
 
-const Headers = ({ securityKey, colorMode, url }) => {
-  let [tabIndex, setTabIndex] = useState(
-    JSON.parse(
-      localStorage.getItem('set-tab-index') === null
-        ? 0
-        : localStorage.getItem('set-tab-index')
-    )
-  );
+const Headers = ({ securityKey, colorMode }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const curFilia = location.pathname.split('/')[2];
   const smallScreen = useMediaQuery('(max-width: 850px)');
 
   const navLinks = [
+    // {
+    //   to: `/${securityKey}/${curFilia}/`,
+    //   icon: <Home />,
+    //   label: 'Home',
+    // },
     {
-      to: `/${securityKey}/${curFilia}/`,
-      icon: <Home />,
-      label: 'Home',
-    },
-    {
+      id: 0,
       to: `/${securityKey}/${curFilia}/informacje`,
       icon: <InfoIcon />,
       label: 'Informacje',
     },
     {
+      id: 1,
       to: `/${securityKey}/${curFilia}/kafejka`,
       icon: <ComputerIcon />,
       label: 'Kafejka',
     },
     {
+      id: 2,
       to: `/${securityKey}/${curFilia}/wifi`,
       icon: <WifiIcon />,
       label: 'WiFi',
     },
     {
+      id: 3,
       to: `/${securityKey}/${curFilia}/ebooki`,
       icon: <Feather />,
       label: 'Ebooki',
     },
     {
+      id: 4,
       to: `/${securityKey}/${curFilia}/ustawienia`,
       icon: <SettingIcon />,
       label: 'Ustawienia',
     },
-    {
-      to: `/${securityKey}/${curFilia}/zgloszenia`,
-      icon: <HelpCenter />,
-      label: 'Zgłoszenia',
-    },
+    // {
+    //   to: `/${securityKey}/${curFilia}/zgloszenia`,
+    //   icon: <HelpCenter />,
+    //   label: 'Zgłoszenia',
+    // },
   ];
 
+  useEffect(() => {
+    const storedValue = localStorage.getItem('navTitle');
+    if (storedValue) {
+      const index = navLinks.findIndex(
+        link => link.label.toLowerCase() === storedValue
+      );
+      if (index !== -1) {
+        setTabIndex(index);
+        navigate(navLinks[index].to);
+      }
+    }
+  }, []);
+
+  const tabIndices = {
+    informacje: 0,
+    kafejka: 1,
+    wifi: 2,
+    ebooki: 3,
+    ustawienia: 4,
+  };
+
+  const tab = location.pathname.split('/')[3];
+
+  const [tabIndex, setTabIndex] = useState(() => {
+    return tabIndices[tab]?.id ?? 0;
+  });
+
   const handleClick = value => {
-    localStorage.setItem('set-tab-index', JSON.stringify(value));
     setTabIndex(value);
+    localStorage.setItem('navTitle', navLinks[value].label.toLowerCase());
   };
 
   return (
@@ -100,8 +117,8 @@ const Headers = ({ securityKey, colorMode, url }) => {
           orientation={smallScreen && 'vertical'}
           className="option__tabs"
           value={tabIndex}
-          onChange={(_, index) => {
-            handleClick(index);
+          onChange={(_, idx) => {
+            handleClick(idx);
           }}
           selectionFollowsFocus
         >

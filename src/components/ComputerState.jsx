@@ -20,20 +20,38 @@ const ComputerState = ({ computer, url }) => {
       }
       return data;
     },
-    {
-      onSuccess: response => {
-        toast.success(
-          `${
-            response[0].fields.f === 1
-              ? 'Komputer Odblokowany'
-              : 'Komputer Zablokowany'
-          }`,
-          {
-            icon: '✅',
-            toastId: 'state',
-          }
-        );
 
+    {
+      onMutate: async compId => {
+        await queryClient.cancelQueries(['komps', curFilia]);
+
+        const previousKomps = queryClient.getQueryData(['komps', curFilia]);
+
+        queryClient.setQueryData(['komps', curFilia], oldData => {
+          return oldData.map(comp => {
+            if (comp.pk === compId) {
+              return {
+                ...comp,
+                fields: {
+                  ...comp.fields,
+                  f: 5,
+                },
+              };
+            } else {
+              return {
+                ...comp,
+              };
+            }
+          });
+        });
+
+        return { previousKomps };
+      },
+      onSuccess: response => {
+        toast.success('Zmieniono status komputera', {
+          icon: '✅',
+          toastId: 'state',
+        });
         queryClient.setQueryData(['komps', curFilia], oldData => {
           return oldData.map(comp => {
             if (comp.pk === response[0].pk) {
@@ -49,11 +67,11 @@ const ComputerState = ({ computer, url }) => {
           });
         });
       },
-      onSettled: () => {
-        queryClient.invalidateQueries(['komps', curFilia]);
-      },
-      onError: error => {
-        toast.error(error.message, { icon: '❌' });
+      onSettled: () => queryClient.invalidateQueries(['komps', curFilia]),
+      onError: (error, context) => {
+        console.log(error);
+        queryClient.setQueryData(['komps', curFilia], context.previousKomps);
+        toast.error(error.message, { icon: '❌', toastId: 'state' });
       },
     }
   );
@@ -63,7 +81,7 @@ const ComputerState = ({ computer, url }) => {
       <ButtonTemplate
         variant={'contained'}
         fullWidth={true}
-        color={computer.fields.f === 0 ? 'error' : 'success'}
+        color={computer.fields.f === 1 ? 'error' : 'success'}
         // disabled when the current computer is being fetched
         disabled={statusPCMutation.isLoading || computer.fields.f === 5}
         className={'btn-state'}
@@ -71,13 +89,7 @@ const ComputerState = ({ computer, url }) => {
           if (statusPCMutation.isLoading) return;
           statusPCMutation.mutate(computer.pk);
         }}
-        text={
-          computer.fields.f === 0
-            ? 'Zablokowany'
-            : computer.fields.f === 1
-            ? 'Odblokowany'
-            : 'Zamykanie'
-        }
+        text={computer.fields.f === 0 ? 'Odblokuj' : 'Zablokuj'}
       />
     </>
   );

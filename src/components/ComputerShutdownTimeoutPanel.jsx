@@ -24,7 +24,6 @@ const ComputerShutdownTimeoutPanel = ({ computer, index, url }) => {
 
   const pcTimerMutation = useMutation(
     async closeByAmount => {
-      if (closeByAmount === NaN) return;
       const urlShutdownTimeout = `${url}shutdown-timeout/${computer.pk}/${closeByAmount}/`;
       const { data, status } = await axios.get(urlShutdownTimeout);
       if (status !== 200) {

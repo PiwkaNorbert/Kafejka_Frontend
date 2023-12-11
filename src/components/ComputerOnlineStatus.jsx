@@ -21,10 +21,7 @@ const ComputerOnlineStatus = ({ computer, url, isLoading }) => {
             <div></div>
           </div>
         ) : (
-          <>
-            <p>Stan</p>
-            <ComputerState computer={computer} url={url} />
-          </>
+          <ComputerState computer={computer} url={url} />
         )}
       </Box>
     </Box>

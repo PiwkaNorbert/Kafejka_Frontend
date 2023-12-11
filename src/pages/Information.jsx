@@ -15,7 +15,44 @@ export const Information = function () {
         </a>
       </CardContent>
       {/* <code className="highlight"> </code>*/}
+
       {/* Lipiec 5, 2023 */}
+      <CardContent className="information-container info-con">
+        <h3 className="info__header--3">v4.3.3</h3>
+
+        <p className="info__date">Październik 19, 2023</p>
+        <h2 className="info__header--4">Code</h2>
+        <ul className="info__list">
+          <li>
+            Dodanie <code className="highlight"> signal</code> w{' '}
+            <code className="highlight">useComputerData</code>, aby moc anulowac
+            zapytanie do serwera przy zmianach na komputerach (np. zmiana stanu)
+          </li>
+          <li>
+            Dodanie <code className="highlight"> Routes</code> w{' '}
+            <code className="highlight">App.jsx</code> aby moc zmieniac zakładki
+            w poprawny sposob
+          </li>
+        </ul>
+        <h2 className="info__header--4">UI</h2>
+        <ul className="info__list">
+          <li>
+            {/* changed the name to unblock and block from isblock and isunblocked in polish */}
+            Zmiana nazwy przycisku <br />
+            <code className="highlight">Zablokowany</code>&rarr;
+            <code className="highlight">Odblokuj</code>
+            <br />
+            <code className="highlight">Odblokowany</code>&rarr;
+            <code className="highlight">Zablokuj</code> <br />w zakładce KAFEJKA
+          </li>
+          <li>
+            Usuniecie slowo stan obok przycisku
+            <code className="highlight">Odblokuj / Zablokuj</code>
+          </li>
+        </ul>
+      </CardContent>
+
+      {/* Wrzesień 9, 2023 */}
       <CardContent className="information-container info-con">
         <h3 className="info__header--3">v4.3.2</h3>
 

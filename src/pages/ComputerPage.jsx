@@ -8,7 +8,6 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
 import ComputerAdd from '../components/ComputerAdd';
 import ComputerShutdownAll from '../components/ComputerShutdownAll';
 
@@ -16,7 +15,6 @@ const ComputerPage = ({ showComps, url }) => {
   let { curFilia } = useParams();
   const { data, isError, isLoading, isFetching, fetchStatus, state } =
     useComputerData(curFilia, url);
-  console.log(window);
   if (isLoading)
     return (
       <div className="codes__loading">
@@ -34,8 +32,10 @@ const ComputerPage = ({ showComps, url }) => {
     <Box className={`${showComps ? 'layout-grid' : 'layout-flex'}`}>
       <div className="btn-additionalContainer">
         <ComputerShutdownAll url={url} />
-        <ComputerAdd url={url} />
-        {window.location.hostname.includes('15.14') && <></>}
+
+        {!window.location.hostname.includes('.200.') && (
+          <ComputerAdd url={url} />
+        )}
       </div>
       {data.map((computer, index) => {
         return (
@@ -54,6 +54,7 @@ const ComputerPage = ({ showComps, url }) => {
                     url={url}
                     showComps={showComps}
                     isLoading={isLoading}
+                    isFetching={isFetching}
                   />
                   <ComputerShutdownTimeoutPanel
                     computer={computer}

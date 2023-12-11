@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import Headers from './pages/Header';
-import ErrorCallback from './components/Errors/ErrorCallback';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
@@ -12,7 +11,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import PageNotFound from './pages/pageNotFound';
-import PanelBibliotekarza from './pages/PanelBibliotekarza';
 import ComputerPage from './pages/ComputerPage';
 import LegimiCodes from './pages/LegimiCodes';
 import { Information } from './pages/Information';
@@ -39,7 +37,8 @@ export function App() {
               <>
                 <Route
                   path={`/${securityKey}/:curFilia`}
-                  element={<PanelBibliotekarza />}
+                  element={<Information />}
+                  exact
                 />
                 {/* information route */}
                 <Route
