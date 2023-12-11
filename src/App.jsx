@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
-import Headers from './pages/Header';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
-import { createTheme, ThemeProvider } from '@mui/material';
-
+import { CircularProgress, createTheme, ThemeProvider } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
-
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import PageNotFound from './pages/pageNotFound';
-import ComputerPage from './pages/ComputerPage';
-import LegimiCodes from './pages/LegimiCodes';
-import { Information } from './pages/Information';
-import WifiPerms from './pages/WifiPerms';
-import TicketPage from './pages/TicketPage';
+
+import Headers from './pages/Header';
+const ComputerPage = lazy(() => import('./pages/ComputerPage'));
+const PageNotFound = lazy(() => import('./pages/pageNotFound'));
+const TicketPage = lazy(() => import('./pages/TicketPage'));
+const LegimiCodes = lazy(() => import('./pages/LegimiCodes'));
+const Information = lazy(() => import('./pages/Information'));
+const WifiPerms = lazy(() => import('./pages/WifiPerms'));
 
 const ColorModeContext = React.createContext({
   toggleColorMode: () => {},
@@ -32,50 +31,58 @@ export function App() {
       <div className="App">
         <BrowserRouter>
           <Headers securityKey={securityKey} colorMode={colorMode} url={url} />
-          <Routes>
-            {securityKey?.length === 64 && (
-              <>
-                <Route
-                  path={`/${securityKey}/:curFilia`}
-                  element={<Information />}
-                  exact
-                />
-                {/* information route */}
-                <Route
-                  path={`/${securityKey}/:curFilia/informacje`}
-                  element={<Information />}
-                />
-                {/* Computer route */}
+          <Suspense
+            fallback={
+              <div className="layout-grid" style={{ marginTop: '10rem' }}>
+                <CircularProgress className="loading-status" disableShrink />
+              </div>
+            }
+          >
+            <Routes>
+              {securityKey?.length === 64 && (
+                <>
+                  <Route
+                    path={`/${securityKey}/:curFilia`}
+                    element={<Information />}
+                    exact
+                  />
+                  {/* information route */}
+                  <Route
+                    path={`/${securityKey}/:curFilia/informacje`}
+                    element={<Information />}
+                  />
+                  {/* Computer route */}
 
-                <Route
-                  path={`/${securityKey}/:curFilia/kafejka`}
-                  element={<ComputerPage showComps={true} url={url} />}
-                />
-                {/* Settings route */}
-                <Route
-                  path={`/${securityKey}/:curFilia/ustawienia`}
-                  element={<ComputerPage showComps={false} url={url} />}
-                />
-                {/* Legimi route */}
-                <Route
-                  path={`/${securityKey}/:curFilia/ebooki`}
-                  element={<LegimiCodes />}
-                />
-                {/* WifiPerms route */}
-                <Route
-                  path={`/${securityKey}/:curFilia/wifi`}
-                  element={<WifiPerms url={url} />}
-                />
-                {/* ticket route */}
-                <Route
-                  path={`/${securityKey}/:curFilia/zgloszenia`}
-                  element={<TicketPage />}
-                />
-              </>
-            )}
-            <Route path="*" element={<Navigate to="/404" replace />} />
-            <Route path="404" element={<PageNotFound />} />
-          </Routes>
+                  <Route
+                    path={`/${securityKey}/:curFilia/kafejka`}
+                    element={<ComputerPage showComps={true} url={url} />}
+                  />
+                  {/* Settings route */}
+                  <Route
+                    path={`/${securityKey}/:curFilia/ustawienia`}
+                    element={<ComputerPage showComps={false} url={url} />}
+                  />
+                  {/* Legimi route */}
+                  <Route
+                    path={`/${securityKey}/:curFilia/ebooki`}
+                    element={<LegimiCodes />}
+                  />
+                  {/* WifiPerms route */}
+                  <Route
+                    path={`/${securityKey}/:curFilia/wifi`}
+                    element={<WifiPerms url={url} />}
+                  />
+                  {/* ticket route */}
+                  <Route
+                    path={`/${securityKey}/:curFilia/zgloszenia`}
+                    element={<TicketPage />}
+                  />
+                </>
+              )}
+              <Route path="*" element={<Navigate to="/404" replace />} />
+              <Route path="404" element={<PageNotFound />} />
+            </Routes>
+          </Suspense>
         </BrowserRouter>
         <ToastContainer
           position="bottom-right"

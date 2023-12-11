@@ -1,6 +1,6 @@
 import { CardContent } from '@mui/material';
 
-export const Information = function () {
+export default function Information() {
   return (
     <div className="kafeika__background-info">
       <CardContent className="information-container info-con">
@@ -209,4 +209,4 @@ export const Information = function () {
       </CardContent>
     </div>
   );
-};
+}

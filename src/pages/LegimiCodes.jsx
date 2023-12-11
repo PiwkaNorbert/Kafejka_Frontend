@@ -1,14 +1,17 @@
-import { useState } from 'react';
-import LegimiCodesButtons from '../components/LegimiCodesButtons';
+import { useState, lazy, Suspense, Fragment } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button, CircularProgress } from '@mui/material';
 import ErrorCallback from '../components/Errors/ErrorCallback';
 import { useEbookData } from '../helper/useEbookData';
-import SideBar from '../components/SideBar';
 import { toast } from 'react-toastify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import CheckIcon from '@mui/icons-material/Check';
+
+const SideBar = lazy(() => import('../components/SideBar'));
+const LegimiCodesButtons = lazy(() =>
+  import('../components/LegimiCodesButtons')
+);
 
 const LegimiCodes = () => {
   const [filterLegimiValue, setFilterLegimi] = useState();
@@ -20,7 +23,9 @@ const LegimiCodes = () => {
   const url = `http://192.168.200.37:8000/`;
 
   const queryClient = useQueryClient();
+
   const legimiQuery = useEbookData();
+
   let { curFilia } = useParams();
 
   const [sidebarOpen, setSideBarOpen] = useState(
@@ -37,25 +42,15 @@ const LegimiCodes = () => {
   };
 
   const filterLegimi = e => {
-    if (e.target.checked) {
-      setFilterLegimi(true);
-    } else {
-      setFilterLegimi(false);
-    }
+    setFilterLegimi(e.target.checked);
   };
+
   const filterEmpik = e => {
-    if (e.target.checked) {
-      setFilterEmpik(true);
-    } else {
-      setFilterEmpik(false);
-    }
+    setFilterEmpik(e.target.checked);
   };
+
   const showInputCodes = e => {
-    if (e.target.checked) {
-      setShowInputs(true);
-    } else {
-      setShowInputs(false);
-    }
+    setShowInputs(e.target.checked);
   };
 
   const codeInputMutation = useMutation(
@@ -116,9 +111,9 @@ const LegimiCodes = () => {
     ?.filter(code =>
       curFilia === undefined ? true : code.fields.index === +curFilia
     )
-    .map(code => {
+    .map((code, idx) => {
       return (
-        <>
+        <Fragment key={idx}>
           {curFilia !== '' && !curFilia !== '0' && curFilia !== undefined && (
             <>
               <div className="codes__header">
@@ -200,7 +195,9 @@ const LegimiCodes = () => {
                       </Button>
                     </form>
                   )}
-                  <LegimiCodesButtons filia={curFilia} url={url} />
+                  <Suspense fallback={<div>loading...</div>}>
+                    <LegimiCodesButtons filia={curFilia} url={url} />
+                  </Suspense>
                 </div>
               </div>
               <div className="counter__output">
@@ -279,16 +276,18 @@ const LegimiCodes = () => {
                       </Button>
                     </form>
                   )}
-                  <LegimiCodesButtons
-                    filia={curFilia}
-                    empik={empik}
-                    url={url}
-                  />
+                  <Suspense fallback={<div>loading...</div>}>
+                    <LegimiCodesButtons
+                      filia={curFilia}
+                      empik={empik}
+                      url={url}
+                    />
+                  </Suspense>
                 </div>
               </div>
             </>
           )}
-        </>
+        </Fragment>
       );
     });
 
@@ -297,13 +296,15 @@ const LegimiCodes = () => {
       <main className="codes__main">
         <div className="codes__container">{FiliaCodes}</div>
         <span>
-          <SideBar
-            isOpen={sidebarOpen}
-            filterLegimi={filterLegimi}
-            filterEmpik={filterEmpik}
-            toggleSidebar={handleViewSidebar}
-            showInputCodes={showInputCodes}
-          />
+          <Suspense fallback={<div>loading...</div>}>
+            <SideBar
+              isOpen={sidebarOpen}
+              filterLegimi={filterLegimi}
+              filterEmpik={filterEmpik}
+              toggleSidebar={handleViewSidebar}
+              showInputCodes={showInputCodes}
+            />
+          </Suspense>
         </span>
         <table id="table" className="table__codes-ebook">
           <thead>

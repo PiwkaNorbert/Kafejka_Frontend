@@ -3,7 +3,6 @@ import axios from 'axios';
 import ButtonTemplate from './ButtonTemplate';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { Tooltip } from '@mui/material';
 import { toast } from 'react-toastify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -98,7 +97,7 @@ const LegimiCodesButtons = ({ filia, empik, url, children }) => {
 
 LegimiCodesButtons.propTypes = {
   filia: PropTypes.string.isRequired,
-  empik: PropTypes.bool.isRequired,
+  empik: PropTypes.bool,
 };
 
 export default LegimiCodesButtons;

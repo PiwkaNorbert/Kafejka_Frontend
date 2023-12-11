@@ -35,7 +35,7 @@ ButtonTemplate.propTypes = {
   className: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
   icon: PropTypes.element,
-  text: PropTypes.string.isRequired,
+  text: PropTypes.string,
   fullWidth: PropTypes.bool,
   callback: PropTypes.func,
   variant: PropTypes.string,

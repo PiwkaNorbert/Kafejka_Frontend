@@ -1,11 +1,11 @@
-import { useRef } from 'react';
+import { useRef, Suspense, lazy } from 'react';
 import axios from 'axios';
 import { Box, TextField, CardContent, Button } from '@mui/material';
-import WifiCodesTable from '../components/WifiCodesTable';
 import { toast } from 'react-toastify';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
+const WifiCodesTable = lazy(() => import('../components/WifiCodesTable'));
 
 const WifiPerms = ({ index, url }) => {
   const inputRef = useRef(null);
@@ -101,7 +101,9 @@ const WifiPerms = ({ index, url }) => {
                 </tr>
               </thead>
               <tbody>
-                <WifiCodesTable url={url} />
+                <Suspense fallback={<div>loading...</div>}>
+                  <WifiCodesTable url={url} />
+                </Suspense>
               </tbody>
             </table>
           </Box>
