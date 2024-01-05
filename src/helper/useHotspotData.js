@@ -15,7 +15,11 @@ export function useHotspotData(url, filia) {
     ['wifiCodes', filia],
     () => fetchHotspotData(url, filia),
     {
-      staleTime: 1000 * 60 * 10,
+      staleTime: 1000 * 30,
+      refetchInterval: 1000 * 30,
+      refetchOnWindowFocus: true,
+      refetchOnMount: true,
+      refetchOnReconnect: true,
 
       onError: error => {
         console.log(error);

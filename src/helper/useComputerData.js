@@ -18,7 +18,6 @@ export function useComputerData(filia, url) {
       refetchOnWindowFocus: true,
       refetchOnMount: true,
       refetchOnReconnect: true,
-      keepPreviousData: true,
 
       onError: error => {
         console.error(error);

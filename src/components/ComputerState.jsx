@@ -81,7 +81,7 @@ const ComputerState = ({ computer, url }) => {
       <ButtonTemplate
         variant={'contained'}
         fullWidth={true}
-        color={computer.fields.f === 1 ? 'error' : 'success'}
+        color={computer.fields.f === 1 ? 'success' : 'error'}
         // disabled when the current computer is being fetched
         disabled={statusPCMutation.isLoading || computer.fields.f === 5}
         className={'btn-state'}
