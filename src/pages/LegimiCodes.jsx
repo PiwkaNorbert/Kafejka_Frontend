@@ -20,7 +20,7 @@ const LegimiCodes = () => {
   const [inputValueEmpik, setInputValueEmpik] = useState();
   const [showInputs, setShowInputs] = useState(false);
 
-  const url = `http://192.168.200.37:8000/`;
+  const url = `http://192.168.200.40:8000/`;
 
   const queryClient = useQueryClient();
 

@@ -9,7 +9,7 @@ export async function fetchComputerData(signal) {
   const port = '8000';
   const urlStalowy = `http://192.168.3.34:${port}/`;
   const urlDomena = `http://192.168.200.30:${port}/`;
-  const urlForward = `http://192.168.200.37:${port}/`;
+  const urlForward = `http://192.168.200.40:${port}/`;
 
   let urlLegmi = hostnameDomain
     ? urlDomena
