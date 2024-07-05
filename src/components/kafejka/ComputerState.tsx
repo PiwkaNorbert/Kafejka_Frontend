@@ -11,7 +11,7 @@ interface HandleStateChange {
 
 interface ComputerStateProps {
   computerID: number
-  computerFlag: 0 | 1 | 2 | 5
+  computerFlag: 0 | 1 | 2 | 3 | 5 | 6
   handleClick: HandleStateChange
   isPending: boolean
 }
@@ -58,7 +58,7 @@ const ComputerState = ({
               ? 'tertiary'
               : computerFlag === 5
                 ? 'accent'
-                : undefined
+                : "accent"
       }
       className="space-x-2 min-w-[116px]"
       onClick={handleButtonClick}

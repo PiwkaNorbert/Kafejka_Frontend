@@ -1,12 +1,4 @@
-import { useCallback } from 'react'
 import {
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query'
-import { toast } from 'react-toastify'
-import { useParams } from 'react-router-dom'
-import {
-  ComputerArray,
   ComputerShutdownTimeoutPanelProps,
 } from '../../types/computer'
 
@@ -17,79 +9,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select'
+import { useChangeStateByIDMutation } from '../../hooks/mutations/useChangeStateByIDMutation'
 
 const ComputerShutdownTimeoutPanel = ({
   computer,
   url,
 }: ComputerShutdownTimeoutPanelProps) => {
-  const { curFilia } = useParams()
-  const queryClient = useQueryClient()
+
   // Set status Shutdown Time
   
 
-  const { mutate: shutdownPCInMutation, isPending } = useMutation({
-    mutationFn: async (closeByAmount: number) => {
-      const urlShutdownTimeout = `${url}shutdown-timeout/${computer.pk}/${closeByAmount}/`
-      const res = await fetch(urlShutdownTimeout)
-      if (!res.ok) {
-        throw new Error(`Bład w ComputerShutdownTimeoutPanel: ${res.statusText}`)
-      }
-      return await res.json()
-    },
-    onSuccess: response => {
-      queryClient.setQueryData(
-        ['komps', curFilia],
-        (oldData: ComputerArray) => {
-          return oldData.map(comp => {
-            if (comp.pk === response[0].pk) {
-              return {
-                ...comp,
-                fields: { ...response[0].fields },
-              }
-            } else {
-              return {
-                ...comp,
-                fields: { ...comp.fields },
-              }
-            }
-          })
-        }
-      )
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['komps', curFilia] })
-    },
-    onError: error => {
-      toast.error(error?.message)
-    },
-  })
-
-  const handleSubmit = useCallback(
-    (value: number) => {
-
-      // mutate based by the input value
-      if (isPending || isNaN(value)) return
-      shutdownPCInMutation(value, {
-        onSuccess: () => {
-          toast.success(`Za ${value} minut nastąpi wyłączenie komputera.`, {
-            toastId: `timeout-${computer.pk}`,
-          })
-        },
-      })
-    },
-    [isPending, shutdownPCInMutation, computer.pk]
-  )
+  const { onStateChange, changeStateByIDMutation } = useChangeStateByIDMutation(url)
   if (computer.fields.katalog) return null
 
   return (
         <form className='w-full' >
-          <Select name="timeout" disabled={isPending} onValueChange={(e)=> {
+          <Select name="timeout" disabled={changeStateByIDMutation.isPending} onValueChange={(e)=> {
 
             const numberValue: number = Number(e)
-            return handleSubmit(numberValue)
+            return onStateChange({ id: computer.pk, t: numberValue, flag: 6})
 
           }} >
-            <SelectTrigger  disabled={isPending || computer.fields.f === 5}>
+            <SelectTrigger  disabled={changeStateByIDMutation.isPending || computer.fields.f === 5}>
               <SelectValue  placeholder=" Wyłącz za" />
             </SelectTrigger>
             <SelectContent>

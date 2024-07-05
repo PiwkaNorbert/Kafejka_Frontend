@@ -28,6 +28,9 @@ export function useChangeStateByIDMutation(url: string) {
       if (data.katalog !== undefined) {
         requestBody['katalog'] = data.katalog;
       }
+      if (data.t !== undefined) {
+        requestBody['t'] = data.t;
+      }
 
       const res = await fetch(`${url}set-state/`, {
         method: "POST",
@@ -55,10 +58,10 @@ export function useChangeStateByIDMutation(url: string) {
   });
 
 
-  const onStateChange = useCallback(({ id, flag, filia, katalog }: StateData) => {
+  const onStateChange = useCallback(({ id, flag, filia, katalog, t }: StateData) => {
 
     // mutate based by the input value
-    changeStateByIDMutation.mutate({ id, flag, filia, katalog }, {
+    changeStateByIDMutation.mutate({ id, flag, filia, katalog, t }, {
       onSuccess: () => {
         if (flag === 0 || flag === 1) {
           toast.success(`Komputer o ID ${id} został ${flag === 0 ? 'zablokowany' : "odblokowany"}`, {
@@ -90,6 +93,10 @@ export function useChangeStateByIDMutation(url: string) {
             // Assuming you have an icon for assignment, or you can choose not to have an icon
             icon: <LibraryBig /> // Replace YourAssignmentIcon with your actual icon component
           });
+        } else if (t !== undefined) { // Assuming t is passed to this function
+            toast.success(`Za ${t} minut nastąpi wyłączenie komputera.`, {
+              toastId: `timeout-${id}`,
+            })
         }
     },
     });
@@ -100,3 +107,23 @@ export function useChangeStateByIDMutation(url: string) {
   return { onStateChange, changeStateByIDMutation };
 
 }
+
+// cache wylacz za
+  // queryClient.setQueryData(
+      //   ['komps', curFilia],
+      //   (oldData: ComputerArray) => {
+      //     return oldData.map(comp => {
+      //       if (comp.pk === response[0].pk) {
+      //         return {
+      //           ...comp,
+      //           fields: { ...response[0].fields },
+      //         }
+      //       } else {
+      //         return {
+      //           ...comp,
+      //           fields: { ...comp.fields },
+      //         }
+      //       }
+      //     })
+      //   }
+      // )

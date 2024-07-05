@@ -149,7 +149,7 @@ import { useFilters } from '../hooks/useFilters'
             <p >{error?.message} </p>
           </div>
         )}
-        {status === 'success' && filia !== '' && filia !== '0' && curFilia !== undefined && specificCode &&  (
+        {status === 'success' && filia !== '' && curFilia !== undefined && specificCode &&  (
 
           <Fragment>
             <div className="">

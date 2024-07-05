@@ -11,6 +11,9 @@ const ComputerOnlineStatus = ({
   const computerFlag = computer.fields.f
   const computerKatalog = computer.fields.katalog
 
+  // in this component the flag i want to be either 0 or 1
+  const currentFlag = computerFlag === 0 ? 0 : 1;
+
   const { onStateChange, changeStateByIDMutation} = useChangeStateByIDMutation(url)
 
   if (computerKatalog) return null
@@ -19,7 +22,7 @@ const ComputerOnlineStatus = ({
   return (
           <ComputerState
             computerID={computerID}
-            computerFlag={computerFlag}
+            computerFlag={currentFlag as 0 | 1}
             handleClick={onStateChange}
             isPending={changeStateByIDMutation.isPending}
           />

@@ -86,7 +86,6 @@ const WifiPerms = ({ url }: WifiPermsProps) => {
         }}
       >
         <Input
-          id="hotspot"
           name="hotspot"
           ref={inputRef}
           placeholder="Numer karty czytelnika"
@@ -96,9 +95,10 @@ const WifiPerms = ({ url }: WifiPermsProps) => {
         <Button 
           type="submit"
           variant='accent'
-          className="rounded-md text-lg"
+          className="rounded-md"
         >
-          OK
+          {addCodeMutation.isPending ? 'Wysyłanie...' : "Wyślij kod"}
+          
         </Button>
       </form>
 

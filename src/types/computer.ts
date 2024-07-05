@@ -7,7 +7,7 @@ export interface Computer {
 }
 
 export interface Fields {
-  f: 0 | 1 | 5 
+  f: 0 | 1 | 2 | 3 | 5 | 6 
   ol: number
   t: number
   online: number
@@ -45,15 +45,18 @@ export interface ComputerShutdownTimeoutPanelProps {
 
 export interface StateData {
   id: number;
-  flag?: 0 | 1 | 2 | 5;
+  flag?: 0 | 1 | 2 | 5| 6;
   filia?: string;
   katalog?: 0 | 1;
+  t?: number;
+
 }
 
 export type RequestBodyType = {
   id: number;
-  f?: 0 | 1 | 2 | 5; 
+  f?: 0 | 1 | 2 | 5 | 6; 
   filia?: string; 
   katalog?: 0 | 1;
+  t?: number;
 
 };

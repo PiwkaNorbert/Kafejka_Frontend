@@ -41,7 +41,7 @@ const TimerUntilShutdown = ({ computerID, timestampTime}: TimerUntilShutdownProp
 
 
   if (!(timestampTime && timestampTime >= curTime)) {
-    return null;
+    return <div/>;
   }
 
 

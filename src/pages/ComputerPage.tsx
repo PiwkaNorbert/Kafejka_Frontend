@@ -15,7 +15,7 @@ import ComputerOnlineStatusMemo from '../components/kafejka/ComputerOnlineStatus
 import ComputerShutdownTimeoutPanel from '../components/kafejka/ComputerShutdownTimeoutPanel'
 import { Button } from '../components/ui/button'
 import ComputerKatalog from '../components/kafejka/ComputerKatalog'
-// import ComputerRestartMemo from '../components/kafejka/ComputerRestart'
+import ComputerRestartMemo from '../components/kafejka/ComputerRestart'
 
 interface ComputerPageProps {
   showComps: boolean
@@ -80,6 +80,7 @@ const ComputerPage = ({
           if (b.fields.katalog === 1) return -1
           return 0
         }).map((computer, index) => {
+          console.log(computer.pk === 3 && computer)
           
           const computerID = computer.pk
           const { online, katalog  } = computer.fields
@@ -115,7 +116,7 @@ const ComputerPage = ({
                 showComps={showComps}
               />
               {showComps && (
-                <div className="grid grid-cols-3 gap-x-4">
+                <div className="grid grid-cols-4 gap-x-4">
                   <div className={onlineColor}>
                     <ComputerShutdown computer={computer}
                       url={url} />
@@ -124,9 +125,9 @@ const ComputerPage = ({
                     computer={computer}
                     url={url}
                   />
-                  {/* <ComputerRestartMemo computer={computer}
+                  <ComputerRestartMemo computer={computer}
                     url={url}
-                  /> */}
+                  />
                   <ComputerShutdownTimeoutPanel
                     computer={computer}
                     index={index}

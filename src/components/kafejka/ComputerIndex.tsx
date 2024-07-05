@@ -26,16 +26,15 @@ const ComputerIndex = ({
 
 
   return (
-    <div className="flex space-x-2 items-center justify-between">
+    <div className="grid grid-cols-[1fr_auto_auto] gap-x-4 items-center justify-between">
       <TooltipProvider>
         <Tooltip>
-          <TooltipTrigger className={cn("text-xl text-nowrap  hover:cursor-default", offlineColor, katalog === 0 ? "bg-card" : "bg-border")}> {computerName}</TooltipTrigger>
+          <TooltipTrigger className={cn("text-xl text-nowrap text-left  hover:cursor-default", offlineColor, katalog === 0 ? "bg-card" : "bg-border")}> {computerName}</TooltipTrigger>
           <TooltipContent>
             ID: {computerID}
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <h2 className="text-xl text-nowrap"></h2>
 
       <TimerUntilShutdown
         computerID={computerID}
