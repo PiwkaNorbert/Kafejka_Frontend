@@ -15,7 +15,6 @@ export function useChangeStateByIDMutation(url: string) {
   const changeStateByIDMutation = useMutation({
     mutationFn: async (data: StateData) => {
 
-      console.log(data);
       
 
       const requestBody: RequestBodyType = { id: data.id };
@@ -32,6 +31,9 @@ export function useChangeStateByIDMutation(url: string) {
         requestBody['t'] = data.t;
       }
 
+try {
+  
+
       const res = await fetch(`${url}set-state/`, {
         method: "POST",
         body: JSON.stringify(requestBody),
@@ -40,6 +42,12 @@ export function useChangeStateByIDMutation(url: string) {
         throw new Error(`Nastpił problem: ${res.statusText}`);
       }
       return await res.json();
+
+    } catch (error: Error | unknown) {
+      const message = (error as Error).message;
+      throw new Error(message)
+  
+    }
     },
 
     onSuccess: () => {

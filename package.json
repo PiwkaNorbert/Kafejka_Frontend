@@ -4,10 +4,12 @@
   "version": "5.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 192.168.15.160",
+    "dev": "vite",
     "build": "tsc && vite build",
+    "preview": "vite preview",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "lint:debug": "eslint ./src --debug",
+    "lint:fix": "eslint ./src --fix"
   },
   "dependencies": {
     "@emotion/react": "latest",
@@ -26,6 +28,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "dotenv": "^16.3.1",
+    "eslint-plugin-tailwindcss": "^3.17.4",
     "lucide-react": "^0.399.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
