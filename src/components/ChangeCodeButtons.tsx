@@ -3,7 +3,6 @@ import { Plus, Minus } from 'lucide-react'
 import { useChangeCodes } from '../hooks/mutations/useChangeCodes';
 
 const ChangeCodeButtons = ({ url, amount, type, children } : { url:string, amount: number, type: "legimi" | "empik", children?: React.ReactNode }) => {
-
   const { onChange, changeCodesMutation } = useChangeCodes(url)
 
   return (

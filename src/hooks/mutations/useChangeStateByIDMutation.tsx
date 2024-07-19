@@ -103,7 +103,7 @@ try {
           });
         } else if (t !== undefined) { // Assuming t is passed to this function
             toast.success(`Za ${t} minut nastąpi wyłączenie komputera.`, {
-              toastId: `timeout-${id}`,
+              toastId: `timeout-${id}-${t}`,
             })
         }
     },

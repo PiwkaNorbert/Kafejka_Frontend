@@ -27,7 +27,6 @@ export const FilterProvider = ({ children }: Props) => {
     }
     return false
   })
-  
 
   const handleViewSidebar = () => {
     const updatedSidebarOpen = !sidebarOpen;

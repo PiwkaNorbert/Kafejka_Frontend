@@ -22,6 +22,8 @@ const ComputerIndex = ({
   const offlineColor = isOffline ?  'text-secondary  hover:text-secondary': 'text-destructive  hover:text-destructive' 
 
   const computerName = katalog ? 'Katalog' : `Komputer ${index + 1}`
+  const currentTime = Math.trunc(new Date().getTime() / 1000)
+  const isShuttingDown = timestampTime && timestampTime > currentTime
 
 
 
@@ -36,10 +38,13 @@ const ComputerIndex = ({
         </Tooltip>
       </TooltipProvider>
 
-      <TimerUntilShutdown
-        computerID={computerID}
-        timestampTime={timestampTime}
-      />
+      {isShuttingDown ? (
+        <TimerUntilShutdown
+          computerID={computerID}
+          timestampTime={timestampTime}
+        />  
+      ) : <div />}
+
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger className={cn("h-10 px-2.5 border rounded-md border-input hover:bg-accent hover:text-accent-foreground", offlineColor,  katalog === 0 ? "bg-card" : "bg-border")}>

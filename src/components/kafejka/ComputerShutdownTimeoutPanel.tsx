@@ -16,22 +16,21 @@ const ComputerShutdownTimeoutPanel = ({
   url,
 }: ComputerShutdownTimeoutPanelProps) => {
 
-  // Set status Shutdown Time
   
-
+  
   const { onStateChange, changeStateByIDMutation } = useChangeStateByIDMutation(url)
   if (computer.fields.katalog) return null
 
+  const handleTimeoutChange = (value: string) => {
+    const numberValue: number = Number(value)
+    return  onStateChange({ id: computer.pk, t: numberValue, flag: 6})
+  }
+  
   return (
         <form className='w-full' >
-          <Select name="timeout" disabled={changeStateByIDMutation.isPending} onValueChange={(e)=> {
-
-            const numberValue: number = Number(e)
-            return onStateChange({ id: computer.pk, t: numberValue, flag: 6})
-
-          }} >
+          <Select name="timeout" defaultValue='0'  disabled={changeStateByIDMutation.isPending} onValueChange={handleTimeoutChange} >
             <SelectTrigger  disabled={changeStateByIDMutation.isPending || computer.fields.f === 5}>
-              <SelectValue  placeholder=" Wyłącz za" />
+              <SelectValue   placeholder=" Wyłącz za" />
             </SelectTrigger>
             <SelectContent>
               {options.map(({ value }, index) => (
