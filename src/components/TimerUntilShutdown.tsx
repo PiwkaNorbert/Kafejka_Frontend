@@ -9,7 +9,6 @@ const TimerUntilShutdown = ({ computerID, timestampTime }: TimerUntilShutdownPro
 
 
   const [timeLeft, setTimeLeft] = useState<number>(0);
-  console.count('TimerUntilShutdown');
 
   useEffect(() => {
     // Ensure timestampTime is not null and greater than current time
@@ -18,7 +17,6 @@ const TimerUntilShutdown = ({ computerID, timestampTime }: TimerUntilShutdownPro
       // Update the current time on each tick
       const currentTime = Math.trunc(new Date().getTime() / 1000);
       const timeLeft = timestampTime! - currentTime;
-      console.log(timeLeft);
   
       if (timeLeft >= 0) {
         setTimeLeft(timeLeft);
