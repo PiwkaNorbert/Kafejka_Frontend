@@ -16,7 +16,7 @@ export const useReportColumnData = (filia: string, raportID: string | null) => {
   return useQuery<ColumnResponse>({
       queryKey: ['report-details', raportID],
       queryFn: ({ signal }) => fetchReportColumnData(filia, raportID, signal),
-      enabled: raportID !== null
+      enabled: typeof raportID === 'string',
     })
 }
 

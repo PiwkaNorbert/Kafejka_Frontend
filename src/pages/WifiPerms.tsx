@@ -74,7 +74,7 @@ const WifiPerms = ({ url }: WifiPermsProps) => {
   return (
     <div className="w-full grid gap-6 mx-auto max-w-sm">
       <form
-        className="grid gap-y-4 bg-background p-5 rounded-lg shadow-md"
+        className="grid gap-4 bg-background p-5 rounded-lg shadow-md"
         ref={formRef}
 
         onSubmit={e => {

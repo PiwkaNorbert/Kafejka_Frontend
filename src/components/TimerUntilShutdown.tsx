@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
-
 import { TimerUntilShutdownProps } from '../types/computer';
 import { Button } from './ui/button';
-
 
 
 const TimerUntilShutdown = ({ computerID, timestampTime }: TimerUntilShutdownProps) => {

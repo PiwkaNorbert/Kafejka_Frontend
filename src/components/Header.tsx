@@ -5,7 +5,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { IP_PRZEKIEROWANIE } from '../constants'
 import { BadgeHelp, BookOpen, Info, LaptopMinimal, Settings, Wifi } from 'lucide-react'
-// import { Container } from 'lucide-react'
+import { Container } from 'lucide-react'
 import { cn } from '../lib/utils'
 
 
@@ -16,7 +16,7 @@ const navLinks = [
   { id: 3, to: 'wifi', icon: <Wifi size={20} />, label: 'Wi-Fi' },
   { id: 4, to: 'ebooki', icon: <BookOpen size={20} />, label: 'Ebooki' },
   { id: 5, to: 'zgloszenia', icon: <BadgeHelp size={20} />, label: 'Zgłoszenia' },
-  // { id: 6, to: 'makulatura', icon: <Container size={20} />, label: 'Makulatura' },
+  { id: 6, to: 'makulatura', icon: <Container size={20} />, label: 'Makulatura' },
 ]
 
 export default function Headers() {

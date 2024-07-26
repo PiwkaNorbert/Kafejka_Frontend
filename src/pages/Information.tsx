@@ -29,6 +29,25 @@ export default function Information() {
 }
 const changelogData = [
   {
+    version: '🎊 v5.1.0',
+    date: 'Lipiec 26, 2024',
+    sections: [
+      {
+        title: 'Code',
+        items: [
+          'Zmiana z <br/><code class="highlight">JavaScript</code>&rarr;<code class="highlight">TypeScript</code>',
+          'Code refactoring i optymalizacja',
+        ],
+      },
+      {
+        title: 'Interface użytkownika',
+        items: [
+          'W nagłówku naszej strony dodaliśmy nową zakładkę <code class="highlight">Makulatura</code>. Ta zakładka jest zaprojektowana, aby umożliwić Państwu bezpośredni kontakt z Działem Gospodarczym. Zakładka "Makulatura" ma na celu zastąpienie arkuszy Google, umożliwiając aktualizację ilości makulatury na filii oraz ilości pudła z filii. Dodatkowo dział gospodarczy będzie mógł dodawać więcej kolumn, dostosowując je do aktualnych potrzeb. W sekcji "Makulatura" znajduje się również tabela, w której można przeglądać wszystkie zgłoszone ilości makulatury, pudła oraz inne dane, co pozwala na śledzenie ich statusu w sposób przejrzysty i zorganizowany.',
+        ],
+      },
+    ],
+  },
+  {
     version: 'v5.0.0',
     date: 'Lipiec 4, 2024',
     sections: [

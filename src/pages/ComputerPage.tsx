@@ -36,19 +36,19 @@ const ComputerPage = ({
   return (
     <>
 
-      <div className="gap-x-4 grid grid-cols-[auto_auto] justify-end">
+      <div className="gap-4 grid grid-cols-[auto_auto] justify-end">
         <Button className="space-x-2 " disabled={isRefetching} onClick={() => {
           refetch()
         }}>
           <RefreshCcw size={16} />
           {!isRefetching ? (
             <span>
-            Odśwież
+              Odśwież
             </span>
 
           ) : (
             <span>
-            Odświeżanie...
+              Odświeżanie...
             </span>
           )}
 
@@ -63,7 +63,7 @@ const ComputerPage = ({
         )}
 
       </div>
-      <main className={cn("grid gap-y-4 p-4 justify-center mx-auto", !showComps ? "grid-cols-3 gap-x-4 flex-wrap" : "")}>
+      <main className={cn("grid gap-4 p-4 justify-center mx-auto", !showComps ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-wrap" : "")}>
 
         {isLoading && (
           <div className="self-center">
@@ -80,16 +80,15 @@ const ComputerPage = ({
           if (b.fields.katalog === 1) return -1
           return 0
         }).map((computer, index) => {
-          
-          const computerID = computer.pk
-          const { online, katalog  } = computer.fields
 
-          const onlineColor = online >= 60 ? 'text-secondary hover:text-secondary' : 'text-destructive hover:text-destructive'
+          const computerID = computer.pk
+          const { katalog } = computer.fields
+
 
           if (!showComps) {
             return (
-              <section className={cn("bg-card p-5 grid gap-y-4 gap-x-4 shadow-md rounded-lg text-muted-foreground text-sm ",
-                katalog === 1 && "bg-border" 
+              <section className={cn("bg-card p-5 grid gap-4 shadow-md rounded-lg text-muted-foreground text-sm ",
+                katalog === 1 && "bg-border"
               )} key={index} >
 
                 <ComputerAssignFilia computer={computer} url={url} />
@@ -101,13 +100,9 @@ const ComputerPage = ({
           }
 
           return (
-            <section className={cn("bg-card p-5 grid gap-y-4 shadow-md rounded-lg text-muted-foreground text-sm ",
-              katalog === 1 && "bg-border" 
-
-            )} key={index} >
-
-
-
+            <section key={index} className={cn("bg-card p-5 grid gap-4 shadow-md rounded-lg text-muted-foreground text-sm ",
+              katalog === 1 && "bg-border"
+            )}  >
               <ComputerIndex
                 computer={computer}
                 index={index}
@@ -115,11 +110,9 @@ const ComputerPage = ({
                 showComps={showComps}
               />
               {showComps && (
-                <div className="grid grid-cols-3 gap-x-4">
-                  <div className={onlineColor}>
-                    <ComputerShutdown computer={computer}
-                      url={url} />
-                  </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <ComputerShutdown computer={computer}
+                    url={url} />
                   <ComputerOnlineStatusMemo
                     computer={computer}
                     url={url}
@@ -134,7 +127,7 @@ const ComputerPage = ({
                   />
                 </div>
               )}
-           
+
             </section>
           )
         })}

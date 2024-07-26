@@ -1,6 +1,6 @@
 import { useParams, useSearchParams } from 'react-router-dom'
 import { Button } from '../components/ui/button'
-import React, { MutableRefObject, useRef } from 'react'
+import React, { MutableRefObject, useRef, useState } from 'react'
 import { Input } from '../components/ui/input'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
@@ -9,19 +9,14 @@ import { cn } from '../lib/utils'
 import { InfoIcon } from 'lucide-react'
 import useReportData, { useReportColumnData } from '../hooks/useReportData'
 import { Column } from '../types/makulatura/columns'
+import { Textarea } from '../components/ui/text-area'
 
 export default function Makulatura() {
   const { curFilia } = useParams()
-  
+
 
   return (
-    <React.Fragment>
-      <div className="flex flex-col grow-1 gap-4 h-full items-center justify-center p-4 max-w-screen-md mx-auto">
-        <main className=" w-full">
-          <RaportsList curFilia={curFilia ?? ''} />
-        </main>
-      </div>
-    </React.Fragment>
+        <RaportsList curFilia={curFilia ?? ''} />
   )
 }
 
@@ -45,17 +40,17 @@ export const RaportsList = ({ curFilia }: { curFilia: string }) => {
   }
 
   return (
-    <div className="flex flex-col gap-4 ">
-      <div className=" flex divide-x-2 border-b-2 overflow-x-auto shadow rounded-lg">
+    <>
+      <div className=" flex bg-card overflow-x-auto max-w-screen-sm mx-auto shadow rounded-lg">
         {status === "pending" && <div>Loading...</div>}
         {status === "error" && <div>{error?.message} </div>}
         {status === "success" && data.length === 0 && (
-        
-           <div className="bg-card ">
+
+          <div className="bg-card ">
             <div className="bg-primary/15 text-primary grid grid-cols-[20px_1fr] gap-2 items-center p-4 rounded-lg">
-              <InfoIcon size={20} className='self-start mt-0.5'  /> Brak arkuszów na danej Filii, proszę się skontaktować z działem informatyzacji, aby dodać.
+              <InfoIcon size={20} className='self-start mt-0.5' /> Brak arkuszów na danej Filii, proszę się skontaktować z działem informatyzacji, aby dodać.
             </div>
-           </div>
+          </div>
         )}
 
         {status === "success" && data.length > 0 &&
@@ -63,10 +58,10 @@ export const RaportsList = ({ curFilia }: { curFilia: string }) => {
             return (
               <Button
                 key={idx}
-                className={cn("inline-flex gap-1 items-center rounded-none border-b border-transparent text-accent-foreground/75",
-                  tab === raport.report_id.toString() ? 'border-b-primary border-b' : 'border-transparent'
+                className={cn("inline-flex gap-1 items-center rounded-none  border-transparent text-accent-foreground/75",
+                  tab === raport.report_id.toString() ? 'border-b-primary border-b-2' : 'border-transparent'
                 )}
-                variant={tab === raport.report_id.toString() ? 'secondary' : 'ghost'}
+                variant='ghost'
                 onClick={() => {
                   handleUpdate(raport.report_id)
                 }}
@@ -80,7 +75,7 @@ export const RaportsList = ({ curFilia }: { curFilia: string }) => {
           })}
       </div>
       <RaportColumns tab={tab} curFilia={curFilia} />
-    </div>
+    </>
   )
 }
 
@@ -102,60 +97,75 @@ const RaportColumns = ({
 
 
   return (
-    <div className="flex flex-col gap-4 pt-6 max-w-screen-md mr-auto divide-y p-6">
+    <div className="grid gap-4 justify-center mx-auto grid-cols-1 md:grid-cols-2 lg:grid-cols-3 flex-wrap py-6 items-start ">
       {isLoading && <div>Loading...</div>}
       {isError && <div>{error?.message} </div>}
       {isSuccess &&
         data?.map(detail => {
           return (
-            <div key={detail.detail_id} className="w-full pt-1">
-              <RaportForm tab={tab} detail={detail} />
-            </div>
+              <RaportForm key={detail.detail_id}  tab={tab} detail={detail} />
           )
         })}
     </div>
   )
 }
 
-const RaportForm = ({tab, detail}: {tab: string | null, detail: Column}) => {
+const RaportForm = ({ tab, detail }: { tab: string | null, detail: Column }) => {
   const formRef = useRef<HTMLFormElement | null>(null)
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
   const { mutate: updateDetailValue, status } = useMutateDetails(tab, formRef)
+  const [text, setText] = useState<string>(detail.response ?? '')
+
+  const autoGrow = (element: React.RefObject<HTMLTextAreaElement>) => {
+    if (element.current) {
+      element.current.style.height = 'inherit'
+      const scrollHeight = element.current.scrollHeight;
+      element.current.style.height = scrollHeight + "px";
+    }
+  }
+
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setText(event.target.value);
+    if (textAreaRef.current) {
+      autoGrow(textAreaRef)
+    }
+  };
 
 
   return (
     <form
-    ref={formRef}
-    className="flex flex-col w-full gap-4"
-    onSubmit={event => {
-      event.preventDefault()
-      const id = new FormData(event.currentTarget)?.get('id')
-      const response = new FormData(event.currentTarget)?.get(
-        'response'
-      )
+      ref={formRef}
+      className="bg-card p-5 grid gap-4 shadow-md rounded-lg text-muted-foreground text-sm"
+      onSubmit={event => {
+        event.preventDefault()
+        const id = new FormData(event.currentTarget)?.get('id')
+        const response = new FormData(event.currentTarget)?.get(
+          'response'
+        )
 
-      if (typeof id === 'string' && typeof response === 'string') {
-        updateDetailValue({ id, response })
-      }
-    }}
-  >
-    <p className="text-sm text-accent-foreground/75">
+        if (typeof id === 'string' && typeof response === 'string') {
+          updateDetailValue({ id, response })
+        }
+      }}
+    >
 
-    {detail.title}
-    </p>
-    <div className="flex space-x-2">
-      <Input
-        
+      <label htmlFor='response' className="pb-2 text-sm text-muted-foreground flex flex-row items-center justify-between">
+
+        {detail.title}
+      </label>
+      <Textarea
         name="id"
         className="hidden"
         defaultValue={detail.detail_id}
       />
-      <Input placeholder={detail.response ?? ''} name="response" />
+        
+        
+        <Textarea placeholder={detail.response ?? ''} name="response" value={text} onChange={handleChange} ref={textAreaRef} />
 
-      <Button type="submit" disabled={status === 'pending'}  className='min-w-[71.89px]'>
-        {status === 'pending' ? '...' : 'Zmień'}
-      </Button>
-    </div>
-  </form>
+        <Button variant='accent' type="submit" disabled={status === 'pending'} className='min-w-[71.89px]'>
+          {status === 'pending' ? '...' : 'Zmień'}
+        </Button>
+    </form>
   )
 }
 
@@ -168,7 +178,6 @@ function useMutateDetails(tab: string | null, formRef: MutableRefObject<HTMLForm
     mutationFn: (payload: Payload) => updateDetailPOST(payload),
     onSuccess: () => {
       toast.success('Raport został stworzony')
-      console.log(formRef.current)
       if (formRef.current) {
         formRef.current.reset()
       }
@@ -180,12 +189,14 @@ function useMutateDetails(tab: string | null, formRef: MutableRefObject<HTMLForm
       if (typeof tab === 'string') {
         queryClient.invalidateQueries({ queryKey: ['report-details', tab] })
       }
+      queryClient.invalidateQueries({ queryKey: ['reports'] })
+
     },
   })
 }
 
 const updateDetailPOST = async (payload: Payload) => {
-  
+
   try {
     const res = await fetch(
       `${IP_POWROZNICZA}:8080/update-report-details/`,
