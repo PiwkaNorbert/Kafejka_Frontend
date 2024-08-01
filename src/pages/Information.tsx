@@ -35,6 +35,7 @@ const changelogData = [
       {
         title: 'Interface użytkownika',
         items: [
+          'W nagłówku znajduje się nowy przycisk ☀️/ 🌙, który umożliwia zmianę motywu strony.',
           'W nagłówku naszej strony dodaliśmy nową zakładkę <code class="highlight">Dystrybucja</code>. Zakładka "Dytrybucja" ma na celu zastąpienie arkuszy Google, umożliwiając aktualizację ilości makulatury na filii oraz ilości pudła z filii. Dodatkowo dział gospodarczy będzie mógł dodawać więcej "Arkuszy", dostosowując je do aktualnych potrzeb. W sekcji "Dystrybucja" znajduje się również tabela, w której można przeglądać wszystkie zgłoszone ilości makulatury, pudła oraz inne dane, co pozwala na śledzenie ich statusu.',
         ],
       },
