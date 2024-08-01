@@ -1,34 +1,20 @@
-import * as React from 'react';
-
 import { Moon, Sun } from 'lucide-react';
+import { Button } from './ui/button';
+import { useTheme } from '../hooks/useTheme';
+import { cn } from '../lib/utils';
 
-export default function DarkModeButton() {
-  const [mode, setMode] = React.useState<string>();
+export default function DarkModeButton({className}: {className: string}) {
 
-  React.useEffect(() => {
-    const localMode = localStorage.getItem('mode');
-    if (localMode) {
-      setMode(localMode);
-    } else {
-      setMode('light');
-    }
-  }, []);
+  const { theme, handleToggleTheme } = useTheme()
 
-  const handleLocalStorage = () => {
-    if (mode === 'dark') {
-      localStorage.setItem('mode', 'light');
-      setMode('light');
-    } else {
-      localStorage.setItem('mode', 'dark');
-      setMode('dark');
-    }
-  }
   return (
-    <button
-      className="darkmode-bg"
-      onClick={handleLocalStorage}
+    <Button
+      variant="outline"
+      className={cn('border-2 rounded-lg px-2', className)}
+      // className="darkmode-bg"
+      onClick={() => handleToggleTheme(theme === 'light' ? 'dark' : 'light')}
     >
-      {mode === 'light' ? <Sun size={16} /> : <Moon size={16} />}
-    </button>
+      {theme === 'light' ? <Sun size={24} /> : <Moon size={24} />}
+    </Button>
   );
 }

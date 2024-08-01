@@ -1,22 +1,22 @@
 import { useParams, useSearchParams } from 'react-router-dom'
 import { Button } from '../components/ui/button'
-import React, { MutableRefObject, useRef, useState } from 'react'
-import { Input } from '../components/ui/input'
+import React, { MutableRefObject, useRef } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { IP_POWROZNICZA } from '../constants'
 import { cn } from '../lib/utils'
 import { InfoIcon } from 'lucide-react'
 import useReportData, { useReportColumnData } from '../hooks/useReportData'
-import { Column } from '../types/makulatura/columns'
 import { Textarea } from '../components/ui/text-area'
+import { Table, TableBody, TableCaption, TableCell, TableHeader, TableRow } from '../components/ui/table'
+import { Row } from '@/types/dystrybucja/columns'
 
 export default function Makulatura() {
   const { curFilia } = useParams()
 
 
   return (
-        <RaportsList curFilia={curFilia ?? ''} />
+    <RaportsList curFilia={curFilia ?? ''} />
   )
 }
 
@@ -79,6 +79,8 @@ export const RaportsList = ({ curFilia }: { curFilia: string }) => {
   )
 }
 
+
+
 const RaportColumns = ({
   curFilia,
   tab,
@@ -87,87 +89,131 @@ const RaportColumns = ({
   tab: string | null
 }) => {
 
+
+
   const {
-    data: data,
-    isSuccess,
-    isError,
-    error,
-    isLoading,
+    data,
+    status,
+    isLoading
   } = useReportColumnData(curFilia, tab)
 
 
+  if (isLoading) return <div>Loading...</div>
+  if (status === 'error') return <div>{status}</div>
+
   return (
-    <div className="grid gap-4 justify-center mx-auto grid-cols-1 md:grid-cols-2 lg:grid-cols-3 flex-wrap py-6 items-start ">
-      {isLoading && <div>Loading...</div>}
-      {isError && <div>{error?.message} </div>}
-      {isSuccess &&
-        data?.map(detail => {
-          return (
-              <RaportForm key={detail.detail_id}  tab={tab} detail={detail} />
-          )
-        })}
-    </div>
+    <Table>
+      <TableCaption>Arkusze</TableCaption>
+      <TableHeader>
+        <TableRow>
+          {data && data.columns.map((column, idx) => (
+            <TableCell key={idx}>
+              {column === 'entity' ? 'Miejsce' : column}
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {data && data.rows.map((report, rowIndex) => (
+          <TableRow key={`${report.entity}-${rowIndex}`} className="border">
+            {data.columns.map((column, colIndex) => (
+              <TableCell key={colIndex}>
+                {column === 'entity' ? (
+                  report.entity
+                ) : (
+                  typeof report[column] === 'object' ? (
+                    <RaportForm tab={tab} report={report} reportKey={column} />
+                  ) : (
+                    report[column]
+                  )
+                )}
+              </TableCell>
+            ))}
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   )
 }
+type Report = {
+  response: string;
+  id: string;
+};
 
-const RaportForm = ({ tab, detail }: { tab: string | null, detail: Column }) => {
-  const formRef = useRef<HTMLFormElement | null>(null)
-  const textAreaRef = useRef<HTMLTextAreaElement | null>(null)
-  const { mutate: updateDetailValue, status } = useMutateDetails(tab, formRef)
-  const [text, setText] = useState<string>(detail.response ?? '')
+function isReport(value: any): value is Report {
+  return value && typeof value === 'object' && 'response' in value && 'id' in value;
+}
+
+const RaportForm = ({ tab, report, reportKey }: { tab: string | null, report: Row, reportKey: string }) => {
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
+  const { mutate: updateDetailValue, status } = useMutateDetails(tab, formRef);
+  
+  // Ensure the reportKey value is of type Report before accessing its properties
+  const reportValue = report[reportKey];
+  const response = isReport(reportValue) ? reportValue .response : '';
+  const id = isReport(reportValue) ? reportValue.id : '';
+
 
   const autoGrow = (element: React.RefObject<HTMLTextAreaElement>) => {
     if (element.current) {
-      element.current.style.height = 'inherit'
+      element.current.style.height = 'inherit';
       const scrollHeight = element.current.scrollHeight;
       element.current.style.height = scrollHeight + "px";
     }
-  }
+  };
 
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setText(event.target.value);
+  const handleChange = () => {
     if (textAreaRef.current) {
-      autoGrow(textAreaRef)
+      autoGrow(textAreaRef);
     }
   };
 
 
+  const handleSubmit = () => {
+    if (formRef.current) {
+      const formData = new FormData(formRef.current);
+      const id = formData.get('id');
+      const response = formData.get('response');
+
+
+      if (typeof id === 'string' && typeof response === 'string') {
+        updateDetailValue({ id, response }, {
+          onSettled: () => {
+            if (formRef.current) {
+              formRef.current.reset();
+            }
+          }
+        });
+
+      }
+    }
+  }
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      handleSubmit();
+    }
+  };
+
   return (
     <form
       ref={formRef}
-      className="bg-card p-5 grid gap-4 shadow-md rounded-lg text-muted-foreground text-sm"
+      className='flex gap-2 h-10'
       onSubmit={event => {
-        event.preventDefault()
-        const id = new FormData(event.currentTarget)?.get('id')
-        const response = new FormData(event.currentTarget)?.get(
-          'response'
-        )
-
-        if (typeof id === 'string' && typeof response === 'string') {
-          updateDetailValue({ id, response })
-        }
+        event.preventDefault();
+        handleSubmit();
       }}
     >
-
-      <label htmlFor='response' className="pb-2 text-sm text-muted-foreground flex flex-row items-center justify-between">
-
-        {detail.title}
-      </label>
-      <Textarea
-        name="id"
-        className="hidden"
-        defaultValue={detail.detail_id}
-      />
-        
-        
-        <Textarea placeholder={detail.response ?? ''} name="response" value={text} onChange={handleChange} ref={textAreaRef} />
-
-        <Button variant='accent' type="submit" disabled={status === 'pending'} className='min-w-[71.89px]'>
-          {status === 'pending' ? '...' : 'Zmień'}
-        </Button>
+      <Textarea className="hidden resize-none size-0" name="id" defaultValue={id} />
+      <Textarea className='max-h-[76px] resize-none' placeholder={response} name="response" onChange={handleChange} onKeyDown={handleKeyDown}
+        ref={textAreaRef} />
+      <Button variant='accent' type="submit" disabled={status === 'pending'} className='min-w-[71.89px]'>
+        {status === 'pending' ? '...' : 'Zmień'}
+      </Button>
     </form>
-  )
-}
+  );
+};
 
 type Payload = { id: string; response: string }
 

@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { ToastContainer } from 'react-toastify'
 import { FilterProvider } from './providers/FilterProvider.tsx';
+import { ThemeProvider } from './providers/ThemeProvider.tsx';
 
 const queryClient = new QueryClient();
 
@@ -16,14 +17,18 @@ const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <FilterProvider>
-        <App />
-        <ToastContainer
-            stacked 
+      <ThemeProvider>
+
+        <FilterProvider>
+
+          <App />
+          <ToastContainer
+            stacked
             position="bottom-right"
             limit={3}
           />
-      </FilterProvider>
+        </FilterProvider>
+      </ThemeProvider>
 
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

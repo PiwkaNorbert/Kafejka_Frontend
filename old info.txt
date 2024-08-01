@@ -1,0 +1,10 @@
+
+ <span className='indent-8'>
+Z przyjemnością informujemy, że szata graficzna aplikacji została nieco zmieniona, aby była bardziej przejrzysta i przyjazna dla użytkowników. Mamy nadzieję, że nowy wygląd przypadnie Wam do gustu i ułatwi korzystanie z aplikacji.
+</span>
+<span className='indent-8'>
+Zakładka <span className="text-primary font-semibold">"Zgłoszenia"</span> została stworzona z myślą o tym, aby umożliwić Wam zgłaszanie wszelkich zadań, które wymagają wsparcia działu informatyzacji na naszej filii. Dzięki tej funkcji możecie łatwo przekazywać swoje potrzeby i problemy, a także śledzić postęp ich realizacji w przejrzystej tabeli zawierającej wszystkie zgłoszone zadania.
+</span>
+<span className='indent-8'>
+Dziękujemy za zaufanie i zapraszamy do korzystania z nowych funkcji!
+</span>

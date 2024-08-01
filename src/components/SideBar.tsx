@@ -8,13 +8,13 @@ function SideBar() {
 
   const {
     sidebarOpen,
-    handleViewSidebar,
     toggleLegimi,
-    filterLegimi,
     toggleEmpik,
-    filterEmpik,
     toggleInputs,
-    showInputCodes,
+    handleToggleSidebar,
+    handleFilterLegimi,
+    handleFilterEmpik,
+    handleCodes,
   } = useFilters();
 
   const sidebarClass = cn("fixed p-3 top-[175px] grid p-3 divide-y rounded-lg gap-4  sidebar",
@@ -24,7 +24,7 @@ function SideBar() {
     <div className='bg-card rounded-md'>
     
       <Button
-        onClick={handleViewSidebar}
+        onClick={() => handleToggleSidebar(!sidebarOpen)}
         className="space-x-2 text-base sidebar-toggle sidebar-toggle-outside"
       >
         <Filter size={16} />
@@ -36,15 +36,15 @@ function SideBar() {
  
         <div className="grid gap-2 place-items-center text-sm">
           <span className="align-middle font-medium text-muted-foreground capitalize text-center">Kody Legimi</span>
-          <Switch checked={toggleLegimi} onCheckedChange={filterLegimi} />
+          <Switch defaultChecked={toggleLegimi} onCheckedChange={handleFilterLegimi} />
         </div>
         <div className="grid gap-2 place-items-center text-sm">
         <span className="align-middle font-medium text-muted-foreground capitalize text-center">Kody Empik</span>
-          <Switch checked={toggleEmpik} onCheckedChange={filterEmpik} disabled={true} />
+          <Switch defaultChecked={toggleEmpik} onCheckedChange={handleFilterEmpik} disabled={true} />
         </div>
         <div className="grid gap-2 place-items-center text-sm">
         <span className="align-middle font-medium text-muted-foreground capitalize text-center">Pole Edycji</span>
-          <Switch checked={toggleInputs} onCheckedChange={showInputCodes} disabled={false} />
+          <Switch defaultChecked={toggleInputs} onCheckedChange={handleCodes} disabled={false} />
         </div>
       </div>
     </>

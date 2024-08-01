@@ -155,7 +155,7 @@ import { useFilters } from '../hooks/useFilters'
             <div className="">
               <h1 className="text-2xl font-bold mb-6 text-center">{specificCode.fields.filiaName}</h1>
             </div>
-            <div className="grid bg-background p-3 divide-y rounded-lg space-y-2 shadow-md max-w-sm mx-auto">
+            <div className="grid bg-card p-3 divide-y rounded-lg space-y-2 shadow-md max-w-sm mx-auto">
             
               <ChangeCodeButtons url={url} amount={specificCode.fields.codesNumber} type='legimi' >
                   <span className="font-bold tabular-nums min-w-8 text-center text-lg">{specificCode.fields.codesNumber}</span>

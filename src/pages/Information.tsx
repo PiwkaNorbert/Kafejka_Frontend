@@ -8,7 +8,7 @@ import {
 export default function Information() {
   return (
     <>
-      <article className=" p-5 bg-background rounded-lg shadow-md ">
+      <article className=" p-5 bg-card rounded-lg shadow-md ">
         <h3 className="text-2xl font-medium">Jak posługiwać się kafejką</h3>
 
         <p className="text-sm text-slate-500 mb-6 ">Mar 20, 2023</p>
@@ -33,16 +33,9 @@ const changelogData = [
     date: 'Lipiec 26, 2024',
     sections: [
       {
-        title: 'Code',
-        items: [
-          'Zmiana z <br/><code class="highlight">JavaScript</code>&rarr;<code class="highlight">TypeScript</code>',
-          'Code refactoring i optymalizacja',
-        ],
-      },
-      {
         title: 'Interface użytkownika',
         items: [
-          'W nagłówku naszej strony dodaliśmy nową zakładkę <code class="highlight">Makulatura</code>. Ta zakładka jest zaprojektowana, aby umożliwić Państwu bezpośredni kontakt z Działem Gospodarczym. Zakładka "Makulatura" ma na celu zastąpienie arkuszy Google, umożliwiając aktualizację ilości makulatury na filii oraz ilości pudła z filii. Dodatkowo dział gospodarczy będzie mógł dodawać więcej kolumn, dostosowując je do aktualnych potrzeb. W sekcji "Makulatura" znajduje się również tabela, w której można przeglądać wszystkie zgłoszone ilości makulatury, pudła oraz inne dane, co pozwala na śledzenie ich statusu w sposób przejrzysty i zorganizowany.',
+          'W nagłówku naszej strony dodaliśmy nową zakładkę <code class="highlight">Dystrybucja</code>. Zakładka "Dytrybucja" ma na celu zastąpienie arkuszy Google, umożliwiając aktualizację ilości makulatury na filii oraz ilości pudła z filii. Dodatkowo dział gospodarczy będzie mógł dodawać więcej "Arkuszy", dostosowując je do aktualnych potrzeb. W sekcji "Dystrybucja" znajduje się również tabela, w której można przeglądać wszystkie zgłoszone ilości makulatury, pudła oraz inne dane, co pozwala na śledzenie ich statusu.',
         ],
       },
     ],
@@ -218,7 +211,7 @@ interface ChangelogEntryProps {
 
 const ChangelogEntry: React.FC<ChangelogEntryProps> = ({ version, date, sections }) => {
   return (
-    <article className="p-5 bg-background rounded-lg shadow-md">
+    <article className="p-5 bg-card rounded-lg shadow-md">
       <h3 className="text-2xl font-medium">{version}</h3>
       <p className="text-sm text-slate-500 mb-2">{date}</p>
       {sections.map((section, index) => (

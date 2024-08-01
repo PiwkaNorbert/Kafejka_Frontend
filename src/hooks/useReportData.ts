@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { fetchReportColumnData, fetchReportData } from '../fetch'
-import { ColumnResponse } from '../types/makulatura/columns'
-import { MakulatoraResponse } from '../types/makulatura/raports'
+import { ColumnResponse } from '../types/dystrybucja/columns'
+import { MakulatoraResponse } from '../types/dystrybucja/raports'
+
 
 
 
@@ -16,7 +17,7 @@ export const useReportColumnData = (filia: string, raportID: string | null) => {
   return useQuery<ColumnResponse>({
       queryKey: ['report-details', raportID],
       queryFn: ({ signal }) => fetchReportColumnData(filia, raportID, signal),
-      enabled: typeof raportID === 'string',
+      enabled: typeof raportID === 'string' && raportID !== '',
     })
 }
 

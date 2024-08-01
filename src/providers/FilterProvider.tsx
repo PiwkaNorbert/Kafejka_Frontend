@@ -1,53 +1,58 @@
 
-import { ReactNode, createContext, useState } from "react";
+import { ReactNode, createContext, useReducer } from "react";
 
 export interface FilterContextType {
   toggleLegimi: boolean;
-  filterLegimi: (checked: boolean) => void;
   toggleEmpik: boolean;
-  filterEmpik: (checked: boolean) => void;
   sidebarOpen: boolean;
   toggleInputs: boolean;
-  handleViewSidebar: () => void;
-  showInputCodes: (checked: boolean) => void;
+  handleToggleSidebar: (checked: boolean) => void;
+  handleFilterLegimi: (checked: boolean) => void;
+  handleFilterEmpik: (checked: boolean) => void;
+  handleCodes: (checked: boolean) => void;
 }
 
 export const FilterContext = createContext<FilterContextType | undefined>(undefined);
 
 type Props = { children: ReactNode }
+type State = { sidebarOpen: boolean, toggleLegimi: boolean, toggleEmpik: boolean, toggleInputs: boolean }
+type Action = { type: string, payload: boolean }
+
+function reducer(state: State, action: Action) {
+
+  if (action.type === 'TOGGLE_SIDEBAR') {
+    localStorage.setItem('sidebar', JSON.stringify(action.payload));
+    return { ...state, sidebarOpen: action.payload }
+  } else if (action.type === 'TOGGLE_LEGIMI') {
+    return { ...state, toggleLegimi: action.payload }
+  } else if (action.type === 'TOGGLE_EMPIK') {
+    return { ...state, toggleEmpik: action.payload }
+  } else if (action.type === 'TOGGLE_INPUTS') {
+    return { ...state, toggleInputs: action.payload }
+  } else {
+    throw new Error(`Unhandled action type: ${action.type}`)
+  }
+}
 
 export const FilterProvider = ({ children }: Props) => {
-  const [toggleLegimi, setToggleLegimi] = useState<boolean>(false);
-  const [toggleEmpik, setToggleEmpik] = useState<boolean>(false);
-  const [toggleInputs, setToggleInputs] = useState<boolean>(false);
-  const [sidebarOpen, setSideBarOpen] = useState<boolean>(() => {
-    const sidebarBoolean = localStorage.getItem('sidebar')
-    if(sidebarBoolean) {
-      return  JSON.parse(sidebarBoolean) 
-    }
-    return false
-  })
+  const [state, dispatch] = useReducer(reducer, { sidebarOpen: false, toggleLegimi: false, toggleEmpik: false, toggleInputs: false });
 
-  const handleViewSidebar = () => {
-    const updatedSidebarOpen = !sidebarOpen;
-    setSideBarOpen(updatedSidebarOpen);
-    localStorage.setItem('sidebar', JSON.stringify(updatedSidebarOpen));
-  };
+  const handleToggleSidebar = (checked: boolean): void =>
+    dispatch({ type: 'TOGGLE_SIDEBAR', payload: checked });
 
-  const filterLegimi = (checked: boolean): void => {
-    setToggleLegimi(checked);
-  };
+  const handleFilterLegimi = (checked: boolean): void =>
+    dispatch({ type: 'TOGGLE_LEGIMI', payload: checked });
 
-  const filterEmpik = (checked: boolean): void => {
-    setToggleEmpik(checked);
-  };
+  const handleFilterEmpik = (checked: boolean): void =>
+    dispatch({ type: 'TOGGLE_EMPIK', payload: checked });
 
-  const showInputCodes = (checked: boolean): void => {
-    setToggleInputs(checked);
-  };
+  const handleCodes = (checked: boolean): void =>
+    dispatch({ type: 'TOGGLE_INPUTS', payload: checked });
 
-return (
-    <FilterContext.Provider value={{showInputCodes, filterEmpik, filterLegimi, handleViewSidebar, toggleInputs, toggleEmpik, toggleLegimi, sidebarOpen}} >
-    { children }
+
+  return (
+    <FilterContext.Provider value={{ handleCodes, handleFilterEmpik, handleFilterLegimi, handleToggleSidebar, toggleInputs: state.toggleInputs, toggleEmpik: state.toggleEmpik, toggleLegimi: state.toggleLegimi, sidebarOpen: state.sidebarOpen }} >
+      {children}
     </FilterContext.Provider>
-)}
+  )
+}

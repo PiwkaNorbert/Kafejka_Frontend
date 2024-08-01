@@ -109,7 +109,7 @@ export default function TicketPage() {
       </div>
 
 
-      <main className="bg-background p-6 rounded-lg shadow-lg w-full">
+      <main className="bg-card p-6 rounded-lg shadow-lg w-full">
         <Table>
           <TableCaption>Lista zgłoszeń do wykonania</TableCaption>
           <TableHeader>
