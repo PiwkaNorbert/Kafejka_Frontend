@@ -6,46 +6,46 @@ import PageNotFound from './pages/PageNotFound.tsx'
 import Information from './pages/Information.tsx'
 import LegimiCodes from './pages/LegimiCodes.tsx'
 import TicketPage from './pages/TicketPage.tsx'
-import Dystrybucja from './pages/Dystrybucja.tsx'
+// import Dystrybucja from './pages/Dystrybucja.tsx'
 import WifiPerms from './pages/WifiPerms.tsx'
 import ComputerPageMemo from './pages/ComputerPage.tsx'
 
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from './components/ui/dialog.tsx'
-import { useEffect, useState } from 'react';
-import { Button } from './components/ui/button.tsx';
+// import {
+//   Dialog,
+//   DialogClose,
+//   DialogContent,
+//   DialogDescription,
+//   DialogFooter,
+//   DialogHeader,
+//   DialogTitle,
+// } from './components/ui/dialog.tsx'
+// import { useEffect, useState } from 'react';
+// import { Button } from './components/ui/button.tsx';
 
 function App() {
   const securityKey = window.location.pathname.split('/')[1];
   const url = `${IP_POWROZNICZA}:8005/${securityKey}/`;
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    // Check if the update information has been shown to the user
-    const updateShown = localStorage.getItem('updateShown');
-    if (updateShown !== 'true') {
-      setOpen(true);
-    }
-  }, []);
+  // useEffect(() => {
+  //   // Check if the update information has been shown to the user
+  //   const updateShown = localStorage.getItem('updateShown');
+  //   if (updateShown !== 'true') {
+  //     setOpen(true);
+  //   }
+  // }, []);
 
-  const handleClose = () => {
-    // Set 'updateShown' to true in localStorage when the modal is closed
-    localStorage.setItem('updateShown', 'true');
-    setOpen(false);
-  };
+  // const handleClose = () => {
+  //   // Set 'updateShown' to true in localStorage when the modal is closed
+  //   localStorage.setItem('updateShown', 'true');
+  //   setOpen(false);
+  // };
 
 
   return (
     <>
       <div className="App">
-        <Dialog open={open} onOpenChange={handleClose}>
+        {/* <Dialog open={open} onOpenChange={handleClose}>
 
           <DialogContent>
             <DialogHeader>
@@ -70,7 +70,7 @@ function App() {
               </DialogClose>
             </DialogFooter>
           </DialogContent>
-        </Dialog>
+        </Dialog> */}
 
         <Router>
           <Routes>
@@ -107,10 +107,10 @@ function App() {
                 path={`/:securityKey/:curFilia/zgloszenia`}
                 element={<TicketPage />}
               />
-              <Route
+              {/* <Route
                 path={`/:securityKey/:curFilia/dystrybucja`}
                 element={<Dystrybucja />}
-              />
+              /> */}
               {/* WifiPerms route */}
               <Route
                 path={`/:securityKey/:curFilia/wifi`}

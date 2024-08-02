@@ -17,9 +17,12 @@ function reducer(state: State, action: Action) {
 
   if (action.type === 'TOGGLE_THEME') {
     const storageTheme = localStorage.getItem('theme');
-    if (!storageTheme) return { ...state, theme: action.theme }
-      const theme = JSON.parse(storageTheme);
-    
+    if (!storageTheme) {
+      localStorage.setItem('theme', JSON.stringify(action.theme));
+      return { ...state, theme: action.theme }
+    }
+    const theme = JSON.parse(storageTheme);
+
     if (theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark')
     } else {
@@ -34,9 +37,9 @@ function reducer(state: State, action: Action) {
 }
 
 export const ThemeProvider = ({ children }: Props) => {
-  const [state, dispatch] = useReducer(reducer, { theme : 'light' });
+  const [state, dispatch] = useReducer(reducer, { theme: 'light' });
 
-  
+
   React.useEffect(() => {
     const storageTheme = localStorage.getItem('theme');
     if (storageTheme) {
@@ -45,17 +48,14 @@ export const ThemeProvider = ({ children }: Props) => {
     }
   }, []);
 
-  const handleToggleTheme = (theme: "light" | "dark"): void =>
-  {
-    console.log(theme);
-    
+  const handleToggleTheme = (theme: "light" | "dark"): void => {
     return dispatch({ type: 'TOGGLE_THEME', theme });
   }
 
 
 
   return (
-    <ThemeContext.Provider value={{handleToggleTheme, theme: state.theme }} >
+    <ThemeContext.Provider value={{ handleToggleTheme, theme: state.theme }} >
       {children}
     </ThemeContext.Provider>
   )

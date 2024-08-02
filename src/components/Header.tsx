@@ -4,7 +4,7 @@ import DarkModeButton from '../components/DarkModeButton'
 import { useEffect, useState } from 'react'
 import { IP_PRZEKIEROWANIE } from '../constants'
 import { BadgeHelp, BookOpen, Info, LaptopMinimal, Menu, Settings, Wifi } from 'lucide-react'
-import { Container } from 'lucide-react'
+// import { Container } from 'lucide-react'
 import { cn } from '../lib/utils'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
@@ -17,7 +17,7 @@ const navLinks = [
   { id: 3, to: 'wifi', icon: <Wifi size={20} />, label: 'Wi-Fi' },
   { id: 4, to: 'ebooki', icon: <BookOpen size={20} />, label: 'Ebooki' },
   { id: 5, to: 'zgloszenia', icon: <BadgeHelp size={20} />, label: 'Zgłoszenia' },
-  { id: 6, to: 'dystrybucja', icon: <Container size={20} />, label: 'Dystrybucja' },
+  // { id: 6, to: 'dystrybucja', icon: <Container size={20} />, label: 'Dystrybucja' },
 ]
 
 export default function Headers() {
@@ -101,7 +101,8 @@ interface FiliaChangerProps {
 
 const FiliaChanger: React.FC<FiliaChangerProps> = ({ securityKey, curFilia, className }) => {
   const navigate = useNavigate();
-  if (window.location.origin.includes(IP_PRZEKIEROWANIE)) return null
+  if (window.location.origin.includes(".37")) return null;
+  
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
