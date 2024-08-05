@@ -3,7 +3,6 @@ import { fetchJsonCodes } from '../fetch';
 
 export function useEbookData() {
 
-
   const legimiQuery = useQuery({
     queryKey: ['codes'],
     queryFn: ({ signal }) => fetchJsonCodes(signal),

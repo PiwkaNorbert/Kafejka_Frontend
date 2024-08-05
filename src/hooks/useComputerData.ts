@@ -15,6 +15,6 @@ export function useComputerData(url: string, filia: string) {
     refetchOnWindowFocus: true,
     refetchOnMount: true,
     refetchOnReconnect: true,
-    }
+  }
   );
 }

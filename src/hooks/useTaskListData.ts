@@ -7,7 +7,7 @@ import { getTaskList } from '../fetch'
 const useTaskListData = (filia: string) => {
   return useQuery<TaskListResponse>({
     queryKey: ['unautherized-tasks'],
-    queryFn: ({signal}) => getTaskList(filia, signal),
+    queryFn: ({ signal }) => getTaskList(filia, signal),
     enabled: filia !== undefined,
   })
 }

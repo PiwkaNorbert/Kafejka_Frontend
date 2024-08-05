@@ -16,8 +16,6 @@ const ComputerShutdownTimeoutPanel = ({
   url,
 }: ComputerShutdownTimeoutPanelProps) => {
 
-  
-  
   const { onStateChange, changeStateByIDMutation } = useChangeStateByIDMutation(url)
   if (computer.fields.katalog) return null
 

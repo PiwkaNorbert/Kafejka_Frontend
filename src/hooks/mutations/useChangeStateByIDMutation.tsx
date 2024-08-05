@@ -15,8 +15,6 @@ export function useChangeStateByIDMutation(url: string) {
   const changeStateByIDMutation = useMutation({
     mutationFn: async (data: StateData) => {
 
-      
-
       const requestBody: RequestBodyType = { id: data.id };
       if (data.flag !== undefined) {
         requestBody['f'] = data.flag;
@@ -32,7 +30,6 @@ export function useChangeStateByIDMutation(url: string) {
       }
 
 try {
-  
 
       const res = await fetch(`${url}set-state/`, {
         method: "POST",
