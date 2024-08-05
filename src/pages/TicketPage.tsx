@@ -377,6 +377,7 @@ export function GroupSelector({ handleShowProblem }: IGroupSelector) {
                 key={group.id}
                 className="font-normal capitalize"
                 value={group.id.toString()}
+                disabled={group.id !== 1} // only let informatyzacja be selected for now 
               >
                 {groupName}
               </SelectItem>
