@@ -369,3 +369,12 @@ button.Mui-selected img.feather {
   right: 30px;
   transition: all 0.2s ease-out;
 }
+
+.content-area {
+  height: calc(100vh - 87px);
+  max-height: calc(100vh - 87px);
+}
+
+.grid-rows-auto-stretch {
+  grid-template-rows: auto 1fr;
+}

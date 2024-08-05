@@ -1,6 +1,7 @@
 import js from "@eslint/js";
 import ts from "typescript-eslint";
 import tailwind from "eslint-plugin-tailwindcss";
+import eslintConfigPrettier from "eslint-config-prettier";
 
 export default [
   // add eslint built-in
@@ -9,13 +10,14 @@ export default [
   // if you would like use more another configuration,
   // see the section: https://typescript-eslint.io/getting-started#details
   ...ts.configs.recommended,
+  eslintConfigPrettier,
   ...tailwind.configs["flat/recommended"],
   {
     settings: {
       tailwindcss: {
         // These are the default values but feel free to customize
         callees: ["classnames", "clsx", "ctl"],
-        config: "tailwind.config.js", // returned from `loadConfig()` utility if not provided
+        config: "tailwind.config.ts", // returned from `loadConfig()` utility if not provided
         cssFiles: [
           "**/*.css",
           "!**/node_modules",

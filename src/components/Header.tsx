@@ -47,7 +47,7 @@ export default function Headers() {
   }
   // 'flex p-4 flex-col gap-2 items-center justify-center font-medium text-muted-foreground capitalize text-center'
   return (
-    <header className='flex lg:place-content-center gap-3 lg:gap-0 justify-end h-[78px] bg-card border-b border-slate-300 dark:border-slate-800  sticky top-0 z-[20] p-4 lg:p-0'>
+    <header className='flex lg:place-content-center space-x-3 lg:gap-0 justify-end h-[78px] bg-card border-b border-slate-300 dark:border-slate-800  sticky top-0 z-[20] p-4 lg:p-0'>
       <FiliaChanger securityKey={securityKey} curFilia={curFilia} className='lg:hidden' />
 
       <DarkModeButton className='lg:hidden' />
