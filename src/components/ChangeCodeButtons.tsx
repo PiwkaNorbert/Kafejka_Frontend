@@ -2,8 +2,8 @@ import { Button } from './ui/button';
 import { Plus, Minus } from 'lucide-react'
 import { useChangeCodes } from '../hooks/mutations/useChangeCodes';
 
-const ChangeCodeButtons = ({ url, amount, type, children } : { url:string, amount: number, type: "legimi" | "empik", children?: React.ReactNode }) => {
-  const { onChange, changeCodesMutation } = useChangeCodes(url)
+const ChangeCodeButtons = ({ amount, type, children } : { amount: number, type: "legimi" | "empik", children?: React.ReactNode }) => {
+  const { onChange, changeCodesMutation } = useChangeCodes()
 
   return (
     <div className="grid grid-cols-[1fr_auto] gap-4 items-center first:pt-0 pt-2">
@@ -16,7 +16,7 @@ const ChangeCodeButtons = ({ url, amount, type, children } : { url:string, amoun
           variant='destructive'
           type="submit"
           onClick={() => {
-            onChange({action:'sub', type});
+            onChange({action:'sub-codes', type});
           }}
         > 
           <Minus size={16} />
@@ -29,7 +29,7 @@ const ChangeCodeButtons = ({ url, amount, type, children } : { url:string, amoun
           variant='secondary'
           type="submit"
           onClick={() => {
-            onChange({action:'add', type});
+            onChange({action:'add-codes', type});
           }}
         >
           <Plus size={16} />

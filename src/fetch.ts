@@ -27,7 +27,8 @@ export const fetchComputerData = async (url: string, filia: string, signal?: Abo
 };
 
 export const fetchJsonCodes = async (signal?: AbortSignal): Promise<GetCodesResponse> => {
-    const url = `${IP_POWROZNICZA}:8000/json-codes/`;
+    // const url = `${IP_POWROZNICZA}:8000/json-codes/`;
+    const url = `http://192.168.200.40:8081/codes`;
     return customFetch<GetCodesResponse>(url, 'Nastpił problem: Fetching JSON codes failed', signal);
 };
 
