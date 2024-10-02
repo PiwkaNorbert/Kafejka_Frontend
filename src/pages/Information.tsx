@@ -29,6 +29,22 @@ export default function Information() {
 }
 const changelogData = [
   {
+    version: '🎊 v5.2.0',
+    date: 'Październik 1, 2024',
+    sections: [
+      {
+        title: 'Nowa funkcja: Instrukcja obsługi kafejki',
+        items: [
+          'Aby rozpocząć edycję, proszę kliknąć na etykietę "Komputer nr".',
+          'W tym miejscu można dokonać modyfikacji nazwy stanowiska komputerowego.',
+          'Wybierz czas wyłączenia, aby zastosować opóźnienie. Jeśli nie wybierzesz czasu, operacja zostanie wykonana natychmiast po kliknięciu "Wyłącz" lub "Restartuj".',
+          'Kliknij "Wyłącz", aby wyłączyć komputer. Jeśli wybrano czas opóźnienia, operacja zostanie wykonana po tym czasie. W przeciwnym razie komputer zostanie wyłączony natychmiast.',
+          'Kliknij "Restartuj", aby zrestartować komputer. Podobnie jak w przypadku wyłączania, jeśli wybrano czas opóźnienia, restart nastąpi po tym czasie. Bez wybranego opóźnienia, restart rozpocznie się natychmiast.',
+        ],
+      },
+    ],
+  },
+  {
     version: '🎊 v5.1.0',
     date: 'Lipiec 26, 2024',
     sections: [

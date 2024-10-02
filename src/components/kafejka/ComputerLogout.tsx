@@ -3,28 +3,29 @@ import ComputerState from './ComputerState'
 import { memo } from 'react'
 import { useChangeStateByIDMutation } from '../../hooks/mutations/useChangeStateByIDMutation'
 
-const ComputerOnlineStatus = memo(({ computer, url }: ComputerOnlineStatusProps) => {
+const ComputerLogout = ({ computer, url }: ComputerOnlineStatusProps) => {
   const computerID = computer.pk
-  const computerFlag = computer.fields.f
   const computerKatalog = computer.fields.katalog
 
-  // in this component the flag i want to be either 0 or 1
-  const currentFlag = computerFlag === 0 ? 0 : 1
 
   const { onStateChange, changeStateByIDMutation } =
     useChangeStateByIDMutation(url)
 
   if (computerKatalog) return null
 
+  const handleShutdown = () => {
+    onStateChange({ id: computerID, flag: 3 })
+  }
+
   return (
     <ComputerState
-      className="col-span-2"
+    className='w-full'
       computerID={computerID}
-      computerFlag={currentFlag as 0 | 1}
-      handleClick={onStateChange}
+      computerFlag={3}
+      handleClick={handleShutdown}
       isPending={changeStateByIDMutation.isPending}
     />
   )
-})
+}
 
-export default ComputerOnlineStatus
+export default memo(ComputerLogout)

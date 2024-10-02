@@ -2,8 +2,9 @@ import ComputerState from './ComputerState'
 import { memo } from 'react'
 import { Computer } from '@/types/computer'
 import { useChangeStateByIDMutation } from '../../hooks/mutations/useChangeStateByIDMutation'
+import { useShutdownTime } from '../../hooks/useShutdownTime'
 
-const ComputerRestart = ({
+const ComputerRestart = memo(({
   computer,
   url,
 }: {
@@ -14,18 +15,23 @@ const ComputerRestart = ({
   const computerKatalog = computer.fields.katalog
 
   const { onStateChange, changeStateByIDMutation } = useChangeStateByIDMutation(url)
+  const { shutdownTime } = useShutdownTime()
 
   if (computerKatalog) return null
+
+    const handleRestart = () => {
+    const numberValue: number = Number(shutdownTime)
+    return onStateChange({ id: computerID, t: numberValue, flag: 2 })
+  }
 
   return (
     <ComputerState
       computerID={computerID}
       computerFlag={2}
-      handleClick={onStateChange}
+      handleClick={handleRestart}
       isPending={changeStateByIDMutation.isPending}
     />
   )
-}
-const ComputerRestartMemo = memo(ComputerRestart)
+})
 
-export default ComputerRestartMemo
+export default ComputerRestart

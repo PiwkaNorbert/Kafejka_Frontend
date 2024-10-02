@@ -1,7 +1,8 @@
 import { StateData } from '@/types/computer';
 import { Button } from '../ui/button'
-import { Lock, LockOpen, Power, RotateCcw } from 'lucide-react'
+import { Lock, LockOpen, LogOut, Power, RotateCcw } from 'lucide-react'
 import { toast } from 'react-toastify'
+import { cn } from '../../lib/utils';
 
 // Define specific types for each onClick function signature
 interface HandleStateChange {
@@ -11,9 +12,10 @@ interface HandleStateChange {
 
 interface ComputerStateProps {
   computerID: number
-  computerFlag: 0 | 1 | 2 | 3 | 5 | 6
+  computerFlag: 0 | 1 | 2 | 3 | 6
   handleClick: HandleStateChange
   isPending: boolean
+  className?: string
 }
 
 const ComputerState = ({
@@ -21,6 +23,7 @@ const ComputerState = ({
   computerFlag,
   handleClick,
   isPending,
+  className
 }: ComputerStateProps) => {
   const handleButtonClick = () => {
     if (typeof handleClick !== 'function') {
@@ -29,17 +32,20 @@ const ComputerState = ({
     }
 
     switch (computerFlag) {
-      case 0:
-        handleClick({ id: computerID, flag: 1 });
+      case 0: 
+        handleClick({ id: computerID, flag: 1 }); //odblokowany
         break;
       case 1:
-        handleClick({ id: computerID, flag: 0 });
+        handleClick({ id: computerID, flag: 0 }); //zablokowany
         break;
       case 2:
-        handleClick({ id: computerID, flag: 2 });
+        handleClick({ id: computerID, flag: 2 }); //reset czasowy
         break;
-      case 5:
-        handleClick({ id: computerID, flag: 5 });
+      case 3:
+        handleClick({ id: computerID, flag: 3 }); //wyloguj
+        break;
+      case 6:
+        handleClick({ id: computerID, flag: 6 }); //shutdown czasowy
         break;
       default:
         toast.error('Nieprawidłowa flaga komputera. Nie można zmienić stanu.');
@@ -56,11 +62,13 @@ const ComputerState = ({
             ? 'destructive'
             : computerFlag === 2
               ? 'tertiary'
-              : computerFlag === 5
+              : computerFlag === 6
                 ? 'accent'
+                : computerFlag === 3
+                ? 'quaternary'
                 : "accent"
       }
-      className="space-x-2 min-w-[116px]"
+      className={cn("space-x-2 min-w-[116px]", className)}
       onClick={handleButtonClick}
     >
       {computerFlag === 0 && (
@@ -86,11 +94,19 @@ const ComputerState = ({
         </span>
       </>
       )}
-      {computerFlag === 5 && (
+      {computerFlag === 6 && (
         <>
           <Power size={16} />
           <span>
             Wyłącz
+          </span>
+        </>
+      )}
+       {computerFlag === 3 && (
+        <>
+          <LogOut size={16} />
+          <span>
+            Wyloguj
           </span>
         </>
       )}

@@ -80,7 +80,7 @@ try {
             icon: () => <RotateCcw />
           });
           
-        } else if (flag === 5) {
+        } else if (flag === 6) {
           toast.success(`Komputer o ID ${id} został wyłączony`, {
             icon: <Power />,
             toastId: `Shudown-PC-${id}`,

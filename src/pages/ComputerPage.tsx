@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom'
-import { memo } from 'react'
+import { Dispatch, memo, SetStateAction, useMemo, useState } from 'react'
 import { cn } from '../lib/utils'
 import ErrorCallback from '../components/Errors/ErrorCallback'
 import { useComputerData } from '../hooks/useComputerData'
-import { RefreshCcw } from 'lucide-react';
+import { RefreshCcw } from 'lucide-react'
 
 import ComputerAdd from '../components/kafejka/ComputerAdd'
 import ComputerIndex from '../components/kafejka/ComputerIndex'
@@ -11,133 +11,175 @@ import ComputerDelete from '../components/kafejka/ComputerDelete'
 import ComputerShutdown from '../components/kafejka/ComputerShutdown'
 import ComputerAssignFilia from '../components/kafejka/ComputerAssignFilia'
 import ComputerShutdownAll from '../components/kafejka/ComputerShutdownAll'
-import ComputerOnlineStatusMemo from '../components/kafejka/ComputerOnlineStatus'
+import ComputerOnlineStatus from '../components/kafejka/ComputerOnlineStatus'
 import ComputerShutdownTimeoutPanel from '../components/kafejka/ComputerShutdownTimeoutPanel'
 import { Button } from '../components/ui/button'
 import ComputerKatalog from '../components/kafejka/ComputerKatalog'
-// import ComputerRestartMemo from '../components/kafejka/ComputerRestart'
+import ComputerRestart from '../components/kafejka/ComputerRestart'
+import { ShutdownTimeProvider } from '../providers/shutdown-time-provider'
+import ComputerLogout from '../components/kafejka/ComputerLogout'
+import { Computer } from '@/types/computer'
+import { OnboardingTutorial } from '../components/onBoarding'
 
 interface ComputerPageProps {
   showComps: boolean
   url: string
 }
 
-const ComputerPage = ({
-  showComps,
-  url,
-}: ComputerPageProps): React.ReactElement => {
-  const { curFilia } = useParams()
-
-  const filia = curFilia ?? "99" as string
-  const { data, status, isLoading, error, refetch, isRefetching } =
-    useComputerData(url, filia)
+const ComputerPage = memo(
+  ({ showComps, url }: ComputerPageProps): React.ReactElement => {
+    const { curFilia } = useParams()
+    const [showTutorial, setShowTutorial] = useState(true)
+    const [isEditing, setIsEditing] = useState<boolean>(false)
 
 
-  return (
-    <>
 
-      <div className="gap-4 grid grid-cols-[auto_auto] justify-end">
-        <Button className="space-x-2 " disabled={isRefetching} onClick={() => {
-          refetch()
-        }}>
-          <RefreshCcw size={16} />
-          {!isRefetching ? (
-            <span>
-              Odśwież
-            </span>
+    const filia = curFilia ?? ('99' as string)
+    const { data, status, isLoading, error, refetch, isRefetching } =
+      useComputerData(url, filia)
 
+    const sortedComputers = useMemo(() => {
+      return data?.sort((a, b) => {
+        if (a.fields.katalog === 1) return 1
+        if (b.fields.katalog === 1) return -1
+        return 0
+      })
+    }, [data])
+
+    return (
+      <ShutdownTimeProvider>
+        {showTutorial && (
+          <OnboardingTutorial
+            onComplete={() => setShowTutorial(false)}
+            setIsEditing={setIsEditing}
+          />
+        )}
+        <div className="grid grid-cols-[auto_auto] justify-end gap-4">
+          <Button
+            className="space-x-2 "
+            disabled={isRefetching}
+            onClick={() => {
+              refetch()
+            }}
+          >
+            <RefreshCcw size={16} />
+            {!isRefetching ? <span>Odśwież</span> : <span>Odświeżanie...</span>}
+          </Button>
+
+          {showComps ? (
+            <ComputerShutdownAll url={url} />
           ) : (
-            <span>
-              Odświeżanie...
-            </span>
+            <ComputerAdd url={url} />
           )}
+        </div>
+        <main
+          className={cn(
+            'mx-auto grid justify-center gap-4 p-4',
+            !showComps
+              ? 'grid-cols-1 flex-wrap gap-4 md:grid-cols-2 lg:grid-cols-3'
+              : ''
+          )}
+        >
+          {isLoading && (
+            <div className="self-center">
+              <h2 className="text-center text-primary">
+                Nawiązywanie połączenia...
+              </h2>
+            </div>
+          )}
+          {status === 'error' && <ErrorCallback errorMsg={error?.message} />}
 
-        </Button>
-
-        {showComps ? (
-          <ComputerShutdownAll url={url} />
-
-        ) : (
-
-          <ComputerAdd url={url} />
-        )}
-
-      </div>
-      <main className={cn("grid gap-4 p-4 justify-center mx-auto", !showComps ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-wrap" : "")}>
-
-        {isLoading && (
-          <div className="self-center">
-            <h2 className="text-center text-primary">Nawiązywanie połączenia...</h2>
-          </div>
-        )}
-        {status === "error" &&
-          (<ErrorCallback errorMsg={error?.message} />)
-        }
-
-        {status === "success" && data?.sort((a, b) => {
-          // put the katablogs at the end
-          if (a.fields.katalog === 1) return 1
-          if (b.fields.katalog === 1) return -1
-          return 0
-        }).map((computer, index) => {
-
-          const computerID = computer.pk
-          const { katalog } = computer.fields
-
-
-          if (!showComps) {
-            return (
-              <section className={cn("bg-card p-5 grid gap-4 shadow-md rounded-lg text-muted-foreground text-sm ",
-                katalog === 1 && "bg-border"
-              )} key={index} >
-
-                <ComputerAssignFilia computer={computer} url={url} />
-                <ComputerKatalog computer={computer} url={url} />
-                <ComputerDelete computerID={computerID} url={url} />
-
-              </section>
-            )
-          }
-
-          return (
-            <section key={index} className={cn("bg-card p-5 grid gap-4 shadow-md rounded-lg text-muted-foreground text-sm ",
-              katalog === 1 && "bg-border"
-            )}  >
-              <ComputerIndex
-                computer={computer}
-                index={index}
-                url={url}
-                showComps={showComps}
-              />
-              {showComps && (
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <ComputerShutdown computer={computer}
-                    url={url} />
-                  <ComputerOnlineStatusMemo
+          {status === 'success' &&
+            sortedComputers?.map((computer, index) => {
+              const computerID = computer.pk
+              if (!showComps) {
+                return (
+                  <ComputerManagementSection
+                    key={index}
                     computer={computer}
                     url={url}
+                    computerID={computerID}
                   />
-                  {/* <ComputerRestartMemo computer={computer}
-                    url={url}
-                  /> */}
-                  <ComputerShutdownTimeoutPanel
-                    computer={computer}
-                    index={index}
-                    url={url}
-                  />
-                </div>
-              )}
+                )
+              }
 
-            </section>
-          )
-        })}
-      </main>
+              return (
+                <ComputerDetailsSection
+                  key={index}
+                  computer={computer}
+                  index={index}
+                  url={url}
+                  showComps={showComps}
+                  isEditing={isEditing}
+                  setIsEditing={setIsEditing}
+                />
+              )
+            })}
+        </main>
+      </ShutdownTimeProvider>
+    )
+  }
+)
 
-    </>
-  )
+export default ComputerPage
+interface ComputerManagementSectionProps {
+  computer: Computer
+  url: string
+  computerID: number
 }
-const ComputerPageMemo = memo(ComputerPage)
+interface ComputerDetailsSectionProps {
+  computer: Computer
+  index: number
+  url: string
+  showComps: boolean
+  isEditing: boolean
+  setIsEditing: Dispatch<SetStateAction<boolean>>
+}
+// New memoized components
+const ComputerManagementSection = memo(
+  ({ computer, url, computerID }: ComputerManagementSectionProps) => (
+    <section
+      className={cn(
+        'grid gap-4 rounded-lg bg-card p-5 text-sm text-muted-foreground shadow-md ',
+        computer.fields.katalog === 1 && 'bg-border'
+      )}
+    >
+      <ComputerAssignFilia computer={computer} url={url} />
+      <ComputerKatalog computer={computer} url={url} />
+      <ComputerDelete computerID={computerID} url={url} />
+    </section>
+  )
+)
 
-export default ComputerPageMemo
-
-
+const ComputerDetailsSection = memo(
+  ({ computer, index, url, showComps, isEditing, setIsEditing }: ComputerDetailsSectionProps) => (
+    <section
+      className={cn(
+        'grid gap-4 rounded-lg bg-card p-5 text-sm text-muted-foreground shadow-md ',
+        computer.fields.katalog === 1 && 'bg-border'
+      )}
+    >
+      <ComputerIndex
+        computer={computer}
+        index={index}
+        url={url}
+        showComps={showComps}
+        isEditing={isEditing}
+        setIsEditing={setIsEditing}
+      />
+      {showComps && (
+        <>
+          <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-3 sm:gap-x-4 ">
+            <ComputerOnlineStatus computer={computer} url={url} />
+            <ComputerLogout computer={computer} url={url} />
+          </div>
+          <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-3 sm:gap-x-4">
+            <ComputerShutdown computer={computer} url={url} />
+            <ComputerRestart computer={computer} url={url} />
+            <ComputerShutdownTimeoutPanel computer={computer} index={index} />
+          </div>
+        </>
+      )}
+    </section>
+  )
+)

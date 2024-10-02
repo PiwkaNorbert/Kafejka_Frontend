@@ -15,6 +15,16 @@ export function useComputerData(url: string, filia: string) {
     refetchOnWindowFocus: true,
     refetchOnMount: true,
     refetchOnReconnect: true,
+    select: (data) => {
+      // Only update if there are actual changes
+      return data.map(computer => ({
+        ...computer,
+        fields: {
+          ...computer.fields,
+          online: Math.floor(computer.fields.online / 30) * 30, // Round to nearest 30 seconds
+        }
+      }));
+    },
   }
   );
 }
