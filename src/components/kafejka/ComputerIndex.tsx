@@ -7,7 +7,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '../../components/ui/tooltip'
-import { cn } from '../../lib/utils'
+import { cn, formatDate, timeDifference } from '../../lib/utils'
 import { Check, Wifi, WifiOff, X } from 'lucide-react'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
@@ -47,9 +47,9 @@ const ComputerIndex = memo(({ computer, index, url, isEditing, setIsEditing }: C
   const computerID = computer.pk
   const {
     timestamp_time: timestampTime,
-    online,
     katalog,
     label,
+    last_fetch: lastFetch
   } = computer.fields
   const [newLabel, setNewLabel] = useState(label || '')
   const { curFilia } = useParams()
@@ -123,8 +123,8 @@ const ComputerIndex = memo(({ computer, index, url, isEditing, setIsEditing }: C
     },
   })
 
-  const isOffline = online < 30
-  const offlineColor = isOffline
+  const isOnline = timeDifference(lastFetch)
+  const offlineColor = isOnline
     ? 'text-secondary  hover:text-secondary'
     : 'text-destructive  hover:text-destructive'
   const computerName = katalog ? 'Katalog' : label || `Komputer ${index + 1}`
@@ -157,7 +157,6 @@ const ComputerIndex = memo(({ computer, index, url, isEditing, setIsEditing }: C
                   defaultValue={label|| ""}
                   onChange={(e) => setNewLabel(e.target.value)}
                   className="h-9 text-base"
-                  autoFocus
                 />
                 <Button
                   size="sm"
@@ -206,9 +205,9 @@ const ComputerIndex = memo(({ computer, index, url, isEditing, setIsEditing }: C
               katalog === 0 ? 'bg-card' : 'bg-border'
             )}
           >
-            {isOffline ? <Wifi size={20} /> : <WifiOff size={20} />}
+            {isOnline ? <Wifi size={20} /> : <WifiOff size={20} />}
           </TooltipTrigger>
-          <TooltipContent>{isOffline ? 'On-line' : 'Off-line'}</TooltipContent>
+          <TooltipContent>{isOnline ? 'On-line' : 'Off-line'} <span className='text-xs'>({formatDate(lastFetch)})</span></TooltipContent>
         </Tooltip>
       </TooltipProvider>
     </div>

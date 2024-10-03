@@ -3,7 +3,7 @@ import { Dispatch, memo, SetStateAction, useMemo, useState } from 'react'
 import { cn } from '../lib/utils'
 import ErrorCallback from '../components/Errors/ErrorCallback'
 import { useComputerData } from '../hooks/useComputerData'
-import { RefreshCcw } from 'lucide-react'
+import { Info, RefreshCcw } from 'lucide-react'
 
 import ComputerAdd from '../components/kafejka/ComputerAdd'
 import ComputerIndex from '../components/kafejka/ComputerIndex'
@@ -32,11 +32,11 @@ const ComputerPage = memo(
     const [showTutorial, setShowTutorial] = useState(true)
     const [isEditing, setIsEditing] = useState<boolean>(false)
 
-
-
     const filia = curFilia ?? ('99' as string)
     const { data, status, isLoading, error, refetch, isRefetching } =
       useComputerData(url, filia)
+
+      
 
     const sortedComputers = useMemo(() => {
       return data?.sort((a, b) => {
@@ -54,7 +54,20 @@ const ComputerPage = memo(
             setIsEditing={setIsEditing}
           />
         )}
-        <div className="grid grid-cols-[auto_auto] justify-end gap-4">
+        <div className="grid grid-cols-[1fr_auto_auto] justify-start gap-4">
+          <div className="mr-auto rounded-md bg-card shadow">
+            <Button
+              className="space-x-2 self-start "
+              variant="secondary"
+              onClick={() => {
+                setShowTutorial(!showTutorial)
+              }}
+            >
+              <Info size={16} />
+              <span>Proces wdrażania 🎊 v5.2.0</span>
+            </Button>
+          </div>
+
           <Button
             className="space-x-2 "
             disabled={isRefetching}
@@ -152,7 +165,14 @@ const ComputerManagementSection = memo(
 )
 
 const ComputerDetailsSection = memo(
-  ({ computer, index, url, showComps, isEditing, setIsEditing }: ComputerDetailsSectionProps) => (
+  ({
+    computer,
+    index,
+    url,
+    showComps,
+    isEditing,
+    setIsEditing,
+  }: ComputerDetailsSectionProps) => (
     <section
       className={cn(
         'grid gap-4 rounded-lg bg-card p-5 text-sm text-muted-foreground shadow-md ',

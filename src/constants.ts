@@ -1,6 +1,6 @@
 export const IP_POWROZNICZA = "http://192.168.200.40"
 export const IP_PRZEKIEROWANIE = "http://192.168.200.37"
-
+export const TIME_ONLINE = 25
 
 export const statesObject:  { id:number , name: string, style?: string }[]  = 
 [

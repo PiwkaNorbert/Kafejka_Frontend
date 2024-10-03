@@ -14,6 +14,7 @@ export interface Fields {
   t: number
   online: number
   label: string
+  last_fetch: string
   filia: number
   timestamp_time: number | null
   katalog: number
