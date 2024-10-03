@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Button } from './ui/button'
 
-
-
 interface TutorialStep {
   position: { x: string; y: string }
   instruction: {
@@ -18,23 +16,16 @@ export function OnboardingTutorial({
   setIsEditing,
 }: {
   onComplete: () => void
-  setIsEditing: (value: boolean) => void
+  setIsEditing: (computerId: number, isEditing: boolean) => void
 }) {
   const [currentStep, setCurrentStep] = useState(0)
-  const [hasSeenTutorial, setHasSeenTutorial] = useState(true)
 
-  useEffect(() => {
-    const tutorialSeen = localStorage.getItem('kafejkaTutorial')
-    if (!tutorialSeen) {
-      setHasSeenTutorial(false)
-    }
-  }, [])
 
   const handleAction = (step: TutorialStep) => {
     if (step.actionType === 'setEditing') {
-      setIsEditing(true)
+      setIsEditing(1, true)
     } else if (step.actionType === 'clearEditing') {
-      setIsEditing(false)
+      setIsEditing(1, false)
     }
   }
 
@@ -62,12 +53,7 @@ export function OnboardingTutorial({
 
   const completeTutorial = () => {
     localStorage.setItem('kafejkaTutorial', 'true')
-    setHasSeenTutorial(true)
     onComplete()
-  }
-
-  if (hasSeenTutorial) {
-    return null
   }
 
   const currentInstruction = steps[currentStep].instruction
@@ -126,49 +112,46 @@ export function OnboardingTutorial({
 }
 
 const steps = [
-    {
-      position: { x: 'calc(50% - 215px)', y: '187px' },
-      instruction: {
-        x: 'calc(50% - 70px)',
-        y: '139px',
-        text: 'Aby rozpocząć edycję, proszę kliknąć na etykietę "Komputer #".',
-      },
+  {
+    position: { x: 'calc(50% - 215px)', y: '187px' },
+    instruction: {
+      x: 'calc(50% - 70px)',
+      y: '139px',
+      text: 'Aby rozpocząć edycję, proszę kliknąć na etykietę "Komputer #".',
     },
-    {
-      position: { x: 'calc(50% - 225px)', y: '187px' },
-      instruction: {
-        x: 'calc(50% + 135px)',
-        y: '139px',
-        text: 'W tym miejscu można dokonać modyfikacji nazwy stanowiska komputerowego.',
-      },
-      actionType: 'setEditing',
-      highlightDimensions: {width: '355px', height: '55px'}
+  },
+  {
+    position: { x: 'calc(50% - 225px)', y: '187px' },
+    instruction: {
+      x: 'calc(50% + 135px)',
+      y: '139px',
+      text: 'W tym miejscu można dokonać modyfikacji nazwy stanowiska komputerowego.',
     },
-    {
-      position: { x: 'calc(50% + 55px)', y: '298px' },
-      instruction: {
-        x: 'calc(50% + 200px)',
-        y: '250px',
-        text: 'Wybierz czas wyłączenia tutaj, aby zastosować opóźnienie. Jeśli nie wybierzesz czasu, operacja zostanie wykonana natychmiast po kliknięciu "Wyłącz" lub "Restartuj".',
-      },
+    actionType: 'setEditing',
+    highlightDimensions: { width: '355px', height: '55px' },
+  },
+  {
+    position: { x: 'calc(50% + 55px)', y: '298px' },
+    instruction: {
+      x: 'calc(50% + 200px)',
+      y: '250px',
+      text: 'Wybierz czas wyłączenia tutaj, aby zastosować opóźnienie. Jeśli nie wybierzesz czasu, operacja zostanie wykonana natychmiast po kliknięciu "Wyłącz" lub "Restartuj".',
     },
-    {
-      position: { x: 'calc(50% - 215px)', y: '298px' },
-      instruction: {
-        x: 'calc(50% - 70px)',
-        y: '250px',
-        text: 'Kliknij "Wyłącz", aby wyłączyć komputer. Jeśli wybrano czas opóźnienia, operacja zostanie wykonana po tym czasie. W przeciwnym razie komputer zostanie wyłączony natychmiast.',
-      },
+  },
+  {
+    position: { x: 'calc(50% - 215px)', y: '298px' },
+    instruction: {
+      x: 'calc(50% - 70px)',
+      y: '250px',
+      text: 'Kliknij "Wyłącz", aby wyłączyć komputer. Jeśli wybrano czas opóźnienia, operacja zostanie wykonana po tym czasie. W przeciwnym razie komputer zostanie wyłączony natychmiast.',
     },
-    {
-      position: { x: 'calc(50% - 80px)', y: '298px' },
-      instruction: {
-        x: 'calc(50% + 65px)',
-        y: '250px',
-        text: 'Kliknij "Restartuj", aby zrestartować komputer. Zalecamy użycie tej opcji po zakończeniu korzystania ze stanowiska przez czytelnika, aby usunąć wszystkie dane i przywrócić komputer do stanu początkowego. Podobnie jak w przypadku wyłączania, jeśli wybrano czas opóźnienia, restart nastąpi po tym czasie. Bez wybranego opóźnienia, restart rozpocznie się natychmiast.',
-      },
+  },
+  {
+    position: { x: 'calc(50% - 80px)', y: '298px' },
+    instruction: {
+      x: 'calc(50% + 65px)',
+      y: '250px',
+      text: 'Kliknij "Restartuj", aby zrestartować komputer. Zalecamy użycie tej opcji po zakończeniu korzystania ze stanowiska przez czytelnika, aby usunąć wszystkie dane i przywrócić komputer do stanu początkowego. Podobnie jak w przypadku wyłączania, jeśli wybrano czas opóźnienia, restart nastąpi po tym czasie. Bez wybranego opóźnienia, restart rozpocznie się natychmiast.',
     },
-  ]
-
-
-   
+  },
+]

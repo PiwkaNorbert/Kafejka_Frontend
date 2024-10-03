@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { Dispatch, memo, SetStateAction, useMemo, useState } from 'react'
+import { Dispatch, memo, SetStateAction, useCallback, useMemo, useState } from 'react'
 import { cn } from '../lib/utils'
 import ErrorCallback from '../components/Errors/ErrorCallback'
 import { useComputerData } from '../hooks/useComputerData'
@@ -29,8 +29,8 @@ interface ComputerPageProps {
 const ComputerPage = memo(
   ({ showComps, url }: ComputerPageProps): React.ReactElement => {
     const { curFilia } = useParams()
-    const [showTutorial, setShowTutorial] = useState(true)
-    const [isEditing, setIsEditing] = useState<boolean>(false)
+    const [showTutorial, setShowTutorial] = useState(false)
+    const [editingStates, setEditingStates] = useState<Record<number, boolean>>({})
 
     const filia = curFilia ?? ('99' as string)
     const { data, status, isLoading, error, refetch, isRefetching } =
@@ -45,6 +45,10 @@ const ComputerPage = memo(
         return 0
       })
     }, [data])
+
+    const setIsEditing = useCallback((computerId: number, isEditing: boolean) => {
+      setEditingStates(prev => ({...prev, [computerId]: isEditing}))
+    }, [])
 
     return (
       <ShutdownTimeProvider>
@@ -123,7 +127,7 @@ const ComputerPage = memo(
                   index={index}
                   url={url}
                   showComps={showComps}
-                  isEditing={isEditing}
+                  isEditing={editingStates[computerID] || false}
                   setIsEditing={setIsEditing}
                 />
               )
@@ -146,7 +150,7 @@ interface ComputerDetailsSectionProps {
   url: string
   showComps: boolean
   isEditing: boolean
-  setIsEditing: Dispatch<SetStateAction<boolean>>
+  setIsEditing: (computerId: number, isEditing: boolean) => void
 }
 // New memoized components
 const ComputerManagementSection = memo(

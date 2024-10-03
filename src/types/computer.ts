@@ -27,7 +27,7 @@ export interface ComputerIndexProps {
   url: string
   showComps: boolean
   isEditing: boolean
-  setIsEditing: Dispatch<SetStateAction<boolean>>
+  setIsEditing: (computerId: number, isEditing: boolean) => void
 }
 export interface ComputerShutdownProps {
   computerID: number

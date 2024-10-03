@@ -11,7 +11,7 @@ import { cn, formatDate, timeDifference } from '../../lib/utils'
 import { Check, Wifi, WifiOff, X } from 'lucide-react'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
-import { useState, memo  } from 'react'
+import { useState, memo } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { useParams } from 'react-router-dom'
@@ -43,175 +43,181 @@ const updatePCLabel = async ({
   return response.json()
 }
 
-const ComputerIndex = memo(({ computer, index, url, isEditing, setIsEditing }: ComputerIndexProps) => {
-  const computerID = computer.pk
-  const {
-    timestamp_time: timestampTime,
-    katalog,
-    label,
-    last_fetch: lastFetch
-  } = computer.fields
-  const [newLabel, setNewLabel] = useState(label || '')
-  const { curFilia } = useParams()
-  const ref = useClickAway<HTMLDivElement>(() => {
-    setIsEditing(false)
-  })
+const ComputerIndex = memo(
+  ({ computer, index, url, isEditing, setIsEditing }: ComputerIndexProps) => {
+    console.count('testing rerenders: ')
 
-  const queryClient = useQueryClient()
-  const mutation = useMutation<
-    { Status: string },
-    Error,
-    MutationVariables,
-    MutationContext
-  >({
-    mutationFn: updatePCLabel,
-    onMutate: async (variables) => {
-      await queryClient.cancelQueries({ queryKey: ['komps', curFilia] })
+    const computerID = computer.pk
+    const {
+      timestamp_time: timestampTime,
+      katalog,
+      label,
+      last_fetch: lastFetch,
+    } = computer.fields
+    const [newLabel, setNewLabel] = useState(label || '')
+    const { curFilia } = useParams()
+    const ref = useClickAway<HTMLDivElement>(() => {
+      setIsEditing(computerID, false)
+    })
 
-      const previousComputers = queryClient.getQueryData<Computer[]>([
-        'komps',
-        curFilia,
-      ])
-      console.log(previousComputers)
+    const queryClient = useQueryClient()
+    const mutation = useMutation<
+      { Status: string },
+      Error,
+      MutationVariables,
+      MutationContext
+    >({
+      mutationFn: updatePCLabel,
+      onMutate: async (variables) => {
+        await queryClient.cancelQueries({ queryKey: ['komps', curFilia] })
 
-      queryClient.setQueryData<Computer[] | undefined>(
-        ['komps', curFilia],
-        (old) => {
-          console.log(old)
+        const previousComputers = queryClient.getQueryData<Computer[]>([
+          'komps',
+          curFilia,
+        ])
+        console.log(previousComputers)
 
-          return old?.map((c) => {
-            console.log(c)
+        queryClient.setQueryData<Computer[] | undefined>(
+          ['komps', curFilia],
+          (old) => {
+            console.log(old)
 
-            return c.pk === variables.kompid
-              ? { ...c, fields: { ...c.fields, label: variables.label } }
-              : c
-          })
+            return old?.map((c) => {
+              console.log(c)
+
+              return c.pk === variables.kompid
+                ? { ...c, fields: { ...c.fields, label: variables.label } }
+                : c
+            })
+          }
+        )
+
+        return { previousComputers }
+      },
+      onSuccess: (data) => {
+        if (data.Status === 'Success') {
+          toast.success(
+            `Komputer o ID ${computerID} ma teraz nazwę "${newLabel}".`,
+            {
+              toastId: computerID,
+            }
+          )
         }
-      )
-
-      return { previousComputers }
-    },
-    onSuccess: (data) => {
-      if (data.Status === 'Success') {
-        toast.success(
-          `Komputer o ID ${computerID} ma teraz nazwę "${newLabel}".`,
+      },
+      onError: (error, variables, context) => {
+        toast.error(
+          `Wystąpił błąd podczas aktualizacji nazwy komputera o ID ${variables.kompid}. Proszę spróbować ponownie.`,
           {
             toastId: computerID,
           }
         )
-      }
-    },
-    onError: (error, variables, context) => {
-      toast.error(
-        `Wystąpił błąd podczas aktualizacji nazwy komputera o ID ${variables.kompid}. Proszę spróbować ponownie.`,
-        {
-          toastId: computerID,
+        console.error('Error updating computer label:', error)
+
+        if (context?.previousComputers) {
+          queryClient.setQueryData<Computer[]>(
+            ['komps', curFilia],
+            context.previousComputers
+          )
         }
-      )
-      console.error('Error updating computer label:', error)
+      },
+      onSettled: async () => {
+        await queryClient.invalidateQueries({ queryKey: ['komps', curFilia] })
+        setIsEditing(computerID, false)
+      },
+    })
 
-      if (context?.previousComputers) {
-        queryClient.setQueryData<Computer[]>(
-          ['komps', curFilia],
-          context.previousComputers
-        )
-      }
-    },
-    onSettled: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['komps', curFilia] })
-      setIsEditing(false)
-    },
-  })
+    const isOnline = timeDifference(lastFetch)
+    const offlineColor = isOnline
+      ? 'text-secondary  hover:text-secondary'
+      : 'text-destructive  hover:text-destructive'
+    const computerName = katalog ? 'Katalog' : label || `Komputer ${index + 1}`
+    const currentTime = Math.trunc(new Date().getTime() / 1000)
+    const isShuttingDown = timestampTime && timestampTime > currentTime
 
-  const isOnline = timeDifference(lastFetch)
-  const offlineColor = isOnline
-    ? 'text-secondary  hover:text-secondary'
-    : 'text-destructive  hover:text-destructive'
-  const computerName = katalog ? 'Katalog' : label || `Komputer ${index + 1}`
-  const currentTime = Math.trunc(new Date().getTime() / 1000)
-  const isShuttingDown = timestampTime && timestampTime > currentTime
-
-  const handleLabelChange = () => {
+    const handleLabelChange = () => {
       mutation.mutate({ url, kompid: computerID, label: newLabel.trim() })
+    }
+    return (
+      <div
+        ref={ref}
+        className="grid grid-cols-[1fr_auto_auto] items-center justify-between gap-x-4"
+      >
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger
+              asChild
+              className={cn(
+                'text-nowrap text-left text-xl  hover:cursor-pointer',
+                offlineColor,
+                katalog === 0 ? 'bg-card' : 'bg-border'
+              )}
+            >
+              {isEditing ? (
+                <div className="flex items-center space-x-2">
+                  <Input
+                    value={newLabel}
+                    defaultValue={label || ''}
+                    onChange={(e) => setNewLabel(e.target.value)}
+                    className="h-9 text-base"
+                  />
+                  <Button
+                    size="sm"
+                    onClick={handleLabelChange}
+                    disabled={mutation.isPending}
+                  >
+                    <Check size={16} />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setIsEditing(computerID, false)}
+                  >
+                    <X size={16} />
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  className="w-fit justify-start px-0 text-left hover:bg-transparent"
+                  variant="ghost"
+                  onClick={() => setIsEditing(computerID, true)}
+                >
+                  {computerName}
+                </Button>
+              )}
+            </TooltipTrigger>
+            <TooltipContent>ID: {computerID}</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        {isShuttingDown ? (
+          <TimerUntilShutdown
+            computerID={computerID}
+            timestampTime={timestampTime}
+          />
+        ) : (
+          <div />
+        )}
+
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger
+              className={cn(
+                'h-10 rounded-md border border-input px-2.5 hover:bg-accent hover:text-accent-foreground',
+                offlineColor,
+                katalog === 0 ? 'bg-card' : 'bg-border'
+              )}
+            >
+              {isOnline ? <Wifi size={20} /> : <WifiOff size={20} />}
+            </TooltipTrigger>
+            <TooltipContent>
+              {isOnline ? 'On-line' : 'Off-line'}{' '}
+              <span className="text-xs">({formatDate(lastFetch)})</span>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
+    )
   }
-
-  return (
-    <div
-      ref={ref}
-      className="grid grid-cols-[1fr_auto_auto] items-center justify-between gap-x-4"
-    >
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger
-            asChild
-            className={cn(
-              'text-nowrap text-left text-xl  hover:cursor-pointer',
-              offlineColor,
-              katalog === 0 ? 'bg-card' : 'bg-border'
-            )}
-          >
-            {isEditing ? (
-              <div className="flex items-center space-x-2">
-                <Input
-                  value={newLabel}
-                  defaultValue={label|| ""}
-                  onChange={(e) => setNewLabel(e.target.value)}
-                  className="h-9 text-base"
-                />
-                <Button
-                  size="sm"
-                  onClick={handleLabelChange}
-                  disabled={mutation.isPending}
-                >
-                  <Check size={16} />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => setIsEditing(false)}
-                >
-                  <X size={16} />
-                </Button>
-              </div>
-            ) : (
-              <Button
-                className="w-fit justify-start px-0 text-left hover:bg-transparent"
-                variant="ghost"
-                onClick={() => setIsEditing(true)}
-              >
-                {computerName}
-              </Button>
-            )}
-          </TooltipTrigger>
-          <TooltipContent>ID: {computerID}</TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-
-      {isShuttingDown ? (
-        <TimerUntilShutdown
-          computerID={computerID}
-          timestampTime={timestampTime}
-        />
-      ) : (
-        <div />
-      )}
-
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger
-            className={cn(
-              'h-10 rounded-md border border-input px-2.5 hover:bg-accent hover:text-accent-foreground',
-              offlineColor,
-              katalog === 0 ? 'bg-card' : 'bg-border'
-            )}
-          >
-            {isOnline ? <Wifi size={20} /> : <WifiOff size={20} />}
-          </TooltipTrigger>
-          <TooltipContent>{isOnline ? 'On-line' : 'Off-line'} <span className='text-xs'>({formatDate(lastFetch)})</span></TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    </div>
-  )
-})
+)
 
 export default ComputerIndex
