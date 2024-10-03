@@ -73,12 +73,10 @@ const ComputerIndex = memo(({ computer, index, url }: ComputerIndexProps) => {
         'komps',
         curFilia,
       ])
-      console.log(previousComputers)
 
       queryClient.setQueryData<Computer[] | undefined>(
         ['komps', curFilia],
         (old) => {
-          console.log(old)
 
           return old?.map((c) => {
             return c.pk === variables.kompid
@@ -136,7 +134,6 @@ const ComputerIndex = memo(({ computer, index, url }: ComputerIndexProps) => {
     e.preventDefault()
     const form = new FormData(e.currentTarget)
     const label = form.get('label') as string
-    console.log(label)
 
     mutation.mutate({ url, kompid: computerID, label: label.trim() })
   }
