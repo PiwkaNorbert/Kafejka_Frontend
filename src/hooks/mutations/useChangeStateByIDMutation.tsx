@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { useCallback } from 'react';
 import { toast } from 'react-toastify';
-import { CircleX, LibraryBig, Lock, LockOpen, Power, RotateCcw } from 'lucide-react';
+import { CircleX, LibraryBig, Lock, LockOpen, Power, RotateCw } from 'lucide-react';
 import { RequestBodyType, StateData } from '@/types/computer';
 
 
@@ -77,7 +77,7 @@ try {
         } else if (flag === 2) {
           toast.success(`Komputer o ID ${id} został restartowany`, {
             toastId: `Restart-PC-${id}`,
-            icon: () => <RotateCcw />
+            icon: () => <RotateCw />
           });
           
         } else if (flag === 6) {

@@ -1,6 +1,6 @@
 import { StateData } from '@/types/computer';
 import { Button } from '../ui/button'
-import { Lock, LockOpen, LogOut, Power, RotateCcw } from 'lucide-react'
+import { Lock, LockOpen, LogOut, Power, RotateCw } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { cn } from '../../lib/utils';
 
@@ -68,7 +68,7 @@ const ComputerState = ({
                 ? 'quaternary'
                 : "accent"
       }
-      className={cn("space-x-2 min-w-[116px]", className)}
+      className={cn("space-x-2 min-w-[116px] group", className)}
       onClick={handleButtonClick}
     >
       {computerFlag === 0 && (
@@ -88,7 +88,7 @@ const ComputerState = ({
         </>
       )}
       {computerFlag === 2 && (<>
-        <RotateCcw size={16} />
+        <RotateCw size={16} className='group-hover:animate-spin' />
         <span>
           Restartuj
         </span>
@@ -104,7 +104,7 @@ const ComputerState = ({
       )}
        {computerFlag === 3 && (
         <>
-          <LogOut size={16} />
+          <LogOut size={16} className='' />
           <span>
             Wyloguj
           </span>

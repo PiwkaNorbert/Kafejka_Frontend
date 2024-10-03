@@ -43,7 +43,6 @@ const ComputerShutdownTimeoutPanel = memo(({
               key={index}
               className="w-full "
               value={value}
-              disabled={value === '0'}
             >
               {value} min {'    '}
             </SelectItem>

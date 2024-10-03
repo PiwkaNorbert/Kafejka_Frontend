@@ -20,7 +20,7 @@ const buttonVariants = cva(
         tertiary:
           'bg-accent-foreground/15 text-accent-foreground hover:bg-accent-foreground/10 border-accent-foreground/25 border',
         quaternary:
-          'text-purple-500 border border-purple-300 bg-purple-100/90 hover:text-purple-500 hover:border-purple-300/80',
+          'text-purple-500 border border-purple-500/25 bg-purple-500/15 hover:bg-purple-500/10',
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
       },

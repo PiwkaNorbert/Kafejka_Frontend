@@ -1,14 +1,15 @@
 import './App.css'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Suspense } from 'react'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom'
 import PrivateRoute from './components/PrivateRoute.tsx'
-import { IP_POWROZNICZA } from './constants.ts'
 import PageNotFound from './pages/PageNotFound.tsx'
-import Information from './pages/Information.tsx'
-import LegimiCodes from './pages/LegimiCodes.tsx'
-import TicketPage from './pages/TicketPage.tsx'
+import LazyRoutes from './pages/LazyRoutes.tsx'
 // import Dystrybucja from './pages/Dystrybucja.tsx'
-import WifiPerms from './pages/WifiPerms.tsx'
-import ComputerPageMemo from './pages/ComputerPage.tsx'
 
 // import {
 //   Dialog,
@@ -23,8 +24,6 @@ import ComputerPageMemo from './pages/ComputerPage.tsx'
 // import { Button } from './components/ui/button.tsx';
 
 function App() {
-  const securityKey = window.location.pathname.split('/')[1];
-  const url = `${IP_POWROZNICZA}:8005/${securityKey}/`;
   // const [open, setOpen] = useState(false);
 
   // useEffect(() => {
@@ -40,7 +39,6 @@ function App() {
   //   localStorage.setItem('updateShown', 'true');
   //   setOpen(false);
   // };
-
 
   return (
     <>
@@ -74,57 +72,20 @@ function App() {
 
         <Router>
           <Routes>
-
-
-            <Route path='/:securityKey/:curFilia' element={<PrivateRoute />} >
-              <Route
-                path="/:securityKey/:curFilia"
-                element={<Information />}
-
-              />
-              {/* information route */}
-              <Route
-                path={`/:securityKey/:curFilia/informacje`}
-                element={<Information />}
-              />
-              {/* Computer route */}
-
-              <Route
-                path={`/:securityKey/:curFilia/kafejka`}
-                element={<ComputerPageMemo showComps={true} url={url} />}
-              />
-              {/* Settings route */}
-              <Route
-                path={`/:securityKey/:curFilia/ustawienia`}
-                element={<ComputerPageMemo showComps={false} url={url} />}
-              />
-              {/* Legimi route */}
-              <Route
-                path={`/:securityKey/:curFilia/ebooki`}
-                element={<LegimiCodes />}
-              />
-              <Route
-                path={`/:securityKey/:curFilia/zgloszenia`}
-                element={<TicketPage />}
-              />
-              {/* <Route
-                path={`/:securityKey/:curFilia/dystrybucja`}
-                element={<Dystrybucja />}
-              /> */}
-              {/* WifiPerms route */}
-              <Route
-                path={`/:securityKey/:curFilia/wifi`}
-                element={<WifiPerms url={url} />}
-              />
-
-            </Route>
+            <Route
+              path="/:securityKey/:curFilia/*"
+              element={
+                <PrivateRoute>
+                  <Suspense fallback={<></>}>
+                    <LazyRoutes />
+                  </Suspense>
+                </PrivateRoute>
+              }
+            />
             <Route path="*" element={<Navigate to="/404" replace />} />
             <Route path="404" element={<PageNotFound />} />
           </Routes>
-
         </Router>
-
-
       </div>
     </>
   )

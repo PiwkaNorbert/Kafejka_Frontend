@@ -22,7 +22,14 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { IP_POWROZNICZA, statesObject } from '../constants'
 import { toast } from 'react-toastify'
-import { CheckIcon, InfoIcon, ListTodo, RefreshCcw, X } from 'lucide-react'
+import {
+  CheckIcon,
+  InfoIcon,
+  ListTodo,
+  RefreshCcw,
+  RefreshCw,
+  X,
+} from 'lucide-react'
 import { z } from 'zod'
 import React, { useState } from 'react'
 import { Category, CategoryResponse } from '../types/categories'
@@ -40,7 +47,7 @@ import { cn } from '../lib/utils'
 import useTicketCategoryData from '../hooks/useTicketCategoryData'
 import useTicketGroupData from '../hooks/useTicketGroupData'
 
-const wait = () => new Promise(resolve => setTimeout(resolve, 200))
+const wait = () => new Promise((resolve) => setTimeout(resolve, 200))
 
 const ticketSchema = z.object({
   index: z.string(),
@@ -75,41 +82,30 @@ export default function TicketPage() {
   const { curFilia } = useParams()
   const filia = curFilia ?? ''
 
-
   const {
     data: data,
     status,
     error,
     isLoading,
     refetch,
-    isRefetching
   } = useTaskListData(filia)
-
 
   return (
     <React.Fragment>
-      <div className='gap-x-4 grid grid-cols-[auto_auto] justify-end'>
-        <Button className="space-x-2" disabled={isRefetching} onClick={() => {
-          refetch()
-        }}>
-          <RefreshCcw size={16} />
-          {!isRefetching ? (
-            <span>
-              Odśwież
-            </span>
-
-          ) : (
-            <span>
-              Odświeżanie...
-            </span>
-          )}
-
+      <div className="grid grid-cols-[auto_auto] justify-end gap-x-4">
+        <Button
+          className="group space-x-2"
+          onClick={() => {
+            refetch()
+          }}
+        >
+          <RefreshCw size={16} className="group-hover:animate-spin" />
+          <span>Odśwież</span>
         </Button>
         <CreateTicket filia={filia} />
       </div>
 
-
-      <main className="bg-card p-6 rounded-lg shadow-lg w-full">
+      <main className="w-full rounded-lg bg-card p-6 shadow-lg">
         <Table>
           <TableCaption>Lista zgłoszeń do wykonania</TableCaption>
           <TableHeader>
@@ -126,22 +122,25 @@ export default function TicketPage() {
                 <TableCell colSpan={4}>Loading...</TableCell>
               </TableRow>
             )}
-            {status === "error" && (
+            {status === 'error' && (
               <TableRow>
                 <TableCell colSpan={4}>{error?.message} </TableCell>
               </TableRow>
             )}
 
-            {status === "success" && data?.tasks_list.length === 0 && (
-              <TableRow className='bg-primary/15 hover:bg-primary/15 text-primary w-full p-4'>
+            {status === 'success' && data?.tasks_list.length === 0 && (
+              <TableRow className="w-full bg-primary/15 p-4 text-primary hover:bg-primary/15">
                 <TableCell colSpan={4}>
-                  <div className='grid grid-cols-[auto_1fr] gap-x-2 items-center '>
-                    <InfoIcon size={20} className='self-start mt-0.5' /> Brak zgłoszeń na danej Filii.
+                  <div className="grid grid-cols-[auto_1fr] items-center gap-x-2 ">
+                    <InfoIcon size={20} className="mt-0.5 self-start" /> Brak
+                    zgłoszeń na danej Filii.
                   </div>
                 </TableCell>
               </TableRow>
             )}
-            {status === "success" && data?.tasks_list && data?.tasks_list.length > 0 &&
+            {status === 'success' &&
+              data?.tasks_list &&
+              data?.tasks_list.length > 0 &&
               data?.tasks_list
                 // sort if finised is true then at the bottom
                 ?.sort((a, b) => b.id - a.id)
@@ -150,7 +149,9 @@ export default function TicketPage() {
 
                   return (
                     <TableRow key={idx}>
-                      <TableCell data-cell="ID" className="tabular-nums">{entityId}</TableCell>
+                      <TableCell data-cell="ID" className="tabular-nums">
+                        {entityId}
+                      </TableCell>
                       <TableCell data-cell="Problem">{task.title}</TableCell>
                       <TableCell data-cell="Opis">
                         <p className="line-clamp-6 max-w-md break-all">
@@ -184,7 +185,6 @@ export function CreateTicket({ filia }: { filia: string }) {
   const [showProblem, setShowProblem] = useState<boolean>(false)
 
   const formRef = React.useRef<HTMLFormElement>(null)
-
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (requestData: TicketData) => {
@@ -245,16 +245,16 @@ export function CreateTicket({ filia }: { filia: string }) {
           formRef.current.reset()
         }
         queryClient.invalidateQueries({
-          predicate: query =>
-            query.queryKey.every((key: unknown) => ['categories', 'unautherized-tasks'].includes(key as string)
-            )
+          predicate: (query) =>
+            query.queryKey.every((key: unknown) =>
+              ['categories', 'unautherized-tasks'].includes(key as string)
+            ),
         })
-
 
         wait().then(() => setOpen(false))
         setShowProblem(false)
       },
-      onError: error => {
+      onError: (error) => {
         console.error(error)
         toast.error(`Nastąpił Błąd w TicketPage.tsx ${error.message}`, {
           icon: <X />,
@@ -266,17 +266,14 @@ export function CreateTicket({ filia }: { filia: string }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <div className='ml-auto bg-card rounded-md shadow'>
-
+        <div className="ml-auto rounded-md bg-card shadow">
           <Button
-            className='space-x-2'
+            className="space-x-2"
             onClick={() => {
               setShowProblem(false)
             }}
           >
-            <ListTodo size={16} /> <span>
-              Złóż zgłoszenie
-            </span>
+            <ListTodo size={16} /> <span>Złóż zgłoszenie</span>
           </Button>
         </div>
       </DialogTrigger>
@@ -290,10 +287,7 @@ export function CreateTicket({ filia }: { filia: string }) {
               onSubmit={handleSendTicket}
             >
               <section className="flex flex-col ">
-                <label
-                  htmlFor="title"
-                  className="pb-2 text-sm text-slate-500"
-                >
+                <label htmlFor="title" className="pb-2 text-sm text-slate-500">
                   Dział
                 </label>
                 <GroupSelector handleShowProblem={handleShowProblem} />
@@ -326,8 +320,10 @@ export function CreateTicket({ filia }: { filia: string }) {
               ) : null}
 
               <Button
-                variant='accent' disabled={showProblem === false || isPending} >
-                {isPending ? "Zgłaszanie Problemu..." : "Zgłoś Problem"}
+                variant="accent"
+                disabled={showProblem === false || isPending}
+              >
+                {isPending ? 'Zgłaszanie Problemu...' : 'Zgłoś Problem'}
               </Button>
             </form>
           </DialogDescription>
@@ -335,7 +331,6 @@ export function CreateTicket({ filia }: { filia: string }) {
       </DialogContent>
     </Dialog>
   )
-
 }
 
 export function GroupSelector({ handleShowProblem }: IGroupSelector) {
@@ -346,7 +341,7 @@ export function GroupSelector({ handleShowProblem }: IGroupSelector) {
       <Select
         name="group"
         required
-        onValueChange={e => {
+        onValueChange={(e) => {
           if (e.length > 0) handleShowProblem()
         }}
       >
@@ -361,7 +356,7 @@ export function GroupSelector({ handleShowProblem }: IGroupSelector) {
           >
             Wybierz dział...
           </SelectItem>
-          {groups?.map(group => {
+          {groups?.map((group) => {
             const inputString = group.name
             const regex = /CN=([^,]+)/
             const match = inputString.match(regex)
@@ -377,7 +372,7 @@ export function GroupSelector({ handleShowProblem }: IGroupSelector) {
                 key={group.id}
                 className="font-normal capitalize"
                 value={group.id.toString()}
-                disabled={group.id !== 1} // only let informatyzacja be selected for now 
+                disabled={group.id !== 1} // only let informatyzacja be selected for now
               >
                 {groupName}
               </SelectItem>
@@ -390,8 +385,6 @@ export function GroupSelector({ handleShowProblem }: IGroupSelector) {
   )
 }
 
-
-
 const CurrentState = ({
   selectedState,
   name,
@@ -401,7 +394,7 @@ const CurrentState = ({
 }) => {
   function getTaskStyle(taskState: number | string): string | undefined {
     const state = statesObject.find(
-      state => state.id === taskState || state.name === taskState
+      (state) => state.id === taskState || state.name === taskState
     )
     return state ? state.style : ''
   }
@@ -429,7 +422,7 @@ export function CategorySelector() {
     <>
       <Select
         name="title"
-        onValueChange={e => {
+        onValueChange={(e) => {
           // setSelectedCategory(e)
           return e
         }}
@@ -476,7 +469,7 @@ const renderCategory = (category: Category) => {
     return (
       <SelectGroup className="pl-4 font-semibold" key={category.id}>
         {category.title}
-        {category.children.map(child => (
+        {category.children.map((child) => (
           <React.Fragment key={child.id}>
             {renderCategory(child)}
           </React.Fragment>
@@ -496,7 +489,7 @@ const renderCategory = (category: Category) => {
   }
 }
 const renderTitles = (categories: CategoryResponse) => {
-  return categories.map(category => (
+  return categories.map((category) => (
     <React.Fragment key={category.id}>
       {renderCategory(category)}
     </React.Fragment>

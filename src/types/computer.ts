@@ -26,8 +26,6 @@ export interface ComputerIndexProps {
   index: number
   url: string
   showComps: boolean
-  isEditing: boolean
-  setIsEditing: (computerId: number, isEditing: boolean) => void
 }
 export interface ComputerShutdownProps {
   computerID: number
