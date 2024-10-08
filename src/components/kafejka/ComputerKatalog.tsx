@@ -3,6 +3,7 @@ import { Computer } from '@/types/computer';
 import { Input } from '../ui/input';
 import { useChangeStateByIDMutation } from '../../hooks/mutations/useChangeStateByIDMutation';
 import { toast } from 'react-toastify';
+import { cn } from '../../lib/utils';
 
 const ComputerKatalog = ({ computer, url }: { computer: Computer; url: string; }) => {
   const computerID = computer.pk;
@@ -49,7 +50,7 @@ const ComputerKatalog = ({ computer, url }: { computer: Computer; url: string; }
 
           </span>
         </label>
-        <Input name='katalog' placeholder={katalog.toString()} />
+        <Input name='katalog' placeholder={katalog.toString()} className={cn( computer.fields.katalog === 1 && 'bg-border border-card')} />
       </section>
     </form>
   );

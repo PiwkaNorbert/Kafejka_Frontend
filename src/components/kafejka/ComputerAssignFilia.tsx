@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Computer } from '@/types/computer';
 import { Input } from '../ui/input';
 import { useChangeStateByIDMutation } from '../../hooks/mutations/useChangeStateByIDMutation';
+import { cn } from '../../lib/utils';
 
 const ComputerAssignFilia = ({ computer, url }: { computer: Computer; url: string; }) => {
   const computerID = computer.pk;
@@ -37,7 +38,7 @@ const ComputerAssignFilia = ({ computer, url }: { computer: Computer; url: strin
 
           </span>
         </label>
-        <Input name='assigned-filia' placeholder={filia.toString()} />
+        <Input name='assigned-filia' placeholder={filia.toString()} className={cn( computer.fields.katalog === 1 && 'bg-border border-card')} />
       </section>
     </form>
   );

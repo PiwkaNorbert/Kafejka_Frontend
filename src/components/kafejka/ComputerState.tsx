@@ -81,8 +81,8 @@ const ComputerState = ({
       )}
       {computerFlag === 1 && (
         <>
-          <Lock size={16} />
-          <span>
+          <Lock size={16} className='group-hover:animate-bounce' />
+          <span  >
             Zablokuj
           </span>
         </>
@@ -96,15 +96,15 @@ const ComputerState = ({
       )}
       {computerFlag === 6 && (
         <>
-          <Power size={16} />
-          <span>
+          <Power size={16} className='group-hover:animate-pulse' />
+          <span className='group-hover:animate-pulse' >
             Wyłącz
           </span>
         </>
       )}
        {computerFlag === 3 && (
         <>
-          <LogOut size={16} className='' />
+          <LogOut size={16} className='group-hover:animate-ping'  />
           <span>
             Wyloguj
           </span>

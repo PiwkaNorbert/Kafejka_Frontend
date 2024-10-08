@@ -178,7 +178,7 @@ const ComputerIndex = memo(({ computer, index, url }: ComputerIndexProps) => {
               </div>
             ) : (
               <Button
-                className="w-fit justify-start px-0 text-left hover:bg-transparent"
+                className="w-fit justify-start px-0 text-left hover:bg-transparent bg-transparent transition-none"
                 variant="ghost"
                 onClick={() => setIsEditing(true)}
               >
@@ -203,12 +203,12 @@ const ComputerIndex = memo(({ computer, index, url }: ComputerIndexProps) => {
         <Tooltip>
           <TooltipTrigger
             className={cn(
-              'h-10 rounded-md border border-input px-2.5 hover:bg-accent hover:text-accent-foreground',
+              'h-10 rounded-md border border-input group px-2.5 hover:bg-accent hover:text-accent-foreground',
               offlineColor,
-              katalog === 0 ? 'bg-card' : 'bg-border'
+              katalog === 0 ? 'hover:bg-primary/15' : 'bg-border hover:bg-primary/15'
             )}
           >
-            {isOnline ? <Wifi size={20} /> : <WifiOff size={20} />}
+            {isOnline ? <Wifi size={20} className='group-hover:animate-pulse' /> : <WifiOff size={20} className='group-hover:animate-pulse' />}
           </TooltipTrigger>
           <TooltipContent>
             {isOnline ? 'On-line' : 'Off-line'}{' '}
