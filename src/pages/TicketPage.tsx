@@ -46,6 +46,7 @@ import useTaskListData from '../hooks/useTaskListData'
 import { cn } from '../lib/utils'
 import useTicketCategoryData from '../hooks/useTicketCategoryData'
 import useTicketGroupData from '../hooks/useTicketGroupData'
+import { SanitizedFormattedDescription } from '@/components/serialized-formatted-description'
 
 const wait = () => new Promise((resolve) => setTimeout(resolve, 200))
 
@@ -154,9 +155,9 @@ export default function TicketPage() {
                       </TableCell>
                       <TableCell data-cell="Problem">{task.title}</TableCell>
                       <TableCell data-cell="Opis">
-                        <p className="line-clamp-6 max-w-md break-all">
-                          {task.description}
-                        </p>
+                        <SanitizedFormattedDescription
+                          description={task.description}
+                        />
                       </TableCell>
                       <TableCell data-cell="Status">
                         <CurrentState

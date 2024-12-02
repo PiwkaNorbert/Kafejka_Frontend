@@ -14,7 +14,8 @@ export default function Information() {
         <p className="text-sm text-slate-500 mb-6 ">Mar 20, 2023</p>
         <a
           className="text-blue-500 hover:underline"
-          href="url:https://moodlebkr.biblioteka.krakow.pl/course/view.php?id=146"
+          target="_blank"
+          href="https://moodlebkr.biblioteka.krakow.pl/course/view.php?id=146"
         >
           Kliknij tutaj
         </a>

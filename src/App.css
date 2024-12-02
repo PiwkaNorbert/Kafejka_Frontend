@@ -378,3 +378,35 @@ button.Mui-selected img.feather {
 .grid-rows-auto-stretch {
   grid-template-rows: auto 1fr;
 }
+
+
+
+
+.prose > ul,
+.prose > ol,
+.prose > menu{
+  padding: inherit !important;
+  margin: 1.25rem 1rem 1.25rem 0.4rem;
+  list-style-type: disc !important;
+  list-style-position: outside;
+
+  li {
+  padding: inherit !important;
+
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+    display: list-item;
+
+    li p {
+      margin: 0;
+    }
+  }
+}
+
+.prose > ul ul,
+.prose > ol ol {
+list-style-type: circle !important;
+margin-left: 1.5rem;
+}
+
+
