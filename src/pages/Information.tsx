@@ -30,6 +30,18 @@ export default function Information() {
 }
 const changelogData = [
   {
+    version: '🎊 v5.2.1',
+    date: 'Grudzień 2, 2024',
+    sections: [
+      {
+        title: 'Bezpieczeństwo i Optymalizacja',
+        items: [
+          'Dodano sformatowane i serializowane opisy w zakładce zgłoszenia'
+        ],
+      },
+    ],
+  },
+  {
     version: '🎊 v5.2.0',
     date: 'Październik 1, 2024',
     sections: [

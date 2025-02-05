@@ -7,6 +7,21 @@ import {
   SelectValue,
 } from '../components/ui/select'
 
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import axios from 'axios'
+import {
+  CheckIcon,
+  InfoIcon,
+  ListTodo,
+  RefreshCw,
+  X
+} from 'lucide-react'
+import React, { useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { z } from 'zod'
+import { SanitizedFormattedDescription } from '../components/serialized-formatted-description'
+import { Button } from '../components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -15,24 +30,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '../components/ui/dialog'
-import { useParams } from 'react-router-dom'
-import { Button } from '../components/ui/button'
-import { Textarea } from '../components/ui/text-area'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
-import { IP_POWROZNICZA, statesObject } from '../constants'
-import { toast } from 'react-toastify'
-import {
-  CheckIcon,
-  InfoIcon,
-  ListTodo,
-  RefreshCcw,
-  RefreshCw,
-  X,
-} from 'lucide-react'
-import { z } from 'zod'
-import React, { useState } from 'react'
-import { Category, CategoryResponse } from '../types/categories'
 import {
   Table,
   TableBody,
@@ -42,11 +39,13 @@ import {
   TableHeader,
   TableRow,
 } from '../components/ui/table'
+import { Textarea } from '../components/ui/text-area'
+import { IP_POWROZNICZA, statesObject } from '../constants'
 import useTaskListData from '../hooks/useTaskListData'
-import { cn } from '../lib/utils'
 import useTicketCategoryData from '../hooks/useTicketCategoryData'
 import useTicketGroupData from '../hooks/useTicketGroupData'
-import { SanitizedFormattedDescription } from '@/components/serialized-formatted-description'
+import { cn } from '../lib/utils'
+import { Category, CategoryResponse } from '../types/categories'
 
 const wait = () => new Promise((resolve) => setTimeout(resolve, 200))
 

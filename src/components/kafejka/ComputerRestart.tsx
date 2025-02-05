@@ -15,7 +15,7 @@ const ComputerRestart = memo(({
   const computerKatalog = computer.fields.katalog
 
   const { onStateChange, changeStateByIDMutation } = useChangeStateByIDMutation(url)
-  const { shutdownTime } = useShutdownTime()
+  const { shutdownTime } = useShutdownTime(computerID)
 
   if (computerKatalog) return null
 

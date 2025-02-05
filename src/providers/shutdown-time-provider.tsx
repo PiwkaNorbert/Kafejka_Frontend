@@ -1,9 +1,15 @@
 import React, { createContext, useState, ReactNode } from 'react'
 
-type ShutdownTimeContextType = {
-  shutdownTime: string
-  setShutdownTime: (time: string) => void
+type ShutdownTimes = {
+  [computerId: number]: string
 }
+
+
+type ShutdownTimeContextType = {
+  shutdownTimes: ShutdownTimes
+  setShutdownTime: (computerId: number, time: string) => void
+}
+
 
 export const ShutdownTimeContext = createContext<
   ShutdownTimeContextType | undefined
@@ -12,10 +18,18 @@ export const ShutdownTimeContext = createContext<
 export const ShutdownTimeProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [shutdownTime, setShutdownTime] = useState('0')
+  const [shutdownTimes, setShutdownTimes] = useState<ShutdownTimes>({})
+
+  const setShutdownTime = (computerId: number, time: string) => {
+    setShutdownTimes(prev => ({
+      ...prev,
+      [computerId]: time
+    }))
+  }
+
 
   return (
-    <ShutdownTimeContext.Provider value={{ shutdownTime, setShutdownTime }}>
+    <ShutdownTimeContext.Provider value={{ shutdownTimes, setShutdownTime }}>
       {children}
     </ShutdownTimeContext.Provider>
   )

@@ -18,7 +18,7 @@ interface ComputerShutdownTimeoutPanelProps {
 const ComputerShutdownTimeoutPanel = memo(({
   computer,
 }: ComputerShutdownTimeoutPanelProps) => {
-  const { shutdownTime, setShutdownTime } = useShutdownTime()
+  const { shutdownTime, setShutdownTime } = useShutdownTime(computer.pk)
 
   if (computer.fields.katalog) return null
 

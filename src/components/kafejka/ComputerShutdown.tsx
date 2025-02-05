@@ -11,7 +11,7 @@ const ComputerShutdown = memo(
     const { onStateChange, changeStateByIDMutation } =
       useChangeStateByIDMutation(url)
 
-    const { shutdownTime } = useShutdownTime()
+    const { shutdownTime } = useShutdownTime(computerID)
 
     const handleShutdown = () => {
       onStateChange({ id: computerID, t: Number(shutdownTime), flag: 6 })
