@@ -1,16 +1,17 @@
-export type CategoryResponse = Category[]
-
 export interface Category {
   id: number
+  group: number
   title: string
-  children: Children[]
+  children: Category[]
   tips: string
-
 }
 
-export interface Children {
+export interface Printer {
   id: number
-  title: string
-  children: Children[]
-  tips: string
+  name: string
+}
+
+export interface CategoryResponse {
+  categories: Category[]
+  printers: Printer[]
 }

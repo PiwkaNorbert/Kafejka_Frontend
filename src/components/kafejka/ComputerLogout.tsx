@@ -4,8 +4,8 @@ import { memo } from 'react'
 import { useChangeStateByIDMutation } from '../../hooks/mutations/useChangeStateByIDMutation'
 
 const ComputerLogout = ({ computer, url }: ComputerOnlineStatusProps) => {
-  const computerID = computer.pk
-  const computerKatalog = computer.fields.katalog
+  const computerID = computer.id
+  const computerKatalog = computer.katalog
 
 
   const { onStateChange, changeStateByIDMutation } =

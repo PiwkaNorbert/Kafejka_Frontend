@@ -1,11 +1,13 @@
-import { useRef, useEffect } from 'react'
-import axios from 'axios'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useRef } from 'react'
+import { useParams } from 'react-router'
 import { toast } from 'react-toastify'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useParams } from 'react-router-dom'
 import WifiCodesTable from '../components/WifiCodesTable'
 import { Button } from '../components/ui/button'
 
+import { InfoIcon } from 'lucide-react'
+import { Input } from '../components/ui/input'
+import { Skeleton } from '../components/ui/skeleton'
 import {
   Table,
   TableBody,
@@ -15,92 +17,52 @@ import {
   TableHeader,
   TableRow,
 } from '../components/ui/table'
-import { InfoIcon } from 'lucide-react'
-import { useHotspotData } from '../hooks/useHotspotData'
-import { Input } from '../components/ui/input'
+import { wifiCodeOptions } from '../hooks/useHotspotData'
+import { fetchApi } from '../lib/custom-fetch'
 
-interface WifiPermsProps {
-  url: string
+export async function addWifiCode(filia: string | undefined, value: number) {
+  const response = await fetchApi({
+    url: 'http://192.168.15.220:8080',
+    port: '8080',
+    path: `/hotspot-code/${filia}/${value * 3 - 1745}/`,
+  })
+
+  return response
 }
 
-const WifiPerms = ({ url }: WifiPermsProps) => {
-  const formRef = useRef<null | HTMLFormElement>(null)
-  const inputRef = useRef<null | HTMLInputElement>(null)
-  const { curFilia } = useParams()
-  const filia = curFilia ?? '99'
-
+const useWifi = (filia: string | undefined) => {
   const queryClient = useQueryClient()
 
-  const { data, status, error, isLoading } = useHotspotData(url, filia)
-
-  useEffect(()=>{
-    if (inputRef.current) {
-      inputRef.current.focus()
-    }
-  },[])
-
-  const cardHotspotCode = async (value: number) => {
-    try {
-      const urlHotspotCode = `${url}hotspot-code/${filia}/${value * 3 - 1745}/`
-      const { data, status } = await axios.get(urlHotspotCode)
-      if (status !== 200) {
-        throw new Error(`Nastpił problem: ${status}`)
-      }
-      return data
-    } catch (error) {
-      console.error(error)
-      throw new Error(`Failed to send code: ${error}`)
-    }
-  }
-
   const addCodeMutation = useMutation({
-    mutationFn: (value: number) => cardHotspotCode(value),
+    mutationFn: ({
+      filia,
+      value,
+    }: {
+      filia: string | undefined
+      value: number
+    }) => addWifiCode(filia, value),
     onSuccess: () => {
-      if (formRef.current) {
-        formRef.current.reset()
-      }
-      toast.success('Kod został wysłany!', {  toastId: 'addCode' })
+      toast.success('Kod został wysłany!', { toastId: 'addCode' })
     },
     onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['wifiCodes', curFilia],
-      })
+      queryClient.invalidateQueries({ queryKey: ['wifiCodes', filia] })
     },
     onError: () => {
-      toast.error("Kod niezostał wysłany", { toastId: 'removeCode' })
+      toast.error('Kod niezostał wysłany', { toastId: 'removeCode' })
     },
   })
 
+  return { addCodeMutation }
+}
+
+const WifiPerms = () => {
+  const { curFilia } = useParams()
+  const filia = curFilia
+  const { data, status, error, isLoading } = useQuery(wifiCodeOptions(filia))
+
   return (
-    <div className="w-full grid gap-6 mx-auto max-w-sm">
-      <form
-        className="grid gap-4 bg-card p-5 rounded-lg shadow-md"
-        ref={formRef}
-
-        onSubmit={e => {
-          e.preventDefault()
-          if (addCodeMutation.isPending) return
-          const cardNumber = new FormData(e.currentTarget).get("hotspot")
-
-          addCodeMutation.mutate(Number(cardNumber))
-        }}
-      >
-        <Input
-          name="hotspot"
-          ref={inputRef}
-          placeholder="Numer karty czytelnika"
-          type="number"
-          className="rounded-md"
-        />
-        <Button 
-          type="submit"
-          variant='accent'
-          className="rounded-md"
-        >
-          {addCodeMutation.isPending ? 'Wysyłanie...' : "Wyślij kod"}
-          
-        </Button>
-      </form>
+    <div className="mx-auto grid w-full max-w-sm gap-6">
+      <AddWifiCode />
 
       <Table>
         <TableCaption>Lista użytkowników dozwolonych do WIFI</TableCaption>
@@ -111,7 +73,7 @@ const WifiPerms = ({ url }: WifiPermsProps) => {
             <TableHead>Status</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody className='bg-card'>
+        <TableBody className="bg-card">
           {isLoading && (
             <TableRow className="">
               <TableCell colSpan={3}>Loading...</TableCell>
@@ -126,9 +88,10 @@ const WifiPerms = ({ url }: WifiPermsProps) => {
             <TableRow className="bg-primary/15 text-primary hover:bg-primary/15">
               <TableCell colSpan={3}>
                 {' '}
-                <div className="grid grid-cols-[20px_1fr] gap-2 items-center">
+                <div className="grid grid-cols-[20px_1fr] items-center gap-2">
                   <InfoIcon size={20} className="mb-5" />
-                   Jeszcze nie udostępniono żadnemu użytkownikowi WiFi w dniu dzisiejszym.
+                  Jeszcze nie udostępniono żadnemu użytkownikowi WiFi w dniu
+                  dzisiejszym.
                 </div>
               </TableCell>
             </TableRow>
@@ -144,3 +107,60 @@ const WifiPerms = ({ url }: WifiPermsProps) => {
 }
 
 export default WifiPerms
+
+const AddWifiCode = () => {
+  const formRef = useRef<null | HTMLFormElement>(null)
+  const inputRef = useRef<null | HTMLInputElement>(null)
+  const { curFilia } = useParams()
+  const { addCodeMutation } = useWifi(curFilia)
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [])
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (addCodeMutation.isPending) return
+    const cardNumber = new FormData(e.currentTarget).get('hotspot')
+
+    addCodeMutation.mutate(
+      { filia: curFilia, value: Number(cardNumber) },
+      {
+        onSuccess: () => {
+          if (formRef.current) {
+            formRef.current.reset()
+          }
+        },
+      }
+    )
+  }
+
+  if (!curFilia)
+    return (
+      <div className="grid gap-4 rounded-lg bg-card p-5 shadow-md">
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10 w-full" />
+      </div>
+    )
+
+  return (
+    <form
+      className="grid gap-4 rounded-lg bg-card p-5 shadow-md"
+      ref={formRef}
+      onSubmit={handleSubmit}
+    >
+      <Input
+        name="hotspot"
+        ref={inputRef}
+        placeholder="Numer karty czytelnika"
+        type="number"
+        className="rounded-md"
+      />
+      <Button type="submit" variant="accent" className="rounded-md">
+        {addCodeMutation.isPending ? 'Wysyłanie...' : 'Wyślij kod'}
+      </Button>
+    </form>
+  )
+}

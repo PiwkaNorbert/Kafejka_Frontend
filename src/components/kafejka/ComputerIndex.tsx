@@ -1,6 +1,12 @@
-import TimerUntilShutdown from '../TimerUntilShutdown'
 import { Computer, ComputerIndexProps } from '../../types/computer'
+import TimerUntilShutdown from '../TimerUntilShutdown'
 
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useClickAway } from '@uidotdev/usehooks'
+import { Check, Wifi, WifiOff, X } from 'lucide-react'
+import { memo, useState } from 'react'
+import { useParams } from 'react-router'
+import { toast } from 'react-toastify'
 import {
   Tooltip,
   TooltipContent,
@@ -8,31 +14,19 @@ import {
   TooltipTrigger,
 } from '../../components/ui/tooltip'
 import { cn, formatDate, timeDifference } from '../../lib/utils'
-import { Check, Wifi, WifiOff, X } from 'lucide-react'
-import { Input } from '../ui/input'
 import { Button } from '../ui/button'
-import { useState, memo, FormEventHandler } from 'react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'react-toastify'
-import { useParams } from 'react-router-dom'
-import { useClickAway } from '@uidotdev/usehooks'
+import { Input } from '../ui/input'
 // Define types for mutation variables and context
-type MutationVariables = {
-  url: string
-  kompid: number
-  label: string
-}
+type MutationVariables = { url: string; kompid: number; label: string }
 
-type MutationContext = {
-  previousComputers: Computer[] | undefined
-}
+type MutationContext = { previousComputers: Computer[] | undefined }
 
 const updatePCLabel = async ({
   url,
   kompid,
   label,
 }: MutationVariables): Promise<{ Status: string }> => {
-  const response = await fetch(`${url}pc-label/${kompid}/`, {
+  const response = await fetch(`${url}pc-label/${kompid}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ label }),
@@ -44,13 +38,13 @@ const updatePCLabel = async ({
 }
 
 const ComputerIndex = memo(({ computer, index, url }: ComputerIndexProps) => {
-  const computerID = computer.pk
+  const computerID = computer.id
   const {
     timestamp_time: timestampTime,
     katalog,
     label,
     last_fetch: lastFetch,
-  } = computer.fields
+  } = computer
   const [newLabel, setNewLabel] = useState(() => label || '')
   const [isEditing, setIsEditing] = useState<boolean>(false)
   const { curFilia } = useParams()
@@ -77,10 +71,9 @@ const ComputerIndex = memo(({ computer, index, url }: ComputerIndexProps) => {
       queryClient.setQueryData<Computer[] | undefined>(
         ['komps', curFilia],
         (old) => {
-
           return old?.map((c) => {
-            return c.pk === variables.kompid
-              ? { ...c, fields: { ...c.fields, label: variables.label } }
+            return c.id === variables.kompid
+              ? { ...c, label: variables.label }
               : c
           })
         }
@@ -92,18 +85,14 @@ const ComputerIndex = memo(({ computer, index, url }: ComputerIndexProps) => {
       if (data.Status === 'Success') {
         toast.success(
           `Komputer o ID ${computerID} ma teraz nazwę "${newLabel}".`,
-          {
-            toastId: computerID,
-          }
+          { toastId: computerID }
         )
       }
     },
     onError: (error, variables, context) => {
       toast.error(
         `Wystąpił błąd podczas aktualizacji nazwy komputera o ID ${variables.kompid}. Proszę spróbować ponownie.`,
-        {
-          toastId: computerID,
-        }
+        { toastId: computerID }
       )
       console.error('Error updating computer label:', error)
 
@@ -178,7 +167,7 @@ const ComputerIndex = memo(({ computer, index, url }: ComputerIndexProps) => {
               </div>
             ) : (
               <Button
-                className="w-fit justify-start px-0 text-left hover:bg-transparent bg-transparent transition-none"
+                className="w-fit justify-start bg-transparent px-0 text-left transition-none hover:bg-transparent"
                 variant="ghost"
                 onClick={() => setIsEditing(true)}
               >
@@ -203,12 +192,18 @@ const ComputerIndex = memo(({ computer, index, url }: ComputerIndexProps) => {
         <Tooltip>
           <TooltipTrigger
             className={cn(
-              'h-10 rounded-md border border-input group px-2.5 hover:bg-accent hover:text-accent-foreground',
+              'group h-10 rounded-md border border-input px-2.5 hover:bg-accent hover:text-accent-foreground',
               offlineColor,
-              katalog === 0 ? 'hover:bg-primary/15' : 'bg-border hover:bg-primary/15'
+              katalog === 0
+                ? 'hover:bg-primary/15'
+                : 'bg-border hover:bg-primary/15'
             )}
           >
-            {isOnline ? <Wifi size={20} className='group-hover:animate-pulse' /> : <WifiOff size={20} className='group-hover:animate-pulse' />}
+            {isOnline ? (
+              <Wifi size={20} className="group-hover:animate-pulse" />
+            ) : (
+              <WifiOff size={20} className="group-hover:animate-pulse" />
+            )}
           </TooltipTrigger>
           <TooltipContent>
             {isOnline ? 'On-line' : 'Off-line'}{' '}

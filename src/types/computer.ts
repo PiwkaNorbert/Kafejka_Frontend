@@ -1,14 +1,9 @@
-import { Dispatch, SetStateAction } from "react"
 
 export type ComputerArray = Computer[]
 
-export interface Computer {
-  model: string
-  pk: number
-  fields: Fields
-}
 
-export interface Fields {
+export interface Computer {
+  id: number
   f: 0 | 1 | 2 | 3 | 5 | 6 
   ol: number
   t: number

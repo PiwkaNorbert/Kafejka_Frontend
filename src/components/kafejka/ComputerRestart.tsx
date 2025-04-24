@@ -11,8 +11,8 @@ const ComputerRestart = memo(({
   computer: Computer,
   url: string
 }) => {
-  const computerID = computer.pk
-  const computerKatalog = computer.fields.katalog
+  const computerID = computer.id
+  const computerKatalog = computer.katalog
 
   const { onStateChange, changeStateByIDMutation } = useChangeStateByIDMutation(url)
   const { shutdownTime } = useShutdownTime(computerID)

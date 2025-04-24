@@ -1,38 +1,44 @@
-import { useParams } from 'react-router-dom'
-import { memo, useMemo, lazy, Suspense } from 'react'
-import { cn } from '../lib/utils'
+import { lazy, memo, Suspense, useMemo } from 'react'
+import { useParams } from 'react-router'
 import ErrorCallback from '../components/Errors/ErrorCallback'
 import { useComputerData } from '../hooks/useComputerData'
+import { cn } from '../lib/utils'
 
 import ComputerAdd from '../components/kafejka/ComputerAdd'
 
-import { Button } from '../components/ui/button'
-import ComputerShutdownAll from '../components/kafejka/ComputerShutdownAll'
-import { ShutdownTimeProvider } from '../providers/shutdown-time-provider'
 import { RefreshCw } from 'lucide-react'
+import ComputerShutdownAll from '../components/kafejka/ComputerShutdownAll'
+import { Button } from '../components/ui/button'
+import { ShutdownTimeProvider } from '../providers/shutdown-time-provider'
 
-const ComputerDetailsSection = lazy(() => import('../components/kafejka/computer-section.tsx').then(module => ({ default: module.ComputerDetailsSection })))
-const ComputerManagementSection = lazy(() => import('../components/kafejka/computer-section.tsx').then(module => ({ default: module.ComputerManagementSection })))
+const ComputerDetailsSection = lazy(() =>
+  import('../components/kafejka/computer-section.tsx').then((module) => ({
+    default: module.ComputerDetailsSection,
+  }))
+)
+const ComputerManagementSection = lazy(() =>
+  import('../components/kafejka/computer-section.tsx').then((module) => ({
+    default: module.ComputerManagementSection,
+  }))
+)
 
 interface ComputerPageProps {
   showComps: boolean
-  url: string
 }
 
 const ComputerPage = memo(
-  ({ showComps, url }: ComputerPageProps): React.ReactElement => {
+  ({ showComps }: ComputerPageProps): React.ReactElement => {
     const { curFilia } = useParams()
+    const url = `http://192.168.15.220:8080/`
 
     const filia = curFilia ?? ('99' as string)
-    const { data, status, isLoading, error, refetch, isFetching } = useComputerData(
-      url,
-      filia
-    )
+    const { data, status, isLoading, error, refetch, isFetching } =
+      useComputerData(filia)
 
     const sortedComputers = useMemo(() => {
       return data?.sort((a, b) => {
-        if (a.fields.katalog === 1) return 1
-        if (b.fields.katalog === 1) return -1
+        if (a.katalog === 1) return 1
+        if (b.katalog === 1) return -1
         return 0
       })
     }, [data])
@@ -76,7 +82,7 @@ const ComputerPage = memo(
           <Suspense fallback={<></>}>
             {status === 'success' &&
               sortedComputers?.map((computer, index) => {
-                const computerID = computer.pk
+                const computerID = computer.id
                 if (!showComps) {
                   return (
                     <ComputerManagementSection

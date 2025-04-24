@@ -18,9 +18,9 @@ interface ComputerShutdownTimeoutPanelProps {
 const ComputerShutdownTimeoutPanel = memo(({
   computer,
 }: ComputerShutdownTimeoutPanelProps) => {
-  const { shutdownTime, setShutdownTime } = useShutdownTime(computer.pk)
+  const { shutdownTime, setShutdownTime } = useShutdownTime(computer.id)
 
-  if (computer.fields.katalog) return null
+  if (computer.katalog) return null
 
   const handleTimeoutChange = (value: string) => {
     setShutdownTime(value)
@@ -34,7 +34,7 @@ const ComputerShutdownTimeoutPanel = memo(({
         value={shutdownTime}
         onValueChange={handleTimeoutChange}
       >
-        <SelectTrigger disabled={computer.fields.f === 5}>
+        <SelectTrigger disabled={computer.f === 5}>
           <SelectValue placeholder="Wyłącz za" />
         </SelectTrigger>
         <SelectContent>

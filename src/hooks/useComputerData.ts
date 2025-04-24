@@ -3,11 +3,11 @@ import { ComputerArray } from '../types/computer';
 import { fetchComputerData } from '../fetch';
 
 
-export function useComputerData(url: string, filia: string) {
+export function useComputerData(filia: string) {
   const queryClient = useQueryClient()
   return useQuery<ComputerArray>({
     queryKey: ['komps', filia],
-    queryFn: ({ signal }) => fetchComputerData(url, filia, signal),
+    queryFn: ({ signal }) => fetchComputerData(filia, signal),
     placeholderData: queryClient.getQueryData(['komps', filia]),
     staleTime: 1000 * 10,
     refetchInterval: 1000 * 10,
@@ -19,10 +19,7 @@ export function useComputerData(url: string, filia: string) {
       // Only update if there are actual changes
       return data.map(computer => ({
         ...computer,
-        fields: {
-          ...computer.fields,
-          online: Math.floor(computer.fields.online / 30) * 30, // Round to nearest 30 seconds
-        }
+        online: Math.floor(computer.online / 30) * 30, // Round to nearest 30 seconds
       }));
     },
   }

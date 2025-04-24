@@ -17,7 +17,7 @@ import {
   X
 } from 'lucide-react'
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
 import { SanitizedFormattedDescription } from '../components/serialized-formatted-description'
@@ -41,11 +41,12 @@ import {
 } from '../components/ui/table'
 import { Textarea } from '../components/ui/text-area'
 import { IP_POWROZNICZA, statesObject } from '../constants'
+import useCopyToClipboard from '../hooks/useCopyToClipboard'
 import useTaskListData from '../hooks/useTaskListData'
 import useTicketCategoryData from '../hooks/useTicketCategoryData'
 import useTicketGroupData from '../hooks/useTicketGroupData'
 import { cn } from '../lib/utils'
-import { Category, CategoryResponse } from '../types/categories'
+import { Category } from '../types/categories'
 
 const wait = () => new Promise((resolve) => setTimeout(resolve, 200))
 
@@ -301,7 +302,7 @@ export function CreateTicket({ filia }: { filia: string }) {
                     >
                       Problem
                     </label>
-                    <CategorySelector />
+                    <CategorySelector filia={filia} />
                   </section>
 
                   <section className="flex flex-col space-y-2">
@@ -414,26 +415,71 @@ const CurrentState = ({
   )
 }
 
-export function CategorySelector() {
-  // const [selectedCategory, setSelectedCategory] = useState<string>('')
-  const { data: categories, error, status } = useTicketCategoryData()
+export function CategorySelector({ filia }: { filia: string }) {
+  const [selectedCategory, setSelectedCategory] = useState<string>('')
+  const [copiedText, copyToClipboard] = useCopyToClipboard();
+  const hasCopied = Boolean(copiedText);
+
+  const { data, error, status } = useTicketCategoryData(filia)
+  const { categories, printers } = data ?? {}
 
   return (
     <>
       <Select
         name="title"
-        onValueChange={(e) => {
-          // setSelectedCategory(e)
-          return e
-        }}
+        onValueChange={setSelectedCategory}
       >
         <SelectTrigger>
           <SelectValue placeholder="Wybierz problem..." />
         </SelectTrigger>
         <SelectContent>
-          {status === 'success' && categories ? renderTitles(categories) : null}
+            {status === 'success' && categories ? renderTitles(categories) : null}
         </SelectContent>
       </Select>
+
+      {status === 'success' && selectedCategory === 'Koniec toneru' && (
+        <>
+          <div className="mt-2">
+            <label className="py-2 text-sm text-slate-500">
+              Drukarki:
+            </label>
+            <div className="mt-1 flex flex-wrap gap-2">
+              {printers?.map((printer) => (
+                <button
+                  key={printer.id}
+                  type="button"
+                  onClick={() => {
+                    copyToClipboard(printer.name)
+                    if (hasCopied) {
+                      toast.success('Skopiowano nazwę drukarki')
+                    }
+                  }}
+                  className="inline-flex items-center rounded-md bg-slate-100 px-2.5 py-1 text-sm 
+                    font-medium text-slate-800 hover:bg-slate-200 
+                    transition-colors duration-200 ease-in-out
+                    focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
+                >
+                  <span>{printer.name}</span>
+                  <svg
+                    className="ml-2 h-4 w-4 text-slate-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+                    />
+                  </svg>
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
       {status === 'error' ? <div>{error?.message}</div> : ''}
       {/* {selectedCategory.length > 0 && categories ? (
         <div className="bg-foreground shadow text-background rounded-lg fixed  top-1/3 right-2 w-22 h-22 p-6">
@@ -488,7 +534,7 @@ const renderCategory = (category: Category) => {
     )
   }
 }
-const renderTitles = (categories: CategoryResponse) => {
+const renderTitles = (categories: Category[]) => {
   return categories.map((category) => (
     <React.Fragment key={category.id}>
       {renderCategory(category)}

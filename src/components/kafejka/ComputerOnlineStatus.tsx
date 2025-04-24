@@ -4,9 +4,9 @@ import { memo } from 'react'
 import { useChangeStateByIDMutation } from '../../hooks/mutations/useChangeStateByIDMutation'
 
 const ComputerOnlineStatus = memo(({ computer, url }: ComputerOnlineStatusProps) => {
-  const computerID = computer.pk
-  const computerFlag = computer.fields.f
-  const computerKatalog = computer.fields.katalog
+  const computerID = computer.id
+  const computerFlag = computer.f
+  const computerKatalog = computer.katalog
 
   // in this component the flag i want to be either 0 or 1
   const currentFlag = computerFlag === 0 ? 0 : 1

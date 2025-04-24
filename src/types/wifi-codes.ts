@@ -1,12 +1,8 @@
 export type GetWifiCodesResponse = Code[]
 
-export interface Code {
-  model: string
-  pk: number
-  fields: Fields
-}
 
-export interface Fields {
+export interface Code {
+  id: number
   nr: string
   data: string
   cz: string

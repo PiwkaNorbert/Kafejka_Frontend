@@ -1,6 +1,6 @@
 import { IP_POWROZNICZA } from '../constants.ts'
 import { lazy } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router'
 
 const Information = lazy(() => import('./Information.tsx'))
 const ComputerPage = lazy(() => import('./ComputerPage.tsx'))
@@ -9,8 +9,7 @@ const TicketPage = lazy(() => import('./TicketPage.tsx'))
 const WifiPerms = lazy(() => import('./WifiPerms.tsx'))
 
 export default function LazyRoutes() {
-  const securityKey = window.location.pathname.split('/')[1]
-  const url = `${IP_POWROZNICZA}:8005/${securityKey}/`
+  const url = `${IP_POWROZNICZA}:8005/`
 
   return (
     <Routes>
@@ -20,7 +19,7 @@ export default function LazyRoutes() {
       <Route path="ustawienia" element={<ComputerPage showComps={false} url={url}/>} />
       <Route path="ebooki" element={<LegimiCodes />} />
       <Route path="zgloszenia" element={<TicketPage />} />
-      <Route path="wifi" element={<WifiPerms url={url} />} />
+      <Route path="wifi" element={<WifiPerms  />} />
     </Routes>
   )
 }

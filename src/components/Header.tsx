@@ -1,13 +1,13 @@
-import { NavLink, useNavigate, useParams } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router'
 
-import DarkModeButton from '../components/DarkModeButton'
-import { useEffect, useState } from 'react'
-import { IP_PRZEKIEROWANIE } from '../constants'
 import { BadgeHelp, BookOpen, Info, LaptopMinimal, Menu, Settings, Wifi } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import DarkModeButton from '../components/DarkModeButton'
+import { IP_PRZEKIEROWANIE } from '../constants'
 // import { Container } from 'lucide-react'
 import { cn } from '../lib/utils'
-import { Input } from './ui/input'
 import { Button } from './ui/button'
+import { Input } from './ui/input'
 
 
 const navLinks = [
@@ -22,33 +22,41 @@ const navLinks = [
 
 export default function Headers() {
   const navigate = useNavigate()
-  const param = useParams()
-  const { securityKey, curFilia } = param
+  const location = useLocation()
+  const [currentFilia, setCurrentFilia] = useState<string | undefined>()
   const [openMenu, setOpenMenu] = useState(false)
+  
+  useEffect(() => {
+    // Extract curFilia from the URL path
+    const pathParts = location.pathname.split('/')
+    const filia = pathParts[2] // The curFilia is the third part of the path
+    setCurrentFilia(filia)
+  }, [location.pathname])
 
   const handleMenu = () => {
     setOpenMenu(!openMenu)
   }
 
-  useEffect(() => {
-    const storedValue = localStorage.getItem('navTitle')
-    if (storedValue) {
-      const index = navLinks.findIndex((link) => link.label.toLowerCase() === storedValue)
-      if (index !== -1) {
-        navigate(navLinks[index].to)
-      }
-    }
-  }, [navigate])
+  // useEffect(() => {
+  //   const storedValue = localStorage.getItem('navTitle')
+  //   if (storedValue) {
+  //     const index = navLinks.findIndex((link) => link.label.toLowerCase() === storedValue)
+  //     if (index !== -1) {
+  //       navigate(navLinks[index].to)
+  //     }
+  //   }
+  // }, [navigate])
 
   const handleClick = (value: number) => {
-    localStorage.setItem('navTitle', navLinks[value].label.toLowerCase())
-    navigate(navLinks[value].to)
     setOpenMenu(false)
+    localStorage.setItem('navTitle', navLinks[value].label.toLowerCase())
+    const newPath = `/${navLinks[value].to}/${currentFilia || ''}`
+    navigate(newPath, { replace: true })
   }
   // 'flex p-4 flex-col gap-2 items-center justify-center font-medium text-muted-foreground capitalize text-center'
   return (
     <header className='flex lg:place-content-center space-x-3 lg:gap-0 justify-end h-[78px] bg-card border-b border-slate-300 dark:border-slate-800  sticky top-0 z-[20] p-4 lg:p-0'>
-      <FiliaChanger securityKey={securityKey} curFilia={curFilia} className='lg:hidden' />
+      <FiliaChanger curFilia={currentFilia} className='lg:hidden' />
 
       <DarkModeButton className='lg:hidden' />
       <Button variant='accent' className='lg:hidden relative z-10 border-2 rounded-lg px-2' onClick={handleMenu}>
@@ -72,7 +80,7 @@ export default function Headers() {
               onClick={() => handleClick(link.id)}
             >
               <NavLink
-                to={link.to}
+                to={`/${link.to}/${currentFilia || ''}`}
                 className={({ isActive, isPending, isTransitioning }) => cn("flex p-4 text-nonwrap flex-col space-x-2 items-center justify-center text-muted-foreground relative border-b-2 border-transparent capitalize text-center",
                   isPending ? "border-primary" : "",
                   isActive ? "font-medium text-primary border-primary" : "",
@@ -85,7 +93,7 @@ export default function Headers() {
             </div>
 
           ))}
-        <FiliaChanger securityKey={securityKey} curFilia={curFilia} className='hidden lg:inline-flex' />
+        <FiliaChanger curFilia={currentFilia} className='hidden lg:inline-flex' />
         <DarkModeButton className='hidden lg:inline-flex' />
 
       </nav>
@@ -94,28 +102,30 @@ export default function Headers() {
   )
 }
 interface FiliaChangerProps {
-  securityKey?: string
   curFilia?: string
   className?: string
 }
 
-const FiliaChanger: React.FC<FiliaChangerProps> = ({ securityKey, curFilia, className }) => {
+const FiliaChanger: React.FC<FiliaChangerProps> = ({ curFilia, className }) => {
   const navigate = useNavigate();
-  if (window.location.origin.includes(".37")) return null;
+  const location = useLocation();
   
-
+  if (window.location.origin.includes(".37")) return null;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newFilia = e.target.value;
-
     if (newFilia && newFilia.length > 0) {
-      navigate(`/${securityKey}/${newFilia}`);
+      // Get the current route (e.g., "informacje", "kafejka", etc.)
+      const currentRoute = location.pathname.split('/')[1];
+      navigate(`/${currentRoute}/${newFilia}`);
     }
   };
 
   return (
-
-    <Input className={cn('w-fit max-w-16 border-2', className)} defaultValue={curFilia} onChange={handleChange} />
-
-  )
-}
+    <Input 
+      className={cn('w-fit max-w-16 border-2', className)} 
+      defaultValue={curFilia} 
+      onChange={handleChange} 
+    />
+  );
+};

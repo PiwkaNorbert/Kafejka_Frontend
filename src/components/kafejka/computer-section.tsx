@@ -28,7 +28,7 @@ export const ComputerManagementSection = memo(
     <section
       className={cn(
         'grid gap-4 rounded-lg bg-card p-5 text-sm text-muted-foreground shadow-md ',
-        computer.fields.katalog === 1 && 'bg-border'
+        computer.katalog === 1 && 'bg-border'
       )}
     >
       <ComputerAssignFilia computer={computer} url={url} />
@@ -44,7 +44,7 @@ export const ComputerDetailsSection = memo(
       <section
         className={cn(
           'grid gap-4 rounded-lg bg-card p-5 text-sm text-muted-foreground shadow-md ',
-          computer.fields.katalog === 1 && 'bg-border'
+          computer.katalog === 1 && 'bg-border'
         )}
       >
         <ComputerIndex

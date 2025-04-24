@@ -1,4 +1,4 @@
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router'
 import { Button } from '../components/ui/button'
 import React, { MutableRefObject, useRef } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'

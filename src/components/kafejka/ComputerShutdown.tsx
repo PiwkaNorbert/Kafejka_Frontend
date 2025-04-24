@@ -6,7 +6,7 @@ import { memo } from 'react'
 
 const ComputerShutdown = memo(
   ({ computer, url }: ComputerOnlineStatusProps) => {
-    const computerID = computer.pk
+    const computerID = computer.id
 
     const { onStateChange, changeStateByIDMutation } =
       useChangeStateByIDMutation(url)

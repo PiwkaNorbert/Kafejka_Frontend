@@ -1,5 +1,5 @@
 import { Fragment, useState, useCallback, useReducer, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import { useEbookData } from '../hooks/useEbookData'
 
 import {

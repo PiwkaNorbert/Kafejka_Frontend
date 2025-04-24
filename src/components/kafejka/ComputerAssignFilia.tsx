@@ -5,8 +5,8 @@ import { useChangeStateByIDMutation } from '../../hooks/mutations/useChangeState
 import { cn } from '../../lib/utils';
 
 const ComputerAssignFilia = ({ computer, url }: { computer: Computer; url: string; }) => {
-  const computerID = computer.pk;
-  const { filia } = computer.fields;
+  const computerID = computer.id;
+  const { filia } = computer;
   const formRef = useRef<HTMLFormElement>(null);
   const { onStateChange } = useChangeStateByIDMutation(url);
 
@@ -38,7 +38,7 @@ const ComputerAssignFilia = ({ computer, url }: { computer: Computer; url: strin
 
           </span>
         </label>
-        <Input name='assigned-filia' placeholder={filia.toString()} className={cn( computer.fields.katalog === 1 && 'bg-border border-card')} />
+        <Input name='assigned-filia' placeholder={filia.toString()} className={cn( computer.katalog === 1 && 'bg-border border-card')} />
       </section>
     </form>
   );

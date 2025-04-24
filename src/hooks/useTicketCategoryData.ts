@@ -2,10 +2,10 @@ import { useQuery } from '@tanstack/react-query'
 import { CategoryResponse } from '../types/categories'
 import { fetchTicketCategoryData } from '../fetch'
 
-const useTicketCategoryData = () => {
+const useTicketCategoryData = (filia: string) => {
   return useQuery<CategoryResponse>({
-    queryKey: ['categories'],
-    queryFn: ({ signal }) => fetchTicketCategoryData(signal),
+    queryKey: ['categories', filia],
+    queryFn: ({ signal }) => fetchTicketCategoryData(filia, signal),
   })
 }
 
