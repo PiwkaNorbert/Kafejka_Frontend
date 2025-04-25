@@ -52,7 +52,7 @@ export const ComputerDetailsSection = memo(
           index={index}
           showComps={showComps}
         />
-        {showComps && (
+        {showComps ? (
           <>
             <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-3 sm:gap-x-4 ">
               <ComputerOnlineStatus computer={computer} />
@@ -64,7 +64,7 @@ export const ComputerDetailsSection = memo(
               <ComputerShutdownTimeoutPanel computer={computer} index={index} />
             </div>
           </>
-        )}
+        ) : null}
       </section>
     )
   }

@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { IP_MATEUSZ } from '@/constants';
 import { fetchApi } from '@/lib/custom-fetch';
 import { ComputerArray } from '@/types/computer';
-
+import { useWebSocket } from './useWebSocket';
 
 const KEYS = {
   BASE: 'komps',
@@ -16,26 +16,27 @@ export const computerQueryKeys = {
   byFilia: (filia: string | undefined) => [KEYS.BASE, filia] as const,
 } satisfies Record<string, QueryKeys | ((...args: any[]) => QueryKeys)>
 
-
-
-
-
 export function useComputerData(filia: string | undefined) {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
+  const ws = useWebSocket(filia || '');
+  console.log(ws);
+
   return useQuery<ComputerArray>({
     queryKey: computerQueryKeys.byFilia(filia),
-    queryFn: ({ signal }) => fetchApi<ComputerArray>({ url: IP_MATEUSZ, port: '8080', path: `/komps/${filia}` }, { signal: signal as AbortSignal }),
+    queryFn: ({ signal }) => fetchApi<ComputerArray>({ 
+      url: IP_MATEUSZ, 
+      port: '8080', 
+      path: `/komps/${filia}` 
+    }, { signal: signal as AbortSignal }),
     placeholderData: queryClient.getQueryData(computerQueryKeys.byFilia(filia)),
-    staleTime: 1000 * 10,
-    refetchInterval: (query) => {
-      return query.state.error ? false : 1000 * 10
-    },
+    staleTime: Infinity, // Don't refetch automatically since we're using WebSocket
+    refetchInterval: false, // Disable automatic refetching
     retry: true,
     retryDelay(attemptIndex) {
-      const delays = [1000, 5000, 15000, 30000]
-      return delays[attemptIndex] ?? 60000
+      const delays = [1000, 5000, 15000, 30000];
+      return delays[attemptIndex] ?? 60000;
     },
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false, // Disable refetch on window focus since we use WebSocket
     refetchOnMount: true,
     refetchOnReconnect: true,
     select: (data) => {
@@ -46,6 +47,5 @@ export function useComputerData(filia: string | undefined) {
       }));
     },
     enabled: typeof filia === 'string',
-  }
-  );
+  });
 }
