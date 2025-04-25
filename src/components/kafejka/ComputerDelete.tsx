@@ -1,15 +1,16 @@
-import { useParams } from 'react-router'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
+import { useParams } from 'react-router'
 import { toast } from 'react-toastify'
+import { IP_MATEUSZ } from '../../constants'
+import { fetchApi } from '../../lib/custom-fetch'
 import { Button } from '../ui/button'
 
 interface ComputerDeleteProps {
   computerID: number
-  url: string
+  filia: string
 }
 
-const ComputerDelete = ({ computerID, url }: ComputerDeleteProps) => {
+const ComputerDelete = ({ computerID, filia }: ComputerDeleteProps) => {
   const { curFilia } = useParams()
   const queryClient = useQueryClient()
 
@@ -18,15 +19,12 @@ const ComputerDelete = ({ computerID, url }: ComputerDeleteProps) => {
     Error,
     number
   >({
-    mutationFn: async compId => {
-      const deletePCURL = `${url}delete-pc/${compId}/`
-
-      const { data, status } = await axios.get(deletePCURL)
-      if (status !== 200) {
-        throw new Error(`Nastpił problem: ${status}`)
-      }
-      return data
-    },
+    mutationFn: (compId) =>
+      fetchApi({
+        url: IP_MATEUSZ,
+        port: '8080',
+        path: `/delete-pc/${filia}/${compId}`,
+      }),
     onSuccess: () => {
       toast.success('Komputer został usunięty')
       // queryClient.setQueryData({ queryKey: ['komps', curFilia] }, old => {
@@ -36,25 +34,20 @@ const ComputerDelete = ({ computerID, url }: ComputerDeleteProps) => {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['komps', curFilia] })
     },
-    onError: error => {
+    onError: (error) => {
       toast.error(`Komputer niezostał usunięty: ${error?.message}`)
     },
   })
 
   const handleDelete = () => {
-      if (isPending) return
-      deleteComputerById(computerID)
+    if (isPending) return
+    deleteComputerById(computerID)
   }
 
-
   return (
-        <Button
-          disabled={isPending}
-          onClick={handleDelete}
-          variant='destructive'
-        >
-          Usuń
-        </Button>
+    <Button disabled={isPending} onClick={handleDelete} variant="destructive">
+      Usuń
+    </Button>
   )
 }
 

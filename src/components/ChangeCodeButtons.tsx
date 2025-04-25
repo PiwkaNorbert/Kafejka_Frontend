@@ -1,6 +1,6 @@
-import { Button } from './ui/button';
-import { Plus, Minus } from 'lucide-react'
-import { useChangeCodes } from '../hooks/mutations/useChangeCodes';
+import { Button } from '@/components/ui/button';
+import { useChangeCodes } from '@/hooks/mutations/useChangeCodes';
+import { Minus, Plus } from 'lucide-react';
 
 const ChangeCodeButtons = ({ amount, type, children } : { amount: number, type: "legimi" | "empik", children?: React.ReactNode }) => {
   const { onChange, changeCodesMutation } = useChangeCodes()

@@ -7,14 +7,14 @@ import { cn } from '../../lib/utils'
 
 const ComputerKatalog = ({
   computer,
-  url,
+  filia,
 }: {
   computer: Computer
-  url: string
+  filia: string
 }) => {
   const { id: computerID, katalog } = computer
   const formRef = useRef<HTMLFormElement>(null)
-  const { onStateChange } = useChangeStateByIDMutation(url)
+  const { onStateChange } = useChangeStateByIDMutation(filia)
 
   useEffect(() => {
     if (formRef.current) {

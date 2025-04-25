@@ -1,7 +1,19 @@
-import { Fragment, useState, useCallback, useReducer, useEffect } from 'react'
+import { ebookOptions } from '@/hooks/options/ebook-options'
+import { Fragment, useCallback, useEffect, useReducer, useState } from 'react'
 import { useParams } from 'react-router'
-import { useEbookData } from '../hooks/useEbookData'
-
+import ChangeCodeButtons from '@/components/ChangeCodeButtons'
+import SideBar from '@/components/SideBar'
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
 import {
   Table,
   TableBody,
@@ -10,31 +22,19 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '../components/ui/table'
-import SideBar from '../components/SideBar'
-import ChangeCodeButtons from '../components/ChangeCodeButtons'
-import { useFilters } from '../hooks/useFilters'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
+} from '@/components/ui/table'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { IP_PRZEKIEROWANIE } from '@/constants'
+import { useFilters } from '@/hooks/useFilters'
+import { Codes, GetCodesResponse } from '@/types/codes'
 import {
   useMutation,
+  useQuery,
   useQueryClient,
   UseQueryResult,
 } from '@tanstack/react-query'
-import { Codes, GetCodesResponse } from '@/types/codes'
-import { IP_PRZEKIEROWANIE } from '../constants'
-import { Button } from '../components/ui/button'
-import { toast } from 'react-toastify'
-import {
-  DialogContent,
-  DialogTrigger,
-  Dialog,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogClose,
-} from '../components/ui/dialog'
 import { Pencil } from 'lucide-react'
-import { Input } from '../components/ui/input'
+import { toast } from 'react-toastify'
 // Define the store type
 function useLocalStorage<T>(key: string, initialValue: T) {
   const [storedValue, setStoredValue] = useState<T>(() => {
@@ -66,13 +66,12 @@ function useLocalStorage<T>(key: string, initialValue: T) {
 
 const LegimiCodes = () => {
   const [activeTab, setActiveTab] = useLocalStorage('activeTab', 'table')
-  const legimiData = useEbookData()
+  const legimiData = useQuery(ebookOptions())
   const { curFilia } = useParams()
 
   // check if the host is 200.40 if so then use tabs if not then just display table content and only show on filia id 99
   //TODO: usunac edycje na 200.37 pokaz tylko na 200.40
   const is20037 = window.location.hostname.includes(IP_PRZEKIEROWANIE)
-
 
   return (
     <>
@@ -367,7 +366,7 @@ const FiliaCodesTable: React.FC<{
 }
 
 const CodesTable: React.FC = () => {
-  const { data, status, error, isLoading } = useEbookData()
+  const { data, status, error, isLoading } = useQuery(ebookOptions())
   const { toggleLegimi } = useFilters()
 
   return (
@@ -383,7 +382,7 @@ const CodesTable: React.FC = () => {
         </TableRow>
       )}
       {status === 'success' &&
-          data
+        data
           ?.sort((a: Codes, b: Codes) => a.FiliaIndex - b.FiliaIndex)
           ?.filter((code: Codes) => code.CodesNumber !== 0 || !toggleLegimi)
           ?.map((code: Codes, idx: number) => {
@@ -433,7 +432,7 @@ const CodeForCurFilia = () => {
   //   showInputs,
   // } = useSidebarAndFilters();
 
-  const { data, status, error, isLoading } = useEbookData()
+  const { data, status, error, isLoading } = useQuery(ebookOptions())
   const { curFilia } = useParams()
 
   const filia = curFilia ?? '0'

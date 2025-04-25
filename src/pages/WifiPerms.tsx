@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from '../components/ui/table'
-import { wifiCodeOptions } from '../hooks/useHotspotData'
+import { wifiCodeOptions } from '../hooks/options/wifi-code-options'
 import { fetchApi } from '../lib/custom-fetch'
 
 export async function addWifiCode(filia: string | undefined, value: number) {

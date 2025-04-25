@@ -19,13 +19,11 @@ export interface Computer {
 export interface ComputerIndexProps {
   computer: Computer
   index: number
-  url: string
   showComps: boolean
 }
 export interface ComputerShutdownProps {
   computerID: number
   online: number
-  url: string
 }
 export interface TimerUntilShutdownProps {
   computerID: number
@@ -33,7 +31,6 @@ export interface TimerUntilShutdownProps {
 }
 export interface ComputerOnlineStatusProps {
   computer: Computer
-  url: string
 }
 
 export interface StateData {

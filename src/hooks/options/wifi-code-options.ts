@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
-import { fetchApi } from '../lib/custom-fetch';
-import { GetWifiCodesResponse } from '../types/wifi-codes';
+import { fetchApi } from '../../lib/custom-fetch';
+import { GetWifiCodesResponse } from '../../types/wifi-codes';
 
 const KEYS = {
   BASE: 'wifi-codes',

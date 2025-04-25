@@ -5,23 +5,10 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../components/ui/select'
+} from '@/components/ui/select'
 
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
-import {
-  CheckIcon,
-  InfoIcon,
-  ListTodo,
-  RefreshCw,
-  X
-} from 'lucide-react'
-import React, { useState } from 'react'
-import { useParams } from 'react-router'
-import { toast } from 'react-toastify'
-import { z } from 'zod'
-import { SanitizedFormattedDescription } from '../components/serialized-formatted-description'
-import { Button } from '../components/ui/button'
+import { SanitizedFormattedDescription } from '@/components/serialized-formatted-description'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -29,7 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '../components/ui/dialog'
+} from '@/components/ui/dialog'
 import {
   Table,
   TableBody,
@@ -38,15 +25,23 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '../components/ui/table'
-import { Textarea } from '../components/ui/text-area'
-import { IP_POWROZNICZA, statesObject } from '../constants'
-import useCopyToClipboard from '../hooks/useCopyToClipboard'
-import useTaskListData from '../hooks/useTaskListData'
-import useTicketCategoryData from '../hooks/useTicketCategoryData'
-import useTicketGroupData from '../hooks/useTicketGroupData'
-import { cn } from '../lib/utils'
-import { Category } from '../types/categories'
+} from '@/components/ui/table'
+import { Textarea } from '@/components/ui/text-area'
+import { IP_POWROZNICZA, statesObject } from '@/constants'
+import { taskListOptions, taskListQueryKeys } from '@/hooks/options/task-list-options'
+import useCopyToClipboard from '@/hooks/useCopyToClipboard'
+import useTicketCategoryData from '@/hooks/useTicketCategoryData'
+import useTicketGroupData from '@/hooks/useTicketGroupData'
+import { cn } from '@/lib/utils'
+import { Category } from '@/types/categories'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import axios from 'axios'
+import { CheckIcon, InfoIcon, ListTodo, RefreshCw, X } from 'lucide-react'
+import React, { useState } from 'react'
+import { useParams } from 'react-router'
+import { toast } from 'react-toastify'
+import { z } from 'zod'
+import { fetchApi } from '@/lib/custom-fetch'
 
 const wait = () => new Promise((resolve) => setTimeout(resolve, 200))
 
@@ -89,7 +84,7 @@ export default function TicketPage() {
     error,
     isLoading,
     refetch,
-  } = useTaskListData(filia)
+  } = useQuery(taskListOptions(filia))
 
   return (
     <React.Fragment>
@@ -188,14 +183,11 @@ export function CreateTicket({ filia }: { filia: string }) {
   const formRef = React.useRef<HTMLFormElement>(null)
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (requestData: TicketData) => {
-      const { data, status } = await axios.post(
-        IP_POWROZNICZA + ':8080/create-request/',
-        requestData
-      )
-      if (status !== 200) throw new Error('asdasa')
-      return data
-    },
+    mutationFn: async (requestData: TicketData) =>
+      await fetchApi(
+        { url: IP_POWROZNICZA, port: '8080', path: '/create-request/' },
+        { method: 'POST', body: JSON.stringify(requestData) }
+      ),
   })
   const handleShowProblem = () => setShowProblem(true)
 
@@ -248,7 +240,7 @@ export function CreateTicket({ filia }: { filia: string }) {
         queryClient.invalidateQueries({
           predicate: (query) =>
             query.queryKey.every((key: unknown) =>
-              ['categories', 'unautherized-tasks'].includes(key as string)
+              ['categories', taskListQueryKeys.all].includes(key as string)
             ),
         })
 
@@ -417,32 +409,27 @@ const CurrentState = ({
 
 export function CategorySelector({ filia }: { filia: string }) {
   const [selectedCategory, setSelectedCategory] = useState<string>('')
-  const [copiedText, copyToClipboard] = useCopyToClipboard();
-  const hasCopied = Boolean(copiedText);
+  const [copiedText, copyToClipboard] = useCopyToClipboard()
+  const hasCopied = Boolean(copiedText)
 
   const { data, error, status } = useTicketCategoryData(filia)
   const { categories, printers } = data ?? {}
 
   return (
     <>
-      <Select
-        name="title"
-        onValueChange={setSelectedCategory}
-      >
+      <Select name="title" onValueChange={setSelectedCategory}>
         <SelectTrigger>
           <SelectValue placeholder="Wybierz problem..." />
         </SelectTrigger>
         <SelectContent>
-            {status === 'success' && categories ? renderTitles(categories) : null}
+          {status === 'success' && categories ? renderTitles(categories) : null}
         </SelectContent>
       </Select>
 
       {status === 'success' && selectedCategory === 'Koniec toneru' && (
         <>
           <div className="mt-2">
-            <label className="py-2 text-sm text-slate-500">
-              Drukarki:
-            </label>
+            <label className="py-2 text-sm text-slate-500">Drukarki:</label>
             <div className="mt-1 flex flex-wrap gap-2">
               {printers?.map((printer) => (
                 <button
@@ -455,8 +442,8 @@ export function CategorySelector({ filia }: { filia: string }) {
                     }
                   }}
                   className="inline-flex items-center rounded-md bg-slate-100 px-2.5 py-1 text-sm 
-                    font-medium text-slate-800 hover:bg-slate-200 
-                    transition-colors duration-200 ease-in-out
+                    font-medium text-slate-800 transition-colors 
+                    duration-200 ease-in-out hover:bg-slate-200
                     focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2"
                 >
                   <span>{printer.name}</span>

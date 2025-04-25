@@ -1,39 +1,38 @@
-import { useParams } from 'react-router'
-import { toast } from 'react-toastify'
+import { IP_MATEUSZ } from '@/constants'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Button } from '../ui/button'
 import { Power } from 'lucide-react'
+import { toast } from 'react-toastify'
+import { Button } from '@/components/ui/button'
+import { fetchApi } from '@/lib/custom-fetch'
+import { computerQueryKeys } from '@/hooks/useComputerData'
 
-const ComputerShutdownAll = ({ url }: { url: string }) => {
-  const { curFilia } = useParams()
+const ComputerShutdownAll = ({ filia }: { filia: string }) => {
   // Send a get to shutdown all computers
   const queryClient = useQueryClient()
 
   const { mutate: shutdownAllComputers, isPending } = useMutation({
-    mutationFn: async () => {
-      const urlSDAll = `${url}shutdown-all/${curFilia}/`
-
-      const res = await fetch(urlSDAll)
-      if (!res.ok) {
-        throw new Error(`Nastpił problem: ${status}`)
-      }
-      return await res.json()
-    },
+    mutationFn: () =>
+      fetchApi({
+        url: IP_MATEUSZ,
+        port: '8080',
+        path: `/shutdown-all/${filia}`,
+      }),
     onSuccess: () => {
-      toast.success('Wszystkie komputery zostały wyłączone', { icon: <Power /> })
-      // queryClient.setQueryData({ queryKey: ['komps', curFilia] }, old => {
-        return queryClient.invalidateQueries({ queryKey: ['komps', curFilia] })
-
-      // });
+      queryClient.invalidateQueries({
+        queryKey: computerQueryKeys.byFilia(filia),
+      })
+      toast.success('Wszystkie komputery zostały wyłączone', {
+        icon: <Power />,
+      })
     },
-    onError: error => {
+    onError: (error) => {
       console.error(error)
       toast.error('Komputery niezostały wyłączone', { icon: <Power /> })
     },
   })
 
   return (
-    <div className='ml-auto bg-card rounded-md shadow'>
+    <div className="ml-auto rounded-md bg-card shadow">
       <Button
         disabled={isPending}
         className="space-x-2"

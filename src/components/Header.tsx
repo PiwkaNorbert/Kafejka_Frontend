@@ -8,6 +8,7 @@ import { IP_PRZEKIEROWANIE } from '../constants'
 import { cn } from '../lib/utils'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
+import { toast } from 'react-toastify'
 
 
 const navLinks = [
@@ -29,8 +30,12 @@ export default function Headers() {
   useEffect(() => {
     // Extract curFilia from the URL path
     const pathParts = location.pathname.split('/')
-    const filia = pathParts[2] // The curFilia is the third part of the path
-    setCurrentFilia(filia)
+    const filia = pathParts[1] // The curFilia is now the second part of the path
+    
+    // Only set currentFilia if it's not a direct route (like dashboard)
+    if (filia && !navLinks.some(link => link.to === filia)) {
+      setCurrentFilia(filia)
+    }
   }, [location.pathname])
 
   const handleMenu = () => {
@@ -42,16 +47,43 @@ export default function Headers() {
   //   if (storedValue) {
   //     const index = navLinks.findIndex((link) => link.label.toLowerCase() === storedValue)
   //     if (index !== -1) {
-  //       navigate(navLinks[index].to)
+  //       if (currentFilia) {
+  //         navigate(`/${currentFilia}/${navLinks[index].to}`)
+  //       } else {
+  //         navigate(navLinks[index].to)
+  //       }
   //     }
   //   }
-  // }, [navigate])
+  // }, [navigate, currentFilia])
 
   const handleClick = (value: number) => {
     setOpenMenu(false)
     localStorage.setItem('navTitle', navLinks[value].label.toLowerCase())
-    const newPath = `/${navLinks[value].to}/${currentFilia || ''}`
-    navigate(newPath, { replace: true })
+    
+    // If we have a currentFilia, navigate to the filia-specific route
+    if (currentFilia) {
+      navigate(`/${currentFilia}/${navLinks[value].to}`, { replace: true })
+    } else {
+      // If we're on a restricted address (200.40), get the stored filia
+      const isRestrictedAddress = window.location.hostname.includes('200.40')
+      const storedFilia = localStorage.getItem('curFilia')
+      
+      if (isRestrictedAddress && storedFilia) {
+        navigate(`/${storedFilia}/${navLinks[value].to}`, { replace: true })
+      } else {
+        // Show error message if no filia is selected
+        toast.error('Nie wybrano filii. Skontaktuj się z administratorem systemu.', {
+          toastId: 'no-filia-error',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        })
+        // Navigate to root to show dashboard
+        navigate('/', { replace: true })
+      }
+    }
   }
   // 'flex p-4 flex-col gap-2 items-center justify-center font-medium text-muted-foreground capitalize text-center'
   return (
@@ -73,6 +105,7 @@ export default function Headers() {
               const lastSector = splitIP[3]
               return window.location.hostname.includes(lastSector) ? link.to !== 'ustawienia' : link
             }
+            // return true
           })
           .map((link) => (
             <div
@@ -80,8 +113,9 @@ export default function Headers() {
               onClick={() => handleClick(link.id)}
             >
               <NavLink
-                to={`/${link.to}/${currentFilia || ''}`}
-                className={({ isActive, isPending, isTransitioning }) => cn("flex p-4 text-nonwrap flex-col space-x-2 items-center justify-center text-muted-foreground relative border-b-2 border-transparent capitalize text-center",
+                to={currentFilia ? `/${currentFilia}/${link.to}` : '/'}
+                className={({ isActive, isPending, isTransitioning }) => cn(
+                  "flex p-4 text-nonwrap flex-col space-x-2 items-center justify-center text-muted-foreground relative border-b-2 border-transparent capitalize text-center",
                   isPending ? "border-primary" : "",
                   isActive ? "font-medium text-primary border-primary" : "",
                   isTransitioning ? "border-primary" : "",
@@ -115,9 +149,23 @@ const FiliaChanger: React.FC<FiliaChangerProps> = ({ curFilia, className }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newFilia = e.target.value;
     if (newFilia && newFilia.length > 0) {
+      // Store the new filia in localStorage
+      localStorage.setItem('curFilia', newFilia);
+      
       // Get the current route (e.g., "informacje", "kafejka", etc.)
-      const currentRoute = location.pathname.split('/')[1];
-      navigate(`/${currentRoute}/${newFilia}`);
+      const currentRoute = location.pathname.split('/')[2] || 'informacje';
+      navigate(`/${newFilia}/${currentRoute}`);
+    } else {
+      // Show error if filia input is cleared
+      toast.error('Nie wybrano filii. Skontaktuj się z administratorem systemu.', {
+        toastId: 'no-filia-error',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      })
+      navigate('/', { replace: true })
     }
   };
 

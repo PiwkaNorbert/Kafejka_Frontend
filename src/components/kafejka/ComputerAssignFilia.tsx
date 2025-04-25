@@ -1,46 +1,56 @@
-import { useEffect, useRef } from 'react';
-import { Computer } from '@/types/computer';
-import { Input } from '../ui/input';
-import { useChangeStateByIDMutation } from '../../hooks/mutations/useChangeStateByIDMutation';
-import { cn } from '../../lib/utils';
+import { useEffect, useRef } from 'react'
+import { Computer } from '@/types/computer'
+import { Input } from '@/components/ui/input'
+import { useChangeStateByIDMutation } from '@/hooks/mutations/useChangeStateByIDMutation'
+import { cn } from '@/lib/utils'
 
-const ComputerAssignFilia = ({ computer, url }: { computer: Computer; url: string; }) => {
-  const computerID = computer.id;
-  const { filia } = computer;
-  const formRef = useRef<HTMLFormElement>(null);
-  const { onStateChange } = useChangeStateByIDMutation(url);
-
+const ComputerAssignFilia = ({
+  computer,
+  filia,
+}: {
+  computer: Computer
+  filia: string
+}) => {
+  const { id: computerID, filia: compFilia } = computer
+  const formRef = useRef<HTMLFormElement>(null)
+  const { onStateChange } = useChangeStateByIDMutation(filia)
 
   useEffect(() => {
     if (formRef.current) {
-      formRef.current.reset();
+      formRef.current.reset()
     }
-  }, [computerID]);
+  }, [computerID])
 
   return (
-    <form ref={formRef} onSubmit={(e) => {
-      e.preventDefault();
-      const formData = new FormData(e.currentTarget as HTMLFormElement);
-      const filia = formData.get('assigned-filia') as string;
+    <form
+      ref={formRef}
+      onSubmit={(e) => {
+        e.preventDefault()
+        const formData = new FormData(e.currentTarget as HTMLFormElement)
+        const newFilia = formData.get('assigned-filia') as string
 
-      onStateChange({ id: computerID, filia });
+        onStateChange({ id: computerID, filia: newFilia })
 
-      if (formRef.current) formRef.current.reset();
-
-    }}>
+        if (formRef.current) formRef.current.reset()
+      }}
+    >
       <section className="flex flex-col ">
         <label
           htmlFor="assigned-filia"
-          className="pb-2 text-sm text-muted-foreground  flex items-center justify-between"
+          className="flex items-center justify-between  pb-2 text-sm text-muted-foreground"
         >
-          Filia <span className='text-xs text-muted-foreground text-end"'>
-           ID {computerID}
-
+          Filia{' '}
+          <span className='text-end" text-xs text-muted-foreground'>
+            ID {computerID}
           </span>
         </label>
-        <Input name='assigned-filia' placeholder={filia.toString()} className={cn( computer.katalog === 1 && 'bg-border border-card')} />
+        <Input
+          name="assigned-filia"
+          placeholder={compFilia.toString()}
+          className={cn(computer.katalog === 1 && 'border-card bg-border')}
+        />
       </section>
     </form>
-  );
-};
+  )
+}
 export default ComputerAssignFilia

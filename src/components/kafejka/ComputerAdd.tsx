@@ -4,8 +4,8 @@ import { useAddComputer } from '../../hooks/mutations/useAddComputer'
 import { Plus } from 'lucide-react'
 
 
-const ComputerAdd = ({ url }: { url: string }) => {
-  const { onAdd, addPCMutation } = useAddComputer(url)
+const ComputerAdd = ({ filia }: { filia: string }) => {
+  const { onAdd, addPCMutation } = useAddComputer(filia)
 
   if (window.location.hostname.includes(IP_PRZEKIEROWANIE)) return null
 

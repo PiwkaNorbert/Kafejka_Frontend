@@ -1,15 +1,13 @@
+import ErrorCallback from '@/components/Errors/ErrorCallback'
+import ComputerAdd from '@/components/kafejka/ComputerAdd'
+import ComputerShutdownAll from '@/components/kafejka/ComputerShutdownAll'
+import { Button } from '@/components/ui/button'
+import { useComputerData } from '@/hooks/useComputerData'
+import { cn } from '@/lib/utils'
+import { ShutdownTimeProvider } from '@/providers/shutdown-time-provider'
+import { RefreshCw } from 'lucide-react'
 import { lazy, memo, Suspense, useMemo } from 'react'
 import { useParams } from 'react-router'
-import ErrorCallback from '../components/Errors/ErrorCallback'
-import { useComputerData } from '../hooks/useComputerData'
-import { cn } from '../lib/utils'
-
-import ComputerAdd from '../components/kafejka/ComputerAdd'
-
-import { RefreshCw } from 'lucide-react'
-import ComputerShutdownAll from '../components/kafejka/ComputerShutdownAll'
-import { Button } from '../components/ui/button'
-import { ShutdownTimeProvider } from '../providers/shutdown-time-provider'
 
 const ComputerDetailsSection = lazy(() =>
   import('../components/kafejka/computer-section.tsx').then((module) => ({
@@ -29,7 +27,6 @@ interface ComputerPageProps {
 const ComputerPage = memo(
   ({ showComps }: ComputerPageProps): React.ReactElement => {
     const { curFilia } = useParams()
-    const url = `http://192.168.15.220:8080/`
 
     const filia = curFilia ?? ('99' as string)
     const { data, status, isLoading, error, refetch, isFetching } =
@@ -58,9 +55,9 @@ const ComputerPage = memo(
           </Button>
 
           {showComps ? (
-            <ComputerShutdownAll url={url} />
+            <ComputerShutdownAll filia={filia} />
           ) : (
-            <ComputerAdd url={url} />
+            <ComputerAdd filia={filia} />
           )}
         </div>
         <main
@@ -88,8 +85,8 @@ const ComputerPage = memo(
                     <ComputerManagementSection
                       key={index}
                       computer={computer}
-                      url={url}
                       computerID={computerID}
+                      filia={filia}
                     />
                   )
                 }
@@ -99,7 +96,7 @@ const ComputerPage = memo(
                     key={index}
                     computer={computer}
                     index={index}
-                    url={url}
+                    filia={filia}
                     showComps={showComps}
                   />
                 )

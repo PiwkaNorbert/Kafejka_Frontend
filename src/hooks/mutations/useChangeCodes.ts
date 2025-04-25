@@ -1,8 +1,11 @@
+import { IP_POWROZNICZA } from "@/constants"
 import { changeCodeAction } from "../../fetch"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useCallback } from "react"
 import { useParams } from "react-router"
 import { toast } from "react-toastify"
+import { fetchApi } from "@/lib/custom-fetch"
+import { ebookQueryKeys } from "../options/ebook-options"
 // import { Minus, Plus } from 'lucide-react'
 
 
@@ -15,14 +18,12 @@ export const useChangeCodes = () => {
   const changeCodesMutation = useMutation({
     mutationFn: ({ action, type }: { action: 'add-codes' | 'sub-codes', type: "empik" | "legimi" }) => {
       const codeType = type === 'empik' ? 1 : 0;
-      const url = `http://192.168.200.40:8081/`
-      const codesUrl = `${url}${action}/${filia}/${codeType}`;
+      return fetchApi({ url: IP_POWROZNICZA, port: '8081', path: `/${action}/${filia}/${codeType}` })
 
-      return changeCodeAction(codesUrl)
     },
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ['codes']
+        queryKey: ebookQueryKeys.all
       });
     },
     onError: (error) => {

@@ -16,28 +16,15 @@ import {
 import { cn, formatDate, timeDifference } from '../../lib/utils'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
+import { IP_MATEUSZ } from '../../constants'
+import { fetchApi } from '../../lib/custom-fetch'
+import { computerQueryKeys } from '@/hooks/useComputerData'
 // Define types for mutation variables and context
-type MutationVariables = { url: string; kompid: number; label: string }
+type MutationVariables = { kompid: number; label: string }
 
 type MutationContext = { previousComputers: Computer[] | undefined }
 
-const updatePCLabel = async ({
-  url,
-  kompid,
-  label,
-}: MutationVariables): Promise<{ Status: string }> => {
-  const response = await fetch(`${url}pc-label/${kompid}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ label }),
-  })
-  if (!response.ok) {
-    throw new Error('Network response was not ok')
-  }
-  return response.json()
-}
-
-const ComputerIndex = memo(({ computer, index, url }: ComputerIndexProps) => {
+const ComputerIndex = memo(({ computer, index }: ComputerIndexProps) => {
   const computerID = computer.id
   const {
     timestamp_time: timestampTime,
@@ -59,17 +46,22 @@ const ComputerIndex = memo(({ computer, index, url }: ComputerIndexProps) => {
     MutationVariables,
     MutationContext
   >({
-    mutationFn: updatePCLabel,
+    mutationFn: ({ kompid, label }) =>
+      fetchApi(
+        { url: IP_MATEUSZ, port: '8080', path: `/pc-label/${kompid}` },
+        { method: 'POST', body: JSON.stringify({ label }) }
+      ),
     onMutate: async (variables) => {
-      await queryClient.cancelQueries({ queryKey: ['komps', curFilia] })
+      await queryClient.cancelQueries({
+        queryKey: computerQueryKeys.byFilia(curFilia),
+      })
 
-      const previousComputers = queryClient.getQueryData<Computer[]>([
-        'komps',
-        curFilia,
-      ])
+      const previousComputers = queryClient.getQueryData<Computer[]>(
+        computerQueryKeys.byFilia(curFilia)
+      )
 
       queryClient.setQueryData<Computer[] | undefined>(
-        ['komps', curFilia],
+        computerQueryKeys.byFilia(curFilia),
         (old) => {
           return old?.map((c) => {
             return c.id === variables.kompid
@@ -82,7 +74,12 @@ const ComputerIndex = memo(({ computer, index, url }: ComputerIndexProps) => {
       return { previousComputers }
     },
     onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: computerQueryKeys.byFilia(curFilia),
+      })
       if (data.Status === 'Success') {
+        setIsEditing(false)
+
         toast.success(
           `Komputer o ID ${computerID} ma teraz nazwę "${newLabel}".`,
           { toastId: computerID }
@@ -98,14 +95,10 @@ const ComputerIndex = memo(({ computer, index, url }: ComputerIndexProps) => {
 
       if (context?.previousComputers) {
         queryClient.setQueryData<Computer[]>(
-          ['komps', curFilia],
+          computerQueryKeys.byFilia(curFilia),
           context.previousComputers
         )
       }
-    },
-    onSettled: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['komps', curFilia] })
-      setIsEditing(false)
     },
   })
 
@@ -124,7 +117,7 @@ const ComputerIndex = memo(({ computer, index, url }: ComputerIndexProps) => {
     const form = new FormData(e.currentTarget)
     const label = form.get('label') as string
 
-    mutation.mutate({ url, kompid: computerID, label: label.trim() })
+    mutation.mutate({ kompid: computerID, label: label.trim() })
   }
   return (
     <div

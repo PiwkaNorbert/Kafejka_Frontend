@@ -1,7 +1,7 @@
+import { IP_MATEUSZ } from '@/constants'
+import { fetchApi } from '@/lib/custom-fetch'
+import { RequestBodyType, StateData } from '@/types/computer'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useParams } from 'react-router'
-import { useCallback } from 'react'
-import { toast } from 'react-toastify'
 import {
   CircleX,
   LibraryBig,
@@ -10,12 +10,12 @@ import {
   Power,
   RotateCw,
 } from 'lucide-react'
-import { RequestBodyType, StateData } from '@/types/computer'
-import { fetchApi } from '../../lib/custom-fetch'
+import { useCallback } from 'react'
+import { toast } from 'react-toastify'
+import { computerQueryKeys } from '../useComputerData'
 
-export function useChangeStateByIDMutation(url: string) {
+export function useChangeStateByIDMutation(filia: string) {
   const queryClient = useQueryClient()
-  const { curFilia } = useParams()
 
   const changeStateByIDMutation = useMutation({
     mutationFn: async (data: StateData) => {
@@ -34,7 +34,7 @@ export function useChangeStateByIDMutation(url: string) {
       }
 
       const res = await fetchApi(
-        { url: url, port: '', path: 'set-state' },
+        { url: IP_MATEUSZ, port: '8080', path: '/set-state' },
         { method: 'POST', body: JSON.stringify(requestBody) }
       )
 
@@ -42,7 +42,7 @@ export function useChangeStateByIDMutation(url: string) {
     },
 
     onSuccess: () => {
-      return queryClient.invalidateQueries({ queryKey: ['komps', curFilia] })
+      return queryClient.invalidateQueries({ queryKey: computerQueryKeys.byFilia(filia) })
     },
 
     onError: (error) => {
