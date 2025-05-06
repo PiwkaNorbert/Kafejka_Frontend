@@ -17,35 +17,34 @@ export const computerQueryKeys = {
 } satisfies Record<string, QueryKeys | ((...args: any[]) => QueryKeys)>
 
 export function useComputerData(filia: string | undefined) {
-  const queryClient = useQueryClient();
-  const ws = useWebSocket(filia || '');
-  console.log(ws);
+
+  // Only initialize WebSocket if we have a valid filia
+  useWebSocket(filia || '');
 
   return useQuery<ComputerArray>({
     queryKey: computerQueryKeys.byFilia(filia),
-    queryFn: ({ signal }) => fetchApi<ComputerArray>({ 
-      url: IP_MATEUSZ, 
-      port: '8080', 
-      path: `/komps/${filia}` 
-    }, { signal: signal as AbortSignal }),
-    placeholderData: queryClient.getQueryData(computerQueryKeys.byFilia(filia)),
-    staleTime: Infinity, // Don't refetch automatically since we're using WebSocket
-    refetchInterval: false, // Disable automatic refetching
-    retry: true,
-    retryDelay(attemptIndex) {
-      const delays = [1000, 5000, 15000, 30000];
-      return delays[attemptIndex] ?? 60000;
+    queryFn: ({ signal }) => {
+      // Return a promise that never resolves - we'll get data from WebSocket
+      return new Promise(() => {});
     },
-    refetchOnWindowFocus: false, // Disable refetch on window focus since we use WebSocket
-    refetchOnMount: true,
-    refetchOnReconnect: true,
+    placeholderData: (oldData) => oldData ?? [],
+    staleTime: Infinity, // Never mark as stale since WebSocket handles updates
+    gcTime: 5 * 60 * 1000, // 5 minutes
+    refetchInterval: false,
+    retry: false, // No retries needed since we're not actually fetching
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
     select: (data) => {
-      // Only update if there are actual changes
+      if (!Array.isArray(data)) {
+        console.warn('Received non-array data from server:', data);
+        return [];
+      }
       return data.map(computer => ({
         ...computer,
         online: Math.floor(computer.online / 30) * 30, // Round to nearest 30 seconds
       }));
     },
-    enabled: typeof filia === 'string',
+    enabled: Boolean(filia), // Only enable if filia is truthy
   });
 }

@@ -1,6 +1,6 @@
 export const IP_POWROZNICZA = "http://192.168.200.40"
 export const IP_PRZEKIEROWANIE = "http://192.168.200.37"
-export const IP_MATEUSZ = "http://192.168.15.160"
+export const IP_MATEUSZ = "http://192.168.15.220"
 export const TIME_ONLINE = 25
 
 
