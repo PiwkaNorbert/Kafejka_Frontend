@@ -1,6 +1,5 @@
 export type GetWifiCodesResponse = Code[]
 
-
 export interface Code {
   id: number
   nr: string

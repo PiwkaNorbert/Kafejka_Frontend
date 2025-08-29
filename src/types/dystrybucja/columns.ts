@@ -1,4 +1,3 @@
-
 export type ColumnResponse = {
   columns: string[]
   rows: Row[]

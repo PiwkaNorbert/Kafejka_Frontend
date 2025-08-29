@@ -1,26 +1,27 @@
-import { ComputerOnlineStatusProps } from '../../types/computer'
-import { useChangeStateByIDMutation } from '../../hooks/mutations/useChangeStateByIDMutation'
-import ComputerState from './ComputerState'
-import { useShutdownTime } from '../../hooks/useShutdownTime'
+import { useChangeStateByIDMutation } from '@/hooks/mutations/useChangeStateByIDMutation'
+import { useShutdownTime } from '@/hooks/useShutdownTime'
+import type { ComputerOnlineStatusProps } from '@/types/computer'
 import { memo } from 'react'
+import ComputerState from './ComputerState'
 
 const ComputerShutdown = memo(
-  ({ computer, url }: ComputerOnlineStatusProps) => {
-    const computerID = computer.id
+  ({ computer, filia }: ComputerOnlineStatusProps) => {
+    const { id, ol: isBlocked } = computer
 
     const { onStateChange, changeStateByIDMutation } =
-      useChangeStateByIDMutation(url)
+      useChangeStateByIDMutation(filia)
 
-    const { shutdownTime } = useShutdownTime(computerID)
+    const { shutdownTime } = useShutdownTime(id)
 
     const handleShutdown = () => {
-      onStateChange({ id: computerID, t: Number(shutdownTime), flag: 6 })
+      onStateChange({ id, t: Number(shutdownTime), flag: 6 })
     }
 
     return (
       <ComputerState
-        computerID={computerID}
+        computerID={id}
         computerFlag={6}
+        computerIsBlocked={isBlocked}
         handleClick={handleShutdown}
         isPending={changeStateByIDMutation.isPending}
       />

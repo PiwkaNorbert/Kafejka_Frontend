@@ -1,5 +1,12 @@
 import { lazy, useEffect } from 'react'
-import { Navigate, Route, BrowserRouter as Router, Routes, useNavigate, useParams } from 'react-router'
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+  useNavigate,
+  useParams,
+} from 'react-router'
 import './App.css'
 import Headers from './components/Header.tsx'
 import Layout from './components/Layout.tsx'
@@ -15,21 +22,21 @@ const WifiPerms = lazy(() => import('./pages/WifiPerms.tsx'))
 const FiliaWrapper = () => {
   const { curFilia } = useParams()
   const navigate = useNavigate()
-  
+
   useEffect(() => {
-    if (!curFilia) return;
+    if (!curFilia) return
 
     const storedFilia = localStorage.getItem('curFilia')
     if (!storedFilia) {
-
       localStorage.setItem('curFilia', curFilia)
     } else if (storedFilia !== curFilia) {
-
       const isRestrictedAddress = window.location.hostname.includes('200.40')
       if (isRestrictedAddress) {
-        navigate(`/${storedFilia}${window.location.pathname.substring(curFilia.length + 1)}`, { replace: true })
+        navigate(
+          `/${storedFilia}${window.location.pathname.substring(curFilia.length + 1)}`,
+          { replace: true }
+        )
       } else {
-
         localStorage.setItem('curFilia', curFilia)
       }
     }
@@ -43,7 +50,10 @@ const FiliaWrapper = () => {
       <Route path="ebooki" element={<LegimiCodes />} />
       <Route path="zgloszenia" element={<TicketPage />} />
       <Route path="wifi" element={<WifiPerms />} />
-      <Route path="*" element={<Navigate to={`/${curFilia}/informacje`} replace />} />
+      <Route
+        path="*"
+        element={<Navigate to={`/${curFilia}/informacje`} replace />}
+      />
     </Routes>
   )
 }
@@ -67,13 +77,15 @@ export default App
 
 const Dashboard = () => {
   const navigate = useNavigate()
-  
+
   useEffect(() => {
     const storedNavTitle = localStorage.getItem('navTitle')
     const storedFilia = localStorage.getItem('curFilia')
-    
+
     if (storedNavTitle && storedFilia) {
-      const index = navLinks.findIndex((link) => link.label.toLowerCase() === storedNavTitle.toLowerCase())
+      const index = navLinks.findIndex(
+        (link) => link.label.toLowerCase() === storedNavTitle.toLowerCase()
+      )
       if (index !== -1) {
         navigate(`/${storedFilia}/${navLinks[index].to}`, { replace: true })
       }

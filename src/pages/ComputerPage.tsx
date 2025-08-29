@@ -25,7 +25,7 @@ interface ComputerPageProps {
 }
 
 const ComputerPage = memo(
-  ({ showComps }: ComputerPageProps): React.ReactElement => {
+  ({ showComps = true }: ComputerPageProps): React.ReactElement => {
     const { curFilia } = useParams()
 
     const filia = curFilia ?? ('99' as string)

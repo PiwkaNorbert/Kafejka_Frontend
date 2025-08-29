@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { Computer } from '@/types/computer'
+import type { Computer } from '@/types/computer'
 import { Input } from '@/components/ui/input'
 import { useChangeStateByIDMutation } from '@/hooks/mutations/useChangeStateByIDMutation'
 import { cn } from '@/lib/utils'

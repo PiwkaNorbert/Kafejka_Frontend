@@ -1,6 +1,5 @@
-import { IP_MATEUSZ } from '@/constants'
-import { fetchApi } from '@/lib/custom-fetch'
-import { RequestBodyType, StateData, Computer } from '@/types/computer'
+import { changeStateByIDAction } from '@/mutations'
+import type { Computer, RequestBodyType, StateData } from '@/types/computer'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   CircleX,
@@ -10,7 +9,6 @@ import {
   Power,
   RotateCw,
 } from 'lucide-react'
-import { useCallback } from 'react'
 import { toast } from 'react-toastify'
 import { computerQueryKeys } from '../useComputerData'
 
@@ -32,13 +30,11 @@ export function useChangeStateByIDMutation(filia: string) {
       if (data.t !== undefined) {
         requestBody['t'] = data.t
       }
+      if (data.ol !== undefined) {
+        requestBody['ol'] = data.ol
+      }
 
-      const res = await fetchApi(
-        { url: IP_MATEUSZ, port: '8080', path: '/set-state' },
-        { method: 'POST', body: JSON.stringify(requestBody) }
-      )
-
-      return res as Computer[]
+      return changeStateByIDAction(requestBody)
     },
 
     onMutate: async (newData) => {
@@ -62,9 +58,14 @@ export function useChangeStateByIDMutation(filia: string) {
               return {
                 ...comp,
                 ...(newData.flag !== undefined && { f: newData.flag }),
-                ...(newData.filia !== undefined && { filia: Number(newData.filia) }),
-                ...(newData.katalog !== undefined && { katalog: newData.katalog }),
+                ...(newData.filia !== undefined && {
+                  filia: Number(newData.filia),
+                }),
+                ...(newData.katalog !== undefined && {
+                  katalog: newData.katalog,
+                }),
                 ...(newData.t !== undefined && { t: newData.t }),
+                ...(newData.ol !== undefined && { ol: newData.ol }),
               }
             }
             return comp
@@ -95,7 +96,7 @@ export function useChangeStateByIDMutation(filia: string) {
       )
     },
 
-    onError: (error, variables, context) => {
+    onError: (error, _, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousData) {
         queryClient.setQueryData(
@@ -111,20 +112,18 @@ export function useChangeStateByIDMutation(filia: string) {
     },
   })
 
-  const onStateChange = ({ id, flag, filia, katalog, t }: StateData) => {
+  const onStateChange = ({ id, flag, filia, katalog, t, ol }: StateData) => {
     // mutate based by the input value
     changeStateByIDMutation.mutate(
-      { id, flag, filia, katalog, t },
+      { id, flag, filia, katalog, t, ol } as StateData,
       {
         onSuccess: () => {
-       
-
-          if (flag === 0 || flag === 1) {
+          if (ol !== undefined) {
             toast.success(
-              `Komputer o ID ${id} został ${flag === 0 ? 'zablokowany' : 'odblokowany'}`,
+              `Komputer o ID ${id} został ${ol === 0 ? 'zablokowany' : 'odblokowany'}`,
               {
-                toastId: flag === 0 ? `Locked-PC-${id}` : `Unlocked-PC-${id}`,
-                icon: () => (flag === 0 ? <Lock /> : <LockOpen />),
+                toastId: ol === 0 ? `Locked-PC-${id}` : `Unlocked-PC-${id}`,
+                icon: () => (ol === 0 ? <Lock /> : <LockOpen />),
               }
             )
           } else if (flag === 2) {
@@ -138,27 +137,22 @@ export function useChangeStateByIDMutation(filia: string) {
               toastId: `Shudown-PC-${id}`,
             })
           } else if (filia !== undefined) {
-            // Assuming filia is passed to this function
             toast.success(
               `Komputer o ID ${id} został przypisany do filii nr ${filia}`,
               {
                 toastId: `Assigned-PC-${id}-to-Filia-${filia}`,
-                // Assuming you have an icon for assignment, or you can choose not to have an icon
-                icon: <LibraryBig />, // Replace YourAssignmentIcon with your actual icon component
+                icon: <LibraryBig />,
               }
             )
           } else if (katalog !== undefined) {
-            // Assuming katalog is passed to this function
             toast.success(
               `Komputer o ID ${id} został przypisany do katalogu ${katalog}`,
               {
                 toastId: `Assigned-PC-${id}-to-Katalog-${katalog}`,
-                // Assuming you have an icon for assignment, or you can choose not to have an icon
-                icon: <LibraryBig />, // Replace YourAssignmentIcon with your actual icon component
+                icon: <LibraryBig />,
               }
             )
           } else if (t !== undefined) {
-            // Assuming t is passed to this function
             toast.success(`Za ${t} minut nastąpi wyłączenie komputera.`, {
               toastId: `timeout-${id}-${t}`,
             })

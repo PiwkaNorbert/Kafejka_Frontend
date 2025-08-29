@@ -26,12 +26,12 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { IP_PRZEKIEROWANIE } from '@/constants'
 import { useFilters } from '@/hooks/useFilters'
-import { Codes, GetCodesResponse } from '@/types/codes'
+import type { Codes, GetCodesResponse } from '@/types/codes'
 import {
   useMutation,
   useQuery,
   useQueryClient,
-  UseQueryResult,
+  type UseQueryResult,
 } from '@tanstack/react-query'
 import { Pencil } from 'lucide-react'
 import { toast } from 'react-toastify'

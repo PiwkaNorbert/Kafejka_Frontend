@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { Computer } from '@/types/computer'
+import type { Computer } from '@/types/computer'
 import { Input } from '../ui/input'
 import { useChangeStateByIDMutation } from '../../hooks/mutations/useChangeStateByIDMutation'
 import { toast } from 'react-toastify'
@@ -59,9 +59,7 @@ const ComputerKatalog = ({
         <Input
           name="katalog"
           placeholder={katalog.toString()}
-          className={cn(
-            katalog === 1 && 'border-card bg-border'
-          )}
+          className={cn(katalog === 1 && 'border-card bg-border')}
         />
       </section>
     </form>

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { CategoryResponse } from '../types/categories'
+import type { CategoryResponse } from '../types/categories'
 import { fetchTicketCategoryData } from '../fetch'
 
 const useTicketCategoryData = (filia: string) => {

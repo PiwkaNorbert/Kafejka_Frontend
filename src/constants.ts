@@ -1,9 +1,24 @@
-export const IP_POWROZNICZA = "http://192.168.200.40"
-export const IP_PRZEKIEROWANIE = "http://192.168.200.37"
-export const IP_MATEUSZ = "http://192.168.15.220"
-export const TIME_ONLINE = 25
+// Base IP address (without port)
+export const BASE_IP = 'http://192.168.200.40'
+export const IP_PRZEKIEROWANIE = 'http://192.168.200.37'
 
+// Port configurations
+export const PORTS = {
+  KAFEJKA: '8005',
+  TASKER: '8080',
+  EBOOKI: '8081',
+  WS: '8888',
+  // Add more ports as needed
+}
 
+// Default port to use if none specified
+export const DEFAULT_PORT = PORTS.KAFEJKA
+
+// Full URLs with IP and port
+export const IP_KAFEJKA = `${BASE_IP}:${PORTS.KAFEJKA}`
+export const IP_EBOOKI = `${BASE_IP}:${PORTS.EBOOKI}`
+export const IP_TASKER = `${BASE_IP}:${PORTS.TASKER}`
+export const IP_WS = `${BASE_IP}:${PORTS.WS}`
 
 export const statesObject: { id: number; name: string; style?: string }[] = [
   {
@@ -60,5 +75,4 @@ export const statesObject: { id: number; name: string; style?: string }[] = [
     style:
       '!bg-emerald-100 text-emerald-500 border border-emerald-300 hover:!bg-opacity-70 hover:!text-emerald-500 hover:!border-emerald-300/80 dark:!bg-emerald-400/10 dark:!text-emerald-300 dark:!border-emerald-400/10 dark:hover:!bg-emerald-400/10 dark:hover:!text-emerald-600 dark:hover:!border-emerald-400/25',
   },
-
 ]

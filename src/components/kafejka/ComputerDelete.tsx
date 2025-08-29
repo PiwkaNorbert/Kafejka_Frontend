@@ -1,8 +1,7 @@
+import { deleteComputerByIdAction } from '@/mutations'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'react-router'
 import { toast } from 'react-toastify'
-import { IP_MATEUSZ } from '../../constants'
-import { fetchApi } from '../../lib/custom-fetch'
 import { Button } from '../ui/button'
 
 interface ComputerDeleteProps {
@@ -19,12 +18,7 @@ const ComputerDelete = ({ computerID, filia }: ComputerDeleteProps) => {
     Error,
     number
   >({
-    mutationFn: (compId) =>
-      fetchApi({
-        url: IP_MATEUSZ,
-        port: '8080',
-        path: `/delete-pc/${filia}/${compId}`,
-      }),
+    mutationFn: (compId) => deleteComputerByIdAction(filia, compId),
     onSuccess: () => {
       toast.success('Komputer został usunięty')
       // queryClient.setQueryData({ queryKey: ['komps', curFilia] }, old => {

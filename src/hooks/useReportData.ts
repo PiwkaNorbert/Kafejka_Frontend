@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { fetchReportColumnData, fetchReportData } from '../fetch'
-import { ColumnResponse } from '../types/dystrybucja/columns'
-import { MakulatoraResponse } from '../types/dystrybucja/raports'
+import type { ColumnResponse } from '../types/dystrybucja/columns'
+import type { MakulatoraResponse } from '../types/dystrybucja/raports'
 
 const useReportData = (filia: string) => {
   return useQuery<MakulatoraResponse>({
@@ -19,4 +19,3 @@ export const useReportColumnData = (filia: string, raportID: string | null) => {
 }
 
 export default useReportData
-

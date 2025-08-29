@@ -20,7 +20,6 @@ export function OnboardingTutorial({
 }) {
   const [currentStep, setCurrentStep] = useState(0)
 
-
   const handleAction = (step: TutorialStep) => {
     if (step.actionType === 'setEditing') {
       setIsEditing(1, true)
@@ -33,7 +32,7 @@ export function OnboardingTutorial({
     if (currentStep < steps.length - 1) {
       const nextStepIndex = currentStep + 1
       setCurrentStep(nextStepIndex)
-      if (steps[nextStepIndex].actionType) {
+      if (steps[nextStepIndex]?.actionType) {
         handleAction(steps[nextStepIndex] as TutorialStep)
       }
     } else {
@@ -45,7 +44,7 @@ export function OnboardingTutorial({
     if (currentStep > 0) {
       const prevStepIndex = currentStep - 1
       setCurrentStep(prevStepIndex)
-      if (steps[prevStepIndex].actionType) {
+      if (steps[prevStepIndex]?.actionType) {
         handleAction(steps[prevStepIndex] as TutorialStep)
       }
     }
@@ -56,8 +55,8 @@ export function OnboardingTutorial({
     onComplete()
   }
 
-  const currentInstruction = steps[currentStep].instruction
-  const highlightDimensions = steps[currentStep].highlightDimensions || {
+  const currentInstruction = steps[currentStep]?.instruction
+  const highlightDimensions = steps[currentStep]?.highlightDimensions || {
     width: '140px',
     height: '55px',
   }
@@ -69,8 +68,8 @@ export function OnboardingTutorial({
         <div
           className="absolute rounded-md bg-transparent"
           style={{
-            left: steps[currentStep].position.x,
-            top: steps[currentStep].position.y,
+            left: steps[currentStep]?.position.x,
+            top: steps[currentStep]?.position.y,
             width: highlightDimensions.width,
             height: highlightDimensions.height,
             boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.6)',
@@ -82,8 +81,8 @@ export function OnboardingTutorial({
       <div
         className="pointer-events-none absolute  rounded-md border-4 border-red-500 bg-transparent"
         style={{
-          left: steps[currentStep].position.x,
-          top: steps[currentStep].position.y,
+          left: steps[currentStep]?.position?.x,
+          top: steps[currentStep]?.position?.y,
           width: highlightDimensions.width,
           height: highlightDimensions.height,
         }}
@@ -92,9 +91,9 @@ export function OnboardingTutorial({
       {/* Instruction box */}
       <div
         className="absolute w-96 rounded-lg bg-white p-4 shadow-lg"
-        style={{ left: currentInstruction.x, top: currentInstruction.y }}
+          style={{ left: currentInstruction?.x, top: currentInstruction?.y }}
       >
-        <p className="mb-4 text-muted-foreground">{currentInstruction.text}</p>
+        <p className="mb-4 text-muted-foreground">{currentInstruction?.text}</p>
         <div className="flex justify-between">
           <Button onClick={prevStep} disabled={currentStep === 0}>
             Poprzedni krok

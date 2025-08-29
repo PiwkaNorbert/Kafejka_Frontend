@@ -1,6 +1,4 @@
-import { IP_POWROZNICZA } from '@/constants'
-import { fetchApi } from '@/lib/custom-fetch'
-import { TaskListResponse } from '@/types/unauthed-task-list'
+import { fetchUnauthorizedTasks } from '@/fetch'
 import { queryOptions } from '@tanstack/react-query'
 
 const KEYS = {
@@ -14,9 +12,9 @@ export const taskListQueryKeys = {
   byFilia: (filia: string) => [KEYS.BASE, filia] as const,
 } satisfies Record<string, QueryKeys | ((...args: any[]) => QueryKeys)>
 
-
-export const taskListOptions = (filia: string) => queryOptions({
-  queryKey: taskListQueryKeys.byFilia(filia),
-  queryFn: ({ signal }) => fetchApi<TaskListResponse>({ url: IP_POWROZNICZA, port: '8080', path: `/unauthorized-tasks/${filia}` }, { signal: signal as AbortSignal }),
-  enabled: typeof filia === 'string',
-})
+export const taskListOptions = (filia: string) =>
+  queryOptions({
+    queryKey: taskListQueryKeys.byFilia(filia),
+    queryFn: ({ signal }) => fetchUnauthorizedTasks(filia, signal),
+    enabled: typeof filia === 'string',
+  })

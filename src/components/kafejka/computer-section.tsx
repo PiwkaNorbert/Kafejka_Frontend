@@ -5,7 +5,7 @@ import ComputerShutdownTimeoutPanel from './ComputerShutdownTimeoutPanel'
 import ComputerRestart from './ComputerRestart'
 import ComputerKatalog from './ComputerKatalog'
 import ComputerLogout from './ComputerLogout'
-import { Computer } from '@/types/computer'
+import type { Computer } from '@/types/computer'
 import { memo } from 'react'
 import { cn } from '@/lib/utils'
 import ComputerDelete from './ComputerDelete'
@@ -55,13 +55,13 @@ export const ComputerDetailsSection = memo(
         {showComps ? (
           <>
             <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-3 sm:gap-x-4 ">
-              <ComputerOnlineStatus computer={computer} />
-              <ComputerLogout computer={computer} />
+              <ComputerOnlineStatus computer={computer} filia={filia} />
+              <ComputerLogout computer={computer} filia={filia} />
             </div>
             <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-3 sm:gap-x-4">
-              <ComputerShutdown computer={computer} />
+              <ComputerShutdown computer={computer} filia={filia} />
               <ComputerRestart computer={computer} filia={filia} />
-              <ComputerShutdownTimeoutPanel computer={computer} index={index} />
+              <ComputerShutdownTimeoutPanel computer={computer} />
             </div>
           </>
         ) : null}

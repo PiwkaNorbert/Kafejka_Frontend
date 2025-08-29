@@ -3,13 +3,11 @@ module.exports = {
   env: { browser: true, es2020: true },
   extends: [
     'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
     'plugin:tailwindcss/recommended',
-    'prettier'
+    'prettier',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
-  parser: '@typescript-eslint/parser',
+  ignorePatterns: ['dist', '.eslintrc.cjs', 'node_modules'  ],
   plugins: ['react-refresh'],
   rules: {
     'react-refresh/only-export-components': [
@@ -18,9 +16,9 @@ module.exports = {
     ],
   },
   overrides: [
-  {
-    files: ['*.ts', '*.tsx', '*.js'],
-    parser: '@typescript-eslint/parser',
-  },
-],
+    {
+      files: ['*.ts', '*.tsx', '*.js'],
+      parser: '@typescript-eslint/parser',
+    },
+  ],
 }

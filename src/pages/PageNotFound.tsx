@@ -1,6 +1,6 @@
 const PageNotFound = () => {
-  const nav = document.querySelector('.css-4nt3dv');
-  const navHeight = nav?.getBoundingClientRect()?.height;
+  const nav = document.querySelector('.css-4nt3dv')
+  const navHeight = nav?.getBoundingClientRect()?.height
 
   return (
     <>
@@ -22,7 +22,7 @@ const PageNotFound = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default PageNotFound;
+export default PageNotFound

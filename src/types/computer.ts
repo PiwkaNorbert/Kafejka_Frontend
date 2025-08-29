@@ -1,11 +1,15 @@
-
 export type ComputerArray = Computer[]
 
+export interface Flags {
+  f: 2 | 3 | 5 | 6
+}
 
-export interface Computer {
+interface OnlineStatus {
+  ol: 1 | 0
+}
+
+export interface Computer extends Flags, OnlineStatus {
   id: number
-  f: 0 | 1 | 2 | 3 | 5 | 6 
-  ol: number
   t: number
   online: number
   label: string
@@ -13,7 +17,7 @@ export interface Computer {
   filia: number
   timestamp_time: number | null
   katalog: number
-  shutdown_timeout: string
+  is_connected: number
 }
 
 export interface ComputerIndexProps {
@@ -23,30 +27,33 @@ export interface ComputerIndexProps {
 }
 export interface ComputerShutdownProps {
   computerID: number
+  filia: string
   online: number
 }
+
 export interface TimerUntilShutdownProps {
   computerID: number
   timestampTime: number | null
 }
 export interface ComputerOnlineStatusProps {
   computer: Computer
+  filia: string
 }
 
 export interface StateData {
-  id: number;
-  flag?: 0 | 1 | 2 | 3 | 6;
-  filia?: string;
-  katalog?: 0 | 1;
-  t?: number;
-
+  id: number
+  flag?: Flags['f']
+  filia?: string
+  katalog?: 0 | 1
+  t?: number
+  ol?: 0 | 1
 }
 
 export type RequestBodyType = {
-  id: number;
-  f?: 0 | 1 | 2 | 3 | 6; 
-  filia?: string; 
-  katalog?: 0 | 1;
-  t?: number;
-
-};
+  id: number
+  f?: Flags['f']
+  filia?: string
+  katalog?: 0 | 1
+  t?: number
+  ol?: 0 | 1
+}

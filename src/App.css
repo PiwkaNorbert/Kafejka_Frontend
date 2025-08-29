@@ -24,7 +24,7 @@
     --primary: 216 70% 56%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 97 46% 41%;  /* #5C9738 */ 
+    --secondary: 97 46% 41%; /* #5C9738 */
     --secondary-foreground: 222.2 47.4% 11.2%;
 
     --tertiary: 222.2 47.4% 11.2%;
@@ -33,7 +33,7 @@
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
-    --destructive: 22 67% 54%; /* #D8753C */ 
+    --destructive: 22 67% 54%; /* #D8753C */
     --destructive-foreground: 210 40% 98%;
 
     --ring: 215 20.2% 65.1%;
@@ -60,11 +60,10 @@
     --card: 224 0% 6%;
     --card-foreground: 213 31% 91%;
 
-
     --primary: 216 70% 56%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 97 46% 41%;  /* #5C9738 */ 
+    --secondary: 97 46% 41%; /* #5C9738 */
     --secondary-foreground: 222.2 47.4% 11.2%;
 
     --tertiary: 222.2 47.4% 11.2%;
@@ -73,7 +72,7 @@
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
-    --destructive: 22 67% 54%; /* #D8753C */ 
+    --destructive: 22 67% 54%; /* #D8753C */
     --destructive-foreground: 210 40% 98%;
 
     --ring: 216 34% 17%;
@@ -88,7 +87,9 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
   }
 }
 
@@ -96,17 +97,16 @@
   font-family: 'Ubuntu';
   font-style: normal;
   font-weight: 400;
-  src: local('Ubuntu'), url("/fonts/Ubuntu-Regular.tff") format('tff');
+  src:
+    local('Ubuntu'),
+    url('/fonts/Ubuntu-Regular.tff') format('tff');
 }
-
-
 
 :root {
   /* --green: #2e7d32; */
   /* --bg-green-400-72: hsl(141.89deg 69.16% 58.04% / 72%); */
 
   /* color: hsl(212, 63%, 41%); */
-
 
   /* --red: #d32f2f; */
   /* --bg-red-400-72: hsl(0deg 91% 71% / 72%); */
@@ -156,20 +156,31 @@ html[data-theme='dark'] {
   /* stolen from firefox */
 }
 html {
-
   box-sizing: border-box;
 }
 body {
   /* background-color: var(--body-bg-color) !important; */
-    font-family: Ubuntu, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    Oxygen, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family:
+    Ubuntu,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Cantarell,
+    'Open Sans',
+    'Helvetica Neue',
+    sans-serif;
 }
 
 .information-container {
   background-color: var(--white);
   padding: 16px;
-  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
-    0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0px 2px 2px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 5px 0px rgba(0, 0, 0, 0.12);
   border-radius: 12px;
   margin: 8px;
 }
@@ -199,7 +210,6 @@ body {
   transform: all 0.2s;
 }
 
-
 .info__header--1 {
   font-size: 4.8rem;
 }
@@ -222,8 +232,6 @@ body {
   font-size: 1.6rem;
 }
 
-
-
 .highlight {
   background-color: rgba(107, 114, 128, 0.2);
   border-radius: 0.25rem;
@@ -236,7 +244,6 @@ body {
 
   /* border border-gray-500 border-opacity-20 bg-gray-500 bg-opacity-10 rounded p-1 */
 }
-
 
 .navigation {
   display: none;
@@ -333,10 +340,9 @@ button.Mui-selected img.feather {
   filter: grayscale(0);
 }
 
-.css-1pw81iq-MuiInputBase-root-MuiFilledInput-root{
+.css-1pw81iq-MuiInputBase-root-MuiFilledInput-root {
   border-radius: calc(var(--radius) - 2px);
 }
-
 
 .sidebar {
   position: fixed;
@@ -345,7 +351,6 @@ button.Mui-selected img.feather {
   transition: right 0.3s ease-in-out;
 }
 .sidebar-toggle {
-
   z-index: 1;
   transition: right 0.3s ease-in-out;
 }
@@ -379,19 +384,16 @@ button.Mui-selected img.feather {
   grid-template-rows: auto 1fr;
 }
 
-
-
-
 .prose > ul,
 .prose > ol,
-.prose > menu{
+.prose > menu {
   padding: inherit !important;
   margin: 1.25rem 1rem 1.25rem 0.4rem;
   list-style-type: disc !important;
   list-style-position: outside;
 
   li {
-  padding: inherit !important;
+    padding: inherit !important;
 
     margin-top: 0.25em;
     margin-bottom: 0.25em;
@@ -405,8 +407,6 @@ button.Mui-selected img.feather {
 
 .prose > ul ul,
 .prose > ol ol {
-list-style-type: circle !important;
-margin-left: 1.5rem;
+  list-style-type: circle !important;
+  margin-left: 1.5rem;
 }
-
-

@@ -1,22 +1,16 @@
-import { IP_MATEUSZ } from '@/constants'
+import { Button } from '@/components/ui/button'
+import { computerQueryKeys } from '@/hooks/useComputerData'
+import { shutdownAllComputersAction } from '@/mutations'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Power } from 'lucide-react'
 import { toast } from 'react-toastify'
-import { Button } from '@/components/ui/button'
-import { fetchApi } from '@/lib/custom-fetch'
-import { computerQueryKeys } from '@/hooks/useComputerData'
 
 const ComputerShutdownAll = ({ filia }: { filia: string }) => {
   // Send a get to shutdown all computers
   const queryClient = useQueryClient()
 
   const { mutate: shutdownAllComputers, isPending } = useMutation({
-    mutationFn: () =>
-      fetchApi({
-        url: IP_MATEUSZ,
-        port: '8080',
-        path: `/shutdown-all/${filia}`,
-      }),
+    mutationFn: () => shutdownAllComputersAction(filia),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: computerQueryKeys.byFilia(filia),

@@ -1,24 +1,23 @@
-import { Computer, ComputerIndexProps } from '../../types/computer'
+import type { Computer, ComputerIndexProps } from '@/types/computer'
 import TimerUntilShutdown from '../TimerUntilShutdown'
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { computerQueryKeys } from '@/hooks/useComputerData'
+import { cn, formatDate } from '@/lib/utils'
+import { updateComputerLabelAction } from '@/mutations'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useClickAway } from '@uidotdev/usehooks'
 import { Check, Wifi, WifiOff, X } from 'lucide-react'
 import { memo, useState } from 'react'
 import { useParams } from 'react-router'
 import { toast } from 'react-toastify'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '../../components/ui/tooltip'
-import { cn, formatDate, timeDifference } from '../../lib/utils'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
-import { IP_MATEUSZ } from '../../constants'
-import { fetchApi } from '../../lib/custom-fetch'
-import { computerQueryKeys } from '@/hooks/useComputerData'
 // Define types for mutation variables and context
 type MutationVariables = { kompid: number; label: string }
 
@@ -31,7 +30,9 @@ const ComputerIndex = memo(({ computer, index }: ComputerIndexProps) => {
     katalog,
     label,
     last_fetch: lastFetch,
+    is_connected: isConnected,
   } = computer
+
   const [newLabel, setNewLabel] = useState(() => label || '')
   const [isEditing, setIsEditing] = useState<boolean>(false)
   const { curFilia } = useParams()
@@ -46,11 +47,7 @@ const ComputerIndex = memo(({ computer, index }: ComputerIndexProps) => {
     MutationVariables,
     MutationContext
   >({
-    mutationFn: ({ kompid, label }) =>
-      fetchApi(
-        { url: IP_MATEUSZ, port: '8080', path: `/pc-label/${kompid}` },
-        { method: 'POST', body: JSON.stringify({ label }) }
-      ),
+    mutationFn: ({ kompid, label }) => updateComputerLabelAction(kompid, label),
     onMutate: async (variables) => {
       await queryClient.cancelQueries({
         queryKey: computerQueryKeys.byFilia(curFilia),
@@ -102,8 +99,7 @@ const ComputerIndex = memo(({ computer, index }: ComputerIndexProps) => {
     },
   })
 
-  const isOnline = timeDifference(lastFetch)
-  const offlineColor = isOnline
+  const offlineColor = isConnected
     ? 'text-secondary  hover:text-secondary'
     : 'text-destructive  hover:text-destructive'
   const computerName = katalog
@@ -192,14 +188,14 @@ const ComputerIndex = memo(({ computer, index }: ComputerIndexProps) => {
                 : 'bg-border hover:bg-primary/15'
             )}
           >
-            {isOnline ? (
+            {isConnected ? (
               <Wifi size={20} className="group-hover:animate-pulse" />
             ) : (
               <WifiOff size={20} className="group-hover:animate-pulse" />
             )}
           </TooltipTrigger>
           <TooltipContent>
-            {isOnline ? 'On-line' : 'Off-line'}{' '}
+            {isConnected ? 'On-line' : 'Off-line'}{' '}
             <span className="text-xs">({formatDate(lastFetch)})</span>
           </TooltipContent>
         </Tooltip>

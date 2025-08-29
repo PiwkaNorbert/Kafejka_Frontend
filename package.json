@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "lint": "eslint . --ext .ts,.tsx --report-unused-disable-directives --max-warnings 0",
     "lint:debug": "eslint ./src --debug",
-    "lint:fix": "eslint ./src --fix"
+    "lint:fix": "eslint ./src --fix",
+    "format:check": "prettier --check .",
+    "format": "prettier --write . --list-different"
   },
   "dependencies": {
     "@emotion/react": "latest",
@@ -50,9 +52,11 @@
     "@types/node": "^22.15.2",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
+    "@typescript-eslint/eslint-plugin": "^8.40.0",
     "@vitejs/plugin-react": "^4.4.1",
     "autoprefixer": "^10.4.19",
     "eslint": "^9.25.0",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",

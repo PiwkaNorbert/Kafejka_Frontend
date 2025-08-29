@@ -1,105 +1,132 @@
-import { useEffect, useRef } from 'react';
-import { IP_MATEUSZ } from '@/constants';
-import { useQueryClient } from '@tanstack/react-query';
-import { computerQueryKeys } from './useComputerData';
+import { IP_WS } from '@/constants'
+import { useQueryClient } from '@tanstack/react-query'
+import { useEffect, useRef } from 'react'
+import { computerQueryKeys } from './useComputerData'
+import type { ComputerArray } from '@/types/computer'
 
 export function useWebSocket(filia: string) {
-  const queryClient = useQueryClient();
-  const reconnectAttempts = useRef(0);
-  const maxReconnectAttempts = 5;
-  const wsRef = useRef<WebSocket | null>(null);
-  const initialDataReceived = useRef(false);
+  const queryClient = useQueryClient()
+  const reconnectAttempts = useRef(0)
+  const maxReconnectAttempts = 1
+  const wsRef = useRef<WebSocket | null>(null)
+  const initialDataReceived = useRef(false)
 
   const connect = () => {
-    if (!filia) return;
+    if (!filia) return
 
     try {
-      console.log('Attempting to connect to WebSocket...');
-      const ws = new WebSocket(`ws://${IP_MATEUSZ.replace('http://', '')}:8080/ws/panel/${filia}`);
-      wsRef.current = ws;
+      console.log('Attempting to connect to WebSocket...')
+      const ws = new WebSocket(
+        `ws://${IP_WS.replace('http://', '')}/ws/panel/${filia}`
+      )
+      wsRef.current = ws
 
       ws.onopen = () => {
-        console.log('✅ Connected to WebSocket server');
-        reconnectAttempts.current = 0; // Reset attempts on successful connection
-      };
+        console.log('✅ Connected to WebSocket server')
+        reconnectAttempts.current = 0 // Reset attempts on successful connection
+      }
 
       ws.onmessage = (event) => {
+
         try {
-          const data = JSON.parse(event.data);
-          
+          const data = JSON.parse(event.data) as ComputerArray
+
           // Set initial loading state to false on first message
           if (!initialDataReceived.current) {
-            initialDataReceived.current = true;
+            initialDataReceived.current = true
           }
 
           // Update query data with the WebSocket data
           queryClient.setQueryData(
             computerQueryKeys.byFilia(filia),
-            (oldData: any) => {
-              if (!Array.isArray(data)) {
-                console.warn('Received non-array data from WebSocket:', data);
-                return oldData ?? [];
-              }
-              
-              if (!oldData) return data;
+            (oldData: ComputerArray) => {
 
-              return data.map(newComputer => ({
+              if (!oldData) return data
+
+              return data.map((newComputer) => ({
                 ...newComputer,
                 online: Math.floor(newComputer.online / 30) * 30, // Round to nearest 30 seconds
-              }));
+              }))
             }
-          );
+          )
         } catch (error) {
-          console.error('Error parsing WebSocket message:', error);
+          console.error('Error parsing WebSocket message:', error)
         }
-      };
-
-      ws.onerror = (error) => {
-        console.error('❌ WebSocket error:', error);
-        // Set empty array as initial data on error if we haven't received any data yet
-        if (!initialDataReceived.current) {
-          queryClient.setQueryData(computerQueryKeys.byFilia(filia), []);
-        }
-      };
+      }
 
       ws.onclose = () => {
+        let delay: number
+
         if (reconnectAttempts.current < maxReconnectAttempts) {
-          const delay = Math.min(1000 * Math.pow(2, reconnectAttempts.current), 10000);
-          console.warn(`⚠️ WebSocket disconnected. Reconnecting in ${delay/1000} seconds... (Attempt ${reconnectAttempts.current + 1}/${maxReconnectAttempts})`);
-          reconnectAttempts.current++;
-          setTimeout(() => {
-            if (wsRef.current?.readyState === WebSocket.CLOSED) {
-              connect();
-            }
-          }, delay);
+          // Use exponential backoff for initial attempts
+          delay = Math.min(
+            1000 * Math.pow(2, reconnectAttempts.current),
+            10000
+          )
+          console.warn(
+            `⚠️ WebSocket disconnected. Reconnecting in ${delay / 1000} seconds... (Attempt ${reconnectAttempts.current + 1}/${maxReconnectAttempts})`
+          )
         } else {
-          console.error('❌ Max reconnection attempts reached. Please refresh the page.');
-          // Set empty array as data if we haven't received any data yet
-          if (!initialDataReceived.current) {
-            queryClient.setQueryData(computerQueryKeys.byFilia(filia), []);
+          // After max attempts, keep trying every 5 seconds
+          delay = 10000
+          console.warn(
+            `⚠️ Max reconnection attempts reached. Continuing to retry every 10 seconds... (Attempt ${reconnectAttempts.current + 1})`
+          )
+
+          const queryCache = queryClient.getQueryCache()
+          const query = queryCache.find({ queryKey: computerQueryKeys.byFilia(filia) })
+          const errMsg = 'Straciłeś połączenie z serwerem. Proszę się skontaktować z administratorem.'
+          if (query) {
+            query.setState({
+              status: 'error',
+              error: new Error(errMsg),
+              data: null,
+              fetchFailureReason: new Error(errMsg),
+            })
+
           }
         }
-      };
+
+        reconnectAttempts.current++
+        setTimeout(() => {
+          if (wsRef.current?.readyState === WebSocket.CLOSED) {
+            connect()
+          }
+        }, delay)
+
+        // Keep the cache if we've received data previously
+        // if (!initialDataReceived.current) {
+        //   queryClient.setQueryData(computerQueryKeys.byFilia(filia), [])
+        // }
+      }
     } catch (error) {
-      console.error('Failed to establish WebSocket connection:', error);
-      // Set empty array as data if we haven't received any data yet
-      if (!initialDataReceived.current) {
-        queryClient.setQueryData(computerQueryKeys.byFilia(filia), []);
+      console.error('Failed to establish WebSocket connection:', error)
+      const errMsg = 'Straciłeś połączenie z serwerem. Proszę się skontaktować z administratorem.'
+      const queryCache = queryClient.getQueryCache()
+      const query = queryCache.find({ queryKey: computerQueryKeys.byFilia(filia) })
+      if (query) {
+
+      query.setState({
+        status: 'error',
+        error: new Error(errMsg),
+        data: null,
+        fetchFailureReason: new Error(errMsg),
+      })
       }
     }
-  };
+  }
 
   useEffect(() => {
-    connect();
+    connect()
 
     return () => {
-      console.log('Cleaning up WebSocket connection');
+      console.log('Cleaning up WebSocket connection')
       if (wsRef.current) {
-        wsRef.current.close();
-        wsRef.current = null;
+        wsRef.current.close()
+        wsRef.current = null
       }
-      reconnectAttempts.current = 0;
-      initialDataReceived.current = false;
-    };
-  }, [filia]);
-} 
+      reconnectAttempts.current = 0
+      initialDataReceived.current = false
+    }
+  }, [filia])
+}

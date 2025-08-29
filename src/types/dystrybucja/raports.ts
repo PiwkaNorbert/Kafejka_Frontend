@@ -5,4 +5,3 @@ export interface Makulatora {
   title: string
   count: number
 }
-

@@ -1,27 +1,26 @@
-import { ComputerOnlineStatusProps } from '../../types/computer'
-import ComputerState from './ComputerState'
 import { memo } from 'react'
 import { useChangeStateByIDMutation } from '../../hooks/mutations/useChangeStateByIDMutation'
+import type { ComputerOnlineStatusProps } from '../../types/computer'
+import ComputerState from './ComputerState'
 
-const ComputerLogout = ({ computer, url }: ComputerOnlineStatusProps) => {
-  const computerID = computer.id
-  const computerKatalog = computer.katalog
-
+const ComputerLogout = ({ computer, filia }: ComputerOnlineStatusProps) => {
+  const { id, ol: isBlocked, katalog } = computer
 
   const { onStateChange, changeStateByIDMutation } =
-    useChangeStateByIDMutation(url)
+    useChangeStateByIDMutation(filia)
 
-  if (computerKatalog) return null
+  if (katalog) return null
 
   const handleShutdown = () => {
-    onStateChange({ id: computerID, flag: 3 })
+    onStateChange({ id, flag: 3 })
   }
 
   return (
     <ComputerState
-    className='w-full'
-      computerID={computerID}
+      className="w-full"
+      computerID={id}
       computerFlag={3}
+      computerIsBlocked={isBlocked}
       handleClick={handleShutdown}
       isPending={changeStateByIDMutation.isPending}
     />

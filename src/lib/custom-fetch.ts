@@ -1,16 +1,19 @@
-import { IP_POWROZNICZA } from "../constants";
+import { BASE_IP, DEFAULT_PORT } from '../constants'
 
-export async function customFetch<T>(url: string, errorMessage: string, signal?: AbortSignal): Promise<T> {
+export async function customFetch<T>(
+  url: string,
+  errorMessage: string,
+  signal?: AbortSignal
+): Promise<T> {
   try {
-    const response = await fetch(url, { signal });
-    if (!response.ok) throw new Error(errorMessage);
-    return await response.json();
+    const response = await fetch(url, { signal: signal as AbortSignal | null })
+    if (!response.ok) throw new Error(errorMessage)
+    return await response.json()
   } catch (error) {
-    console.error(error);
-    throw new Error(errorMessage);
+    console.error(error)
+    throw new Error(errorMessage)
   }
 }
-
 
 export type Success<T> = {
   data: T
@@ -26,7 +29,7 @@ export type Result<T, E = Error> = Success<T> | Failure<E>
 
 // Main wrapper function
 export async function tryCatch<T, E = Error>(
-  promise: Promise<T>,
+  promise: Promise<T>
 ): Promise<Result<T, E>> {
   try {
     const data = await promise
@@ -36,11 +39,25 @@ export async function tryCatch<T, E = Error>(
   }
 }
 
+export const apiLink = (port?: string) => {
+  // Use the provided port, environment variable, or default port
+  const selectedPort = port || process.env.API_PORT || DEFAULT_PORT
 
-export async function fetchApi<T>({ url = IP_POWROZNICZA, port = '8005', path }: { url: string, port: string, path: string }, init?: RequestInit): Promise<T> {
+  // If API_LINK is provided in env, use it directly
+  if (process.env.API_LINK) {
+    return process.env.API_LINK
+  }
 
+  // Otherwise construct the URL with BASE_IP and port
+  return `${BASE_IP}:${selectedPort}`
+}
+
+export async function fetchApi<T>(
+  { path, port }: { path: string; port?: string },
+  init?: RequestInit
+): Promise<T> {
   const fetchResult = await tryCatch(
-    fetch(`${url}:${port}${path}`, {
+    fetch(`${apiLink(port)}${path}`, {
       ...init,
       headers: {
         'Content-Type': 'application/json',
@@ -63,5 +80,4 @@ export async function fetchApi<T>({ url = IP_POWROZNICZA, port = '8005', path }:
   }
 
   return dataResult.data as T
-
 }

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { GroupResponse } from '../types/groups'
+import  type { GroupResponse } from '../types/groups'
 import { fetchTicketGroupData } from '../fetch'
 
 const useTicketGroupData = () => {

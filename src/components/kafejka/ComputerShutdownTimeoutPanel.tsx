@@ -1,5 +1,7 @@
-import { Computer } from '../../types/computer'
+import type { Computer } from '@/types/computer'
 
+import { useShutdownTime } from '@/hooks/useShutdownTime'
+import { memo } from 'react'
 import {
   Select,
   SelectContent,
@@ -7,51 +9,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select'
-import { useShutdownTime } from '../../hooks/useShutdownTime'
-import { memo } from 'react'
 
-interface ComputerShutdownTimeoutPanelProps {
-  computer: Computer
-  index: number
-}
+const ComputerShutdownTimeoutPanel = memo(
+  ({ computer }: { computer: Computer }) => {
+    const { shutdownTime, setShutdownTime } = useShutdownTime(computer.id)
 
-const ComputerShutdownTimeoutPanel = memo(({
-  computer,
-}: ComputerShutdownTimeoutPanelProps) => {
-  const { shutdownTime, setShutdownTime } = useShutdownTime(computer.id)
+    if (computer.katalog) return null
 
-  if (computer.katalog) return null
+    const handleTimeoutChange = (value: string) => {
+      setShutdownTime(value)
+    }
 
-  const handleTimeoutChange = (value: string) => {
-    setShutdownTime(value)
+    return (
+      <form className="w-full">
+        <Select
+          name="timeout"
+          defaultValue="0"
+          value={shutdownTime}
+          onValueChange={handleTimeoutChange}
+        >
+          <SelectTrigger disabled={computer.f === 5}>
+            <SelectValue placeholder="Wyłącz za" />
+          </SelectTrigger>
+          <SelectContent>
+            {options.map(({ value }, index) => (
+              <SelectItem key={index} className="w-full " value={value}>
+                {value} min {'    '}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </form>
+    )
   }
-
-  return (
-    <form className="w-full">
-      <Select
-        name="timeout"
-        defaultValue="0"
-        value={shutdownTime}
-        onValueChange={handleTimeoutChange}
-      >
-        <SelectTrigger disabled={computer.f === 5}>
-          <SelectValue placeholder="Wyłącz za" />
-        </SelectTrigger>
-        <SelectContent>
-          {options.map(({ value }, index) => (
-            <SelectItem
-              key={index}
-              className="w-full "
-              value={value}
-            >
-              {value} min {'    '}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </form>
-  )
-})
+)
 
 // options for a select with increments of 5 up to 60
 const options = [

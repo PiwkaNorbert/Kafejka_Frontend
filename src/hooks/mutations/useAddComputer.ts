@@ -1,20 +1,16 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { addComputerAction } from '@/mutations'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
-import { useCallback } from "react"
-import { toast } from "react-toastify"
-import { IP_MATEUSZ } from '@/constants';
-import { fetchApi } from '@/lib/custom-fetch';
-import { computerQueryKeys } from '../useComputerData';
-
+import { useCallback } from 'react'
+import { toast } from 'react-toastify'
+import { computerQueryKeys } from '../useComputerData'
 
 export const useAddComputer = (filia: string) => {
-
   const queryClient = useQueryClient()
 
   const addPCMutation = useMutation({
     mutationKey: computerQueryKeys.add(filia),
-    mutationFn: () => fetchApi({ url: IP_MATEUSZ, port: '8080', path: `/add-pc/${filia}` }),
-
+    mutationFn: () => addComputerAction(filia),
     onSuccess: (res) => {
       toast.success('Komputer został dodany', { icon: Plus })
       console.log(res)
@@ -23,7 +19,9 @@ export const useAddComputer = (filia: string) => {
       // });
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: computerQueryKeys.byFilia(filia) })
+      queryClient.invalidateQueries({
+        queryKey: computerQueryKeys.byFilia(filia),
+      })
     },
     onError: (error: Error) => {
       console.error(error)
@@ -31,15 +29,11 @@ export const useAddComputer = (filia: string) => {
     },
   })
 
-  const onAdd = useCallback(
-    () => {
-      if (addPCMutation.isPending) return
+  const onAdd = useCallback(() => {
+    if (addPCMutation.isPending) return
 
-      addPCMutation.mutate()
-    },
-    [addPCMutation]
-  )
-
+    addPCMutation.mutate()
+  }, [addPCMutation])
 
   return { onAdd, addPCMutation }
 }

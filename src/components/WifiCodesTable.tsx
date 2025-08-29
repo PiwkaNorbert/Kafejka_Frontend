@@ -1,5 +1,5 @@
 import { cn } from '../lib/utils'
-import { GetWifiCodesResponse } from '../types/wifi-codes'
+import type { GetWifiCodesResponse } from '../types/wifi-codes'
 import { TableCell, TableRow } from './ui/table'
 import { formatDate } from '../utils/dateFormatter'
 

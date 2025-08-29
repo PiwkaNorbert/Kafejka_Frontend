@@ -5,9 +5,9 @@ import { toast } from 'react-toastify'
 import WifiCodesTable from '../components/WifiCodesTable'
 import { Button } from '../components/ui/button'
 
+import { addWifiCode } from '@/mutations'
 import { InfoIcon } from 'lucide-react'
 import { Input } from '../components/ui/input'
-import { Skeleton } from '../components/ui/skeleton'
 import {
   Table,
   TableBody,
@@ -18,29 +18,13 @@ import {
   TableRow,
 } from '../components/ui/table'
 import { wifiCodeOptions } from '../hooks/options/wifi-code-options'
-import { fetchApi } from '../lib/custom-fetch'
-
-export async function addWifiCode(filia: string | undefined, value: number) {
-  const response = await fetchApi({
-    url: 'http://192.168.15.220:8080',
-    port: '8080',
-    path: `/hotspot-code/${filia}/${value * 3 - 1745}/`,
-  })
-
-  return response
-}
 
 const useWifi = (filia: string | undefined) => {
   const queryClient = useQueryClient()
 
   const addCodeMutation = useMutation({
-    mutationFn: ({
-      filia,
-      value,
-    }: {
-      filia: string | undefined
-      value: number
-    }) => addWifiCode(filia, value),
+    mutationFn: ({ filia, value }: { filia: string; value: number }) =>
+      addWifiCode(filia, value),
     onSuccess: () => {
       toast.success('Kod został wysłany!', { toastId: 'addCode' })
     },
@@ -57,12 +41,17 @@ const useWifi = (filia: string | undefined) => {
 
 const WifiPerms = () => {
   const { curFilia } = useParams()
-  const filia = curFilia
+  const filia = curFilia as string
   const { data, status, error, isLoading } = useQuery(wifiCodeOptions(filia))
+
+  if (!filia)
+    return (
+      <div className="mx-auto grid w-full max-w-sm gap-6">Nie ma filii</div>
+    )
 
   return (
     <div className="mx-auto grid w-full max-w-sm gap-6">
-      <AddWifiCode />
+      <AddWifiCode filia={filia} />
 
       <Table>
         <TableCaption>Lista użytkowników dozwolonych do WIFI</TableCaption>
@@ -108,11 +97,10 @@ const WifiPerms = () => {
 
 export default WifiPerms
 
-const AddWifiCode = () => {
+const AddWifiCode = ({ filia }: { filia: string }) => {
   const formRef = useRef<null | HTMLFormElement>(null)
   const inputRef = useRef<null | HTMLInputElement>(null)
-  const { curFilia } = useParams()
-  const { addCodeMutation } = useWifi(curFilia)
+  const { addCodeMutation } = useWifi(filia)
 
   useEffect(() => {
     if (inputRef.current) {
@@ -126,7 +114,7 @@ const AddWifiCode = () => {
     const cardNumber = new FormData(e.currentTarget).get('hotspot')
 
     addCodeMutation.mutate(
-      { filia: curFilia, value: Number(cardNumber) },
+      { filia, value: Number(cardNumber) },
       {
         onSuccess: () => {
           if (formRef.current) {
@@ -136,14 +124,6 @@ const AddWifiCode = () => {
       }
     )
   }
-
-  if (!curFilia)
-    return (
-      <div className="grid gap-4 rounded-lg bg-card p-5 shadow-md">
-        <Skeleton className="h-10 w-full" />
-        <Skeleton className="h-10 w-full" />
-      </div>
-    )
 
   return (
     <form

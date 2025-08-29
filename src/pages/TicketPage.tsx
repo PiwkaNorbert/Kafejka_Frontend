@@ -27,21 +27,23 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Textarea } from '@/components/ui/text-area'
-import { IP_POWROZNICZA, statesObject } from '@/constants'
-import { taskListOptions, taskListQueryKeys } from '@/hooks/options/task-list-options'
+import { statesObject } from '@/constants'
+import {
+  taskListOptions,
+  taskListQueryKeys,
+} from '@/hooks/options/task-list-options'
 import useCopyToClipboard from '@/hooks/useCopyToClipboard'
 import useTicketCategoryData from '@/hooks/useTicketCategoryData'
 import useTicketGroupData from '@/hooks/useTicketGroupData'
 import { cn } from '@/lib/utils'
-import { Category } from '@/types/categories'
+import { createRequestAction } from '@/mutations'
+import type { Category } from '@/types/categories'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
 import { CheckIcon, InfoIcon, ListTodo, RefreshCw, X } from 'lucide-react'
 import React, { useState } from 'react'
 import { useParams } from 'react-router'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
-import { fetchApi } from '@/lib/custom-fetch'
 
 const wait = () => new Promise((resolve) => setTimeout(resolve, 200))
 
@@ -183,11 +185,7 @@ export function CreateTicket({ filia }: { filia: string }) {
   const formRef = React.useRef<HTMLFormElement>(null)
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (requestData: TicketData) =>
-      await fetchApi(
-        { url: IP_POWROZNICZA, port: '8080', path: '/create-request/' },
-        { method: 'POST', body: JSON.stringify(requestData) }
-      ),
+    mutationFn: createRequestAction,
   })
   const handleShowProblem = () => setShowProblem(true)
 
@@ -357,7 +355,7 @@ export function GroupSelector({ handleShowProblem }: IGroupSelector) {
 
             if (match) {
               const fullname = match[1]
-              groupName = fullname.split('_')[1]
+              groupName = fullname?.split('_')[1] ?? ''
             }
 
             return (
