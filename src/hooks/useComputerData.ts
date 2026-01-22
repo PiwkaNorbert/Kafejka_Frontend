@@ -1,5 +1,5 @@
 import type { ComputerArray } from '@/types/computer'
-import { useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { useWebSocket } from './useWebSocket'
 import { fetchComputerData } from '@/fetch'
 
@@ -25,12 +25,13 @@ export function useComputerData(filia: string | undefined) {
   useWebSocket(filia || '')
 
 
+
   return useQuery<ComputerArray>({
     queryKey: computerQueryKeys.byFilia(filia),
     // This is a fallback query function that would normally fetch data from the server
     // In this case, WebSocket is our primary data source
     queryFn: ({ signal }) => fetchComputerData(filia || '', signal),
-    placeholderData: (oldData) => oldData ?? [],
+    placeholderData: keepPreviousData,
     staleTime: Infinity,
     gcTime: 5 * 60 * 1000,
     refetchInterval: false,

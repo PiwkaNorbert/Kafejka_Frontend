@@ -1,6 +1,6 @@
 const ErrorCallback = ({ errorMsg }: ErrorCallbackProps) => {
   return (
-    <div className=" grid items-start justify-center">
+    <div className=" grid items-start justify-center col-span-full">
       <h1 className="mb-4 text-2xl">Nastąpił Błąd</h1>
       <p className="rounded-lg border border-destructive/25 bg-destructive/15 p-4 text-destructive">
         Proszę kliknąć przycisk <span className="italic">"odśwież"</span>

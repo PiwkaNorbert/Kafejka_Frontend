@@ -1,38 +1,31 @@
 import { addComputerAction } from '@/mutations'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Plus } from 'lucide-react'
+import { useMutation } from '@tanstack/react-query'
+import { AlertCircle, Plus } from 'lucide-react'
 import { useCallback } from 'react'
 import { toast } from 'react-toastify'
 import { computerQueryKeys } from '../useComputerData'
 
 export const useAddComputer = (filia: string) => {
-  const queryClient = useQueryClient()
 
   const addPCMutation = useMutation({
     mutationKey: computerQueryKeys.add(filia),
     mutationFn: () => addComputerAction(filia),
-    onSuccess: (res) => {
-      toast.success('Komputer został dodany', { icon: Plus })
-      console.log(res)
-      // queryClient.setQueryData({ queryKey: ['komps', curFilia] }, old => {
-
-      // });
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: computerQueryKeys.byFilia(filia),
-      })
-    },
-    onError: (error: Error) => {
-      console.error(error)
-      toast.error('Komputer niezostał dodany')
+    meta: {
+      invalidates: [computerQueryKeys.byFilia(filia),],
     },
   })
 
   const onAdd = useCallback(() => {
     if (addPCMutation.isPending) return
 
-    addPCMutation.mutate()
+    addPCMutation.mutate(undefined, {
+      onSuccess: () => {
+        toast.success('Komputer został dodany', { icon: Plus })
+      },
+      onError: () => {
+        toast.error('Komputer niezostał dodany', { toastId: 'addComputer', icon: AlertCircle })
+      },
+    })
   }, [addPCMutation])
 
   return { onAdd, addPCMutation }

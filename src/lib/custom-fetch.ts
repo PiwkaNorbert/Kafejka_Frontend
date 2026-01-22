@@ -41,12 +41,7 @@ export async function tryCatch<T, E = Error>(
 
 export const apiLink = (port?: string) => {
   // Use the provided port, environment variable, or default port
-  const selectedPort = port || process.env.API_PORT || DEFAULT_PORT
-
-  // If API_LINK is provided in env, use it directly
-  if (process.env.API_LINK) {
-    return process.env.API_LINK
-  }
+  const selectedPort = port || DEFAULT_PORT
 
   // Otherwise construct the URL with BASE_IP and port
   return `${BASE_IP}:${selectedPort}`
@@ -75,7 +70,14 @@ export async function fetchApi<T>(
   }
 
   const dataResult = await tryCatch(fetchResult.data.json())
+  
+  
   if (dataResult.error) {
+    // Empty response is valid for some endpoints
+    const errorMessage = dataResult.error instanceof Error ? dataResult.error.message : String(dataResult.error)
+    if (errorMessage.includes('Unexpected end of JSON input')) {
+      return {} as T
+    }
     throw new Error('Failed to parse response')
   }
 

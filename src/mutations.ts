@@ -18,7 +18,7 @@ export const shutdownAllComputersAction = (filia: string) =>
   })
 
 export const addComputerAction = (filia: string) =>
-  fetchApi<{ Status: string }>({ path: `/add-pc/${filia}`, port: PORTS.WS })
+  fetchApi<null>({ path: `/add-pc/${filia}`, port: PORTS.WS })
 
 export const changeCodeAction = (
   action: 'add-codes' | 'sub-codes',
@@ -54,8 +54,8 @@ export const changeStateByIDAction = (payload: StateData) =>
   })
 
 
-export const addWifiCode = (filia: string, value: number) =>
+export const addWifiCode = (filia: string, value: number) => 
   fetchApi({
     path: `/hotspot-code/${filia}/${value * 3 - 1745}/`,
-    port: PORTS.KAFEJKA,
+    port: PORTS.WS,
   })

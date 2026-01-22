@@ -1,4 +1,4 @@
-import { IP_EBOOKI, IP_KAFEJKA, IP_TASKER, IP_WS } from './constants'
+import { IP_EBOOKI, IP_TASKER, IP_WS } from './constants'
 import { customFetch } from './lib/custom-fetch'
 import type { CategoryResponse } from './types/categories'
 import type { GetCodesResponse } from './types/codes'
@@ -78,7 +78,7 @@ export const fetchEbookCodes = async (signal?: AbortSignal) => {
 
 
 export const fetchWifiCodes = async (filia: string, signal?: AbortSignal) => {
-  const url = `${IP_KAFEJKA}/get-codes/${filia}`
+  const url = `${IP_WS}/get-codes/${filia}`
   return customFetch<GetWifiCodesResponse>(
     url,
     'Błąd pobierania kodów: Proszę się skontaktować z administratorem.',
