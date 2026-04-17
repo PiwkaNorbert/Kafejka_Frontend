@@ -24,7 +24,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { IP_PRZEKIEROWANIE } from '@/constants'
+import { IP_EBOOKI, IP_PRZEKIEROWANIE } from '@/constants'
 import { useFilters } from '@/hooks/useFilters'
 import type { Codes, GetCodesResponse } from '@/types/codes'
 import {
@@ -188,7 +188,7 @@ const FiliaCodesTable: React.FC<{
 
   const { mutate, isPending } = useMutation({
     mutationFn: (body: GetCodesResponse) => {
-      return fetch('http://192.168.200.40:8081/update-codes', {
+      return fetch(`${IP_EBOOKI}/update-codes`, {
         method: 'PUT',
         body: JSON.stringify(body),
         headers: {
